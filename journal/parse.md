@@ -1,0 +1,5 @@
+I had a look at the go parsing library today. It is pretty weird in some sense. For example, in `go/token` package, There are really two orthogonal things. One is a `File` type that is really just a set of lines, which is used as a database for converting `Pos` between filename and line number pairs. And another thing is the token system. The two part really have nothing related. 
+
+We will have each package compiled into an archive file of binaries and symbol table, the linker will take the rest. We doing this, the compiler also need to look up the type declarations in other packages (this is like the automatically generated header file from other packages, which includes all the values, offsets and address information for the public consts, variables, functions, and structs. But that will be after parsing.
+
+Therefore, using an integer as a index for file position might not be a bad idea. 
