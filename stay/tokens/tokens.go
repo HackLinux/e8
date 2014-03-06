@@ -70,7 +70,7 @@ const (
 	Rbrack    // ]
 	Rbrace    // }
 	Semicolon // ;
-	Collon    // :
+	Colon     // :
 
 	operatorEnd
 
