@@ -105,8 +105,54 @@ func (self *Lexer) scanNumber(dotLed bool) (lit string, t int) {
 	return
 }
 
+func (self *Lexer) scanEscape(q rune) {
+	if self.scanAny("abfnrtv\\") {
+		return
+	}
+	if self.scan(q) {
+		return
+	}
+
+	if self.scan('x') {
+		if !(self.scanHexDigit() && self.scanHexDigit()) {
+			self.failf("invalid hex escape")
+		}
+		return
+	}
+
+	if self.scanOctDigit() {
+		if !(self.scanOctDigit() && self.scanOctDigit()) {
+			self.failf("invalid oct escape")
+		}
+		return
+	}
+
+	self.failf("unknown escape char %q", self.peek())
+	self.next()
+	return
+}
+
 func (self *Lexer) scanChar() string {
-	panic("todo")
+	n := 0
+	for !self.scan('\'') {
+		if self.peek() == '\n' {
+			self.failf("char not terminated")
+			break
+		}
+
+		if self.scan('\\') {
+			self.scanEscape('\'')
+		} else {
+			self.next()
+		}
+		n++
+	}
+
+	if n != 1 {
+		self.failf("illegal char")
+	}
+
+	return self.accept()
 }
 
 func (self *Lexer) scanComment() string {

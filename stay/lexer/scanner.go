@@ -103,6 +103,22 @@ func (self *scanner) scanDigits() int {
 	return ret
 }
 
+func (self *scanner) scanHexDigit() bool {
+	if isHexDigit(self.r) {
+		self.next()
+		return true
+	}
+	return false
+}
+
+func (self *scanner) scanOctDigit() bool {
+	if isOctDigit(self.r) {
+		self.next()
+		return true
+	}
+	return false
+}
+
 func (self *scanner) scanHexDigits() int {
 	ret := 0
 	for isHexDigit(self.r) {
