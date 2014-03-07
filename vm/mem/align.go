@@ -23,11 +23,15 @@ func offset8(offset uint32) uint32 {
 }
 
 func offset16(offset uint32) uint32 {
-	return align.U16(maskOffset(offset))
+	return align.A16(maskOffset(offset))
 }
 
 func offset32(offset uint32) uint32 {
-	return align.U32(maskOffset(offset))
+	return align.A32(maskOffset(offset))
+}
+
+func offset64(offset uint32) uint32 {
+	return align.A64(maskOffset(offset))
 }
 
 func (self *Align) WriteU8(offset uint32, value uint8) {
@@ -42,6 +46,10 @@ func (self *Align) WriteU32(offset uint32, value uint32) {
 	self.writeU32(offset32(offset), value)
 }
 
+func (self *Align) WriteF64(offset uint32, value float64) {
+	panic("todo")
+}
+
 func (self *Align) ReadU8(offset uint32) uint8 {
 	return self.readU8(offset8(offset))
 }
@@ -52,6 +60,10 @@ func (self *Align) ReadU16(offset uint32) uint16 {
 
 func (self *Align) ReadU32(offset uint32) uint32 {
 	return self.readU32(offset32(offset))
+}
+
+func (self *Align) ReadF64(offset uint32) float64 {
+	panic("todo")
 }
 
 func (self *Align) writeU8(offset uint32, value uint8) {

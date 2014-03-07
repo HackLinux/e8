@@ -39,7 +39,7 @@ func (self *Registers) WriteReg(a uint8, v uint32) {
 	if a == 0 {
 		// do nothing
 	} else if a == inst.RegPC {
-		self.ints[inst.RegPC] = align.U32(v)
+		self.ints[inst.RegPC] = align.A32(v)
 	} else {
 		self.ints[a] = v
 	}

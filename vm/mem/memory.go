@@ -37,7 +37,7 @@ func (self *Memory) Get(addr uint32) Page {
 	return ret
 }
 
-// Check if a page exists for the address
+// Checks if a page exists for the address
 func (self *Memory) Check(addr uint32) bool {
 	return self.pages[PageId(addr)] != nil
 }
@@ -47,44 +47,55 @@ func (self *Memory) align(addr uint32) *Align {
 	return self._align
 }
 
-// Write a byte at addr.
+// Writes a byte at addr.
 // If the page is missing, and auto allocation is off, this is an noop.
 func (self *Memory) WriteU8(addr uint32, value uint8) {
 	self.align(addr).WriteU8(addr, value)
 }
 
-// Write a half word at addr, the address will be automatically aligned down.
+// Writes a half word at addr, the address will be automatically aligned down.
 // Byte order is little endian, and the lower bytes will be written first.
 // If the page is missing and auto allocation is off, this is a noop.
 func (self *Memory) WriteU16(addr uint32, value uint16) {
 	self.align(addr).WriteU16(addr, value)
 }
 
-// Write a word at addr, the address will be automatically aligned down.
+// Writes a word at addr, the address will be automatically aligned down.
 // Byte order is little endian, and the lower bytes will be written first.
 // If the page is missing and auto allocation is off, this is a noop.
 func (self *Memory) WriteU32(addr uint32, value uint32) {
 	self.align(addr).WriteU32(addr, value)
 }
 
-// Read a byte at addr.
+// Writes a double precision floating point at addr, the address will be
+// automatically aligned down.
+func (self *Memory) WriteF64(addr uint32, value float64) {
+	self.align(addr).WriteF64(addr, value)
+}
+
+// Reads a byte at addr.
 // If the page is missing and auto allocation is off, 0 is returned.
 func (self *Memory) ReadU8(addr uint32) uint8 {
 	return self.align(addr).ReadU8(addr)
 }
 
-// Read a half word at addr.
+// Reads a half word at addr.
 // Byte order is little endian, and the lower bytes will be read first.
 // If the page is missing and auto allocation is off, 0 is returned.
 func (self *Memory) ReadU16(addr uint32) uint16 {
 	return self.align(addr).ReadU16(addr)
 }
 
-// Read a word at addr.
+// Reads a word at addr.
 // Byte order is little endian, and the lower bytes will be read first.
 // If the page is missing and auto allocation is off, 0 is returned.
 func (self *Memory) ReadU32(addr uint32) uint32 {
 	return self.align(addr).ReadU32(addr)
+}
+
+// Reads a double precision floating point at addr.
+func (self *Memory) ReadF64(addr uint32) float64 {
+	return self.align(addr).ReadF64(addr)
 }
 
 // Map a page for the address, the address will be auto aligned down to
