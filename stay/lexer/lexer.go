@@ -89,13 +89,10 @@ func (self *Lexer) accept(r rune) bool {
 }
 
 func (self *Lexer) isWhite(r rune) bool {
-	if r == ' ' || r == '\r' || r == '\t' {
-		return true
-	}
 	if r == '\n' && self.whiteEndl {
 		return true
 	}
-	return false
+	return isWhite(r)
 }
 
 func (self *Lexer) acceptWhites() int {
@@ -123,5 +120,6 @@ func (self *Lexer) peek() rune {
 
 func (self *Lexer) Scan() (t int, p uint32, lit string) {
 	self.acceptWhites()
+
 	panic("todo")
 }
