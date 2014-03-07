@@ -73,4 +73,7 @@ func TestLexer(t *testing.T) {
 	o("//", m(Comment, "//"))
 	o("// something", m(Comment, "// something"))
 	o("   /* some */ ", m(Comment, "/* some */"))
+	o("   /* some ***/", m(Comment, "/* some ***/"))
+	o("   /* some ***", m(Comment, "/* some ***"))
+	o("a3/* some */func", id("a3"), m(Comment, "/* some */"), n(Func))
 }

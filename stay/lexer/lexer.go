@@ -109,9 +109,13 @@ func (self *Lexer) scanChar() string {
 func (self *Lexer) scanComment() string {
 	if self.scan('*') {
 		for {
-			if self.scan('*') && self.scan('/') {
-				return self.accept()
+			if self.scan('*') {
+				if self.scan('/') {
+					return self.accept()
+				}
+				continue
 			}
+
 			if self.closed {
 				self.failf("incomplete block comment")
 				return self.accept()
