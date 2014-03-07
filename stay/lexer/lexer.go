@@ -275,6 +275,30 @@ func (self *Lexer) Err() error {
 	return self.err
 }
 
+var insertSemiTokens = []int{
+	tokens.Ident,
+	tokens.Int,
+	tokens.Float,
+	tokens.Break,
+	tokens.Continue,
+	tokens.Fallthrough,
+	tokens.Return,
+	tokens.Char,
+	tokens.Rparen,
+	tokens.Rbrack,
+	tokens.Rbrace,
+}
+
+/*
+func (self *Lexer) Scan() (t int, p, uint32, lit string) {
+	t, p, lit = self.scanToken()
+
+	tokens.Illegal {
+		self.insertSemi = true
+	}
+}
+*/
+
 func (self *Lexer) Scan() (t int, p uint32, lit string) {
 	self.skipWhites()
 
@@ -284,7 +308,9 @@ func (self *Lexer) Scan() (t int, p uint32, lit string) {
 	if isLetter(r) {
 		self.scanIdent()
 		lit = self.accept()
-		return tokens.IdentToken(lit), p, lit
+		t = tokens.IdentToken(lit)
+
+		return t, p, lit
 	} else if isDigit(r) {
 		lit, t = self.scanNumber(false)
 		return t, p, lit
