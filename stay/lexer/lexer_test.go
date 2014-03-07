@@ -87,12 +87,16 @@ func TestLexer(t *testing.T) {
 		id("C3"), n(Lparen), n(Rparen), sc,
 	)
 	oe("$", m(Illegal, "$"))
+
+	// comments
 	o("//", m(Comment, "//"))
 	o("// something", m(Comment, "// something"))
 	o("   /* some */ ", m(Comment, "/* some */"))
 	o("   /* some ***/", m(Comment, "/* some ***/"))
 	oe("   /* some ***", m(Comment, "/* some ***"))
 	o("a3/* some */func", id("a3"), m(Comment, "/* some */"), n(Func))
+
+	// char literals
 	o(`' '`, m(Char, `' '`), sc)
 	o(`'\''`, m(Char, `'\''`), sc)
 	oe(`  ' \''`, m(Char, `' \''`), sc)
@@ -100,6 +104,7 @@ func TestLexer(t *testing.T) {
 	o(`'\032'`, m(Char, `'\032'`), sc)
 	o(`'\x3a'`, m(Char, `'\x3a'`), sc)
 	o(`'\xa3'`, m(Char, `'\xa3'`), sc)
+	o(`'永'`, m(Char, `'永'`), sc)
 	oe(`'\ax3'`, m(Char, `'\ax3'`), sc)
 	oe(`'\32a'`, m(Char, `'\32a'`), sc)
 	oe(`'''`, m(Char, `''`), m(Char, `'`), sc)
