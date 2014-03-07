@@ -6,6 +6,7 @@ import (
 	"io"
 
 	"github.com/h8liu/e8/stay/pos"
+	"github.com/h8liu/e8/stay/tokens"
 )
 
 type Lexer struct {
@@ -18,7 +19,7 @@ type Lexer struct {
 	eof     bool  // end of file reached, or some fatal error occured
 	e       error // if any error
 
-	whiteEndl bool // if treat end line as whilespace
+	insertSemi bool // if treat end line as whitespace
 }
 
 func New(in io.Reader) *Lexer {
@@ -89,25 +90,77 @@ func (self *Lexer) accept(r rune) bool {
 }
 
 func (self *Lexer) isWhite(r rune) bool {
-	if r == '\n' && self.whiteEndl {
+	if r == '\n' && !self.insertSemi {
 		return true
 	}
 	return isWhite(r)
 }
 
-func (self *Lexer) acceptWhites() int {
+func (self *Lexer) scanWhites() int {
 	ret := 0
 
 	for {
 		r := self.peek()
 		if self.isWhite(r) {
 			ret++
+			self.accept(r)
 			continue
 		}
 		break
 	}
 
 	return ret
+}
+
+func (self *Lexer) scanLine() int {
+	ret := 0
+
+	for {
+		r := self.peek()
+		if r != '\n' {
+			ret++
+			self.accept(r)
+			continue
+		}
+		break
+	}
+
+	if self.peek() == '\n' {
+		self.accept('\n')
+	}
+	
+	return ret
+}
+
+func (self *Lexer) scanIdent() string {
+	r := self.peek()
+	ret := string(r)
+	self.accept(r)
+
+	for {
+		r := self.peek()
+		if isLetter(r) || isDigit(r) {
+			ret += string(r)
+			self.accept(r)
+			continue
+		}
+
+		break
+	}
+	
+	return ret
+}
+
+func (self *Lexer) scanNumber() (lit string, t int) {
+	panic("todo")
+}
+
+func (self *Lexer) scanChar() string {
+	panic("todo")
+}
+
+func (self *Lexer) scanString() string {
+	panic("todo")
 }
 
 func (self *Lexer) peek() rune {
@@ -119,7 +172,44 @@ func (self *Lexer) peek() rune {
 }
 
 func (self *Lexer) Scan() (t int, p uint32, lit string) {
-	self.acceptWhites()
+	self.scanWhites()
+
+	r := self.peek()
+	p = self.pos()
+
+	if isLetter(r) {
+		lit = self.scanIdent()
+		// handle keywords
+		return tokens.Ident, p, lit
+	} else if isDigit(r) {
+		lit, t = self.scanNumber()
+		return t, p, lit
+	} else if self.eof && self.e == nil {
+		if self.insertSemi {
+			self.insertSemi = false
+			return tokens.Semicolon, self.pos(), "\n"
+		}
+		return tokens.EOF, p, ""
+	}
+
+	self.accept(r)
+
+	switch r {
+	case '\n':
+		self.insertSemi = false
+		return tokens.Semicolon, p, "\n"
+	/*
+	case '"':
+		self.insertSemi = true // why?
+		lit = self.scanString()
+		return tokens.String, p, lit
+	*/
+	case '\'':
+		self.insertSemi = true
+		lit = self.scanChar()
+		return tokens.Char, p, lit
+
+	}
 
 	panic("todo")
 }
