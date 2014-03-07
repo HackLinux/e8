@@ -26,6 +26,8 @@ func (self *Lexer) failf(f string, args ...interface{}) {
 	self.es = append(self.es, self.errorf(f, args...))
 }
 
+func (self *Lexer) LexErrors() []error { return self.es }
+
 const whites = " \t\r"
 
 func (self *Lexer) skipWhites() {
@@ -97,6 +99,7 @@ func (self *Lexer) scanNumber(dotLed bool) (lit string, t int) {
 	lit, t = self._scanNumber(dotLed)
 	if t == tokens.Illegal {
 		self.failf("invalid number")
+		t = tokens.Int
 	}
 
 	return
@@ -136,7 +139,7 @@ func (self *Lexer) scanComment() string {
 	panic("bug")
 }
 
-func (self *Lexer) scanSymbol(r rune) int {
+func (self *Lexer) scanOperator(r rune) int {
 	switch r {
 	case '\n':
 		self.insertSemi = false
@@ -287,19 +290,29 @@ var insertSemiTokens = []int{
 	tokens.Rparen,
 	tokens.Rbrack,
 	tokens.Rbrace,
+	tokens.Inc,
+	tokens.Dec,
 }
 
-/*
-func (self *Lexer) Scan() (t int, p, uint32, lit string) {
-	t, p, lit = self.scanToken()
-
-	tokens.Illegal {
-		self.insertSemi = true
+var insertSemiTokenMap = func() map[int]bool {
+	ret := make(map[int]bool)
+	for _, t := range insertSemiTokens {
+		ret[t] = true
 	}
-}
-*/
+	return ret
+}()
 
 func (self *Lexer) Scan() (t int, p uint32, lit string) {
+	t, p, lit = self.scanToken()
+
+	if t != tokens.Illegal {
+		self.insertSemi = insertSemiTokenMap[t]
+	}
+
+	return
+}
+
+func (self *Lexer) scanToken() (t int, p uint32, lit string) {
 	self.skipWhites()
 
 	r := self.peek()
@@ -321,7 +334,7 @@ func (self *Lexer) Scan() (t int, p uint32, lit string) {
 	} else if self.closed {
 		if self.insertSemi {
 			self.insertSemi = false
-			return tokens.Semicolon, self.pos(), "\n"
+			return tokens.Semicolon, self.pos(), ";"
 		}
 		return tokens.EOF, p, ""
 	}
@@ -339,6 +352,10 @@ func (self *Lexer) Scan() (t int, p uint32, lit string) {
 		}
 	}
 
-	t = self.scanSymbol(r)
-	return t, p, self.accept()
+	t = self.scanOperator(r)
+	lit = self.accept()
+	if t == tokens.Semicolon {
+		lit = ";"
+	}
+	return t, p, lit
 }
