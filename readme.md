@@ -63,6 +63,17 @@ See more on my [Motivation](https://github.com/h8liu/e8/wiki/Motivation) page.
   where it can compile itself. 
   [More thoughts here](https://github.com/h8liu/e8/wiki/Thoughts-on-Language).
 
+**Install**
+
+`$ go get github.com/h8liu/e8`
+
+This should grab all `e8` into you `$GOPATH` folder.
+
+**Documents**
+
+Incomplete now. However, you can try type `make doc` under this project folder, 
+and visit `http://localhost:8000` for the API document.
+
 **TODO**
 
 - Const immediates support in assembly.
