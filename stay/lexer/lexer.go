@@ -107,7 +107,29 @@ func (self *Lexer) scanChar() string {
 }
 
 func (self *Lexer) scanComment() string {
-	panic("todo")
+	if self.scan('*') {
+		for {
+			if self.scan('*') && self.scan('/') {
+				return self.accept()
+			}
+			if self.closed {
+				self.failf("incomplete block comment")
+				return self.accept()
+			}
+			self.next()
+		}
+	}
+
+	if self.scan('/') {
+		for {
+			if self.peek() == '\n' || self.closed {
+				return self.accept()
+			}
+			self.next()
+		}
+	}
+
+	panic("bug")
 }
 
 func (self *Lexer) scanSymbol(r rune) int {
@@ -258,8 +280,7 @@ func (self *Lexer) Scan() (t int, p uint32, lit string) {
 	if isLetter(r) {
 		self.scanIdent()
 		lit = self.accept()
-		// translate keywords here
-		return tokens.Ident, p, lit
+		return tokens.IdentToken(lit), p, lit
 	} else if isDigit(r) {
 		lit, t = self.scanNumber(false)
 		return t, p, lit

@@ -93,3 +93,19 @@ func TokenStr(t int) string {
 	}
 	return fmt.Sprintf("<na-%d>", t)
 }
+
+var keywords = func() map[string]int {
+	ret := make(map[string]int)
+	for i := keywordBegin + 1; i < keywordEnd; i++ {
+		s := tokenStr[i]
+		ret[s] = i
+	}
+	return ret
+}()
+
+func IdentToken(s string) int {
+	if i, found := keywords[s]; found {
+		return i
+	}
+	return Ident
+}
