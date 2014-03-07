@@ -128,7 +128,7 @@ func (self *Lexer) scanLine() int {
 	if self.peek() == '\n' {
 		self.accept('\n')
 	}
-	
+
 	return ret
 }
 
@@ -147,7 +147,7 @@ func (self *Lexer) scanIdent() string {
 
 		break
 	}
-	
+
 	return ret
 }
 
@@ -199,10 +199,10 @@ func (self *Lexer) Scan() (t int, p uint32, lit string) {
 		self.insertSemi = false
 		return tokens.Semicolon, p, "\n"
 	/*
-	case '"':
-		self.insertSemi = true // why?
-		lit = self.scanString()
-		return tokens.String, p, lit
+		case '"':
+			self.insertSemi = true // why?
+			lit = self.scanString()
+			return tokens.String, p, lit
 	*/
 	case '\'':
 		self.insertSemi = true
