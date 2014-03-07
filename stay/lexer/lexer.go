@@ -16,6 +16,7 @@ type Lexer struct {
 	rsize   int
 	lineNo  int
 	lineOff int
+	illegal bool
 	eof     bool  // end of file reached, or some fatal error occured
 	e       error // if any error
 
@@ -151,7 +152,7 @@ func (self *Lexer) scanIdent() string {
 	return ret
 }
 
-func (self *Lexer) scanNumber() (lit string, t int) {
+func (self *Lexer) scanNumber(dotLed bool) (lit string, t int) {
 	panic("todo")
 }
 
@@ -159,7 +160,7 @@ func (self *Lexer) scanChar() string {
 	panic("todo")
 }
 
-func (self *Lexer) scanString() string {
+func (self *Lexer) scanComment(r rune) string {
 	panic("todo")
 }
 
@@ -169,6 +170,134 @@ func (self *Lexer) peek() rune {
 	}
 
 	return self.r
+}
+
+func (self *Lexer) scanSymbol(r rune) int {
+	switch r {
+	case '\n':
+		self.insertSemi = false
+		return tokens.Semicolon
+	case ':':
+		return tokens.Colon
+	case '.':
+		if self.accept('.') {
+			if self.accept('.') {
+				return tokens.Ellipsis
+			}
+			self.errorf("two dots, expecting one more")
+			return tokens.Illegal
+		} else {
+			return tokens.Period
+		}
+	case ',':
+		return tokens.Comma
+	case ';':
+		return tokens.Semicolon
+	case '(':
+		return tokens.Lparen
+	case ')':
+		return tokens.Rparen
+	case '[':
+		return tokens.Lbrack
+	case ']':
+		return tokens.Rbrack
+	case '{':
+		return tokens.Lbrace
+	case '}':
+		return tokens.Rbrack
+	case '+':
+		if self.accept('+') {
+			return tokens.Inc
+		} else if self.accept('=') {
+			return tokens.AddAssign
+		} else {
+			return tokens.Add
+		}
+	case '-':
+		if self.accept('-') {
+			return tokens.Dec
+		} else if self.accept('=') {
+			return tokens.SubAssign
+		}
+		return tokens.Sub
+	case '*':
+		if self.accept('=') {
+			return tokens.MulAssign
+		}
+		return tokens.Mul
+	case '/':
+		if self.accept('=') {
+			return tokens.DivAssign
+		}
+		return tokens.Div
+	case '%':
+		if self.accept('=') {
+			return tokens.ModAssign
+		}
+		return tokens.Mod
+	case '^':
+		if self.accept('=') {
+			return tokens.XorAssign
+		}
+		return tokens.Xor
+	case '<':
+		if self.accept('=') {
+			return tokens.Leq
+		} else if self.accept('<') {
+			if self.accept('=') {
+				return tokens.ShiftLeftAssign
+			}
+			return tokens.ShiftLeft
+		}
+		return tokens.Less
+	case '>':
+		if self.accept('=') {
+			return tokens.Geq
+		} else if self.accept('>') {
+			if self.accept('=') {
+				return tokens.ShiftRightAssign
+			}
+			return tokens.ShiftRight
+		}
+		return tokens.Greater
+	case '=':
+		if self.accept('=') {
+			return tokens.Eq
+		}
+		return tokens.Assign
+	case '!':
+		if self.accept('=') {
+			return tokens.Neq
+		}
+		return tokens.Not
+	case '&':
+		if self.accept('^') {
+			if self.accept('=') {
+				return tokens.NandAssign
+			} else {
+				return tokens.Nand
+			}
+		}
+		if self.accept('=') {
+			return tokens.AndAssign
+		} else if self.accept('&') {
+			return tokens.Land
+		}
+
+		return tokens.And
+	case '|':
+		if self.accept('=') {
+			return tokens.OrAssign
+		} else if self.accept('|') {
+			return tokens.Lor
+		}
+	}
+
+	if !self.illegal {
+		self.illegal = true
+		self.errorf("illegal character")
+	}
+	return tokens.Illegal
 }
 
 func (self *Lexer) Scan() (t int, p uint32, lit string) {
@@ -182,8 +311,12 @@ func (self *Lexer) Scan() (t int, p uint32, lit string) {
 		// handle keywords
 		return tokens.Ident, p, lit
 	} else if isDigit(r) {
-		lit, t = self.scanNumber()
+		lit, t = self.scanNumber(false)
 		return t, p, lit
+	} else if r == '\'' {
+		self.insertSemi = true
+		lit = self.scanChar()
+		return tokens.Char, p, lit
 	} else if self.eof && self.e == nil {
 		if self.insertSemi {
 			self.insertSemi = false
@@ -194,22 +327,18 @@ func (self *Lexer) Scan() (t int, p uint32, lit string) {
 
 	self.accept(r)
 
-	switch r {
-	case '\n':
-		self.insertSemi = false
-		return tokens.Semicolon, p, "\n"
-	/*
-		case '"':
-			self.insertSemi = true // why?
-			lit = self.scanString()
-			return tokens.String, p, lit
-	*/
-	case '\'':
-		self.insertSemi = true
-		lit = self.scanChar()
-		return tokens.Char, p, lit
-
+	if r == '.' && isDigit(self.peek()) {
+		lit, t = self.scanNumber(true)
+		return t, p, lit
+	} else if r == '/' {
+		r2 := self.peek()
+		if r2 == '/' || r2 == '*' {
+			self.accept(r2)
+			lit = self.scanComment(r2)
+			return tokens.Comment, p, lit
+		}
 	}
 
-	panic("todo")
+	t = self.scanSymbol(r)
+	return t, p, ""
 }
