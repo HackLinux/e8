@@ -18,6 +18,7 @@ func New() *Parser {
 }
 
 func (self *Parser) Parse(id uint8, in io.Reader) (*ast.Ast, error) {
+
 	panic("todo")
 }
 
