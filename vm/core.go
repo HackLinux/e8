@@ -56,7 +56,7 @@ func New() *Core {
 	return ret
 }
 
-// Run one instruction.
+// Executes one instruction.
 func (self *Core) Step() {
 	self.sys.ClearError()
 
@@ -81,8 +81,8 @@ func (self *Core) Step() {
 	self.sys.FlushStdout(self.Stdout)
 }
 
-// Run at most n instructions. Returns the number of instructions actually
-// executed. A core may return early when the core pauses.
+// Executes at most n instructions. Returns the number of instructions actually
+// executed. A core may return early when the core halts.
 func (self *Core) Run(n int) int {
 	i := 0
 	for i < n {
