@@ -15,7 +15,6 @@ type Lexer struct {
 }
 
 func New(in io.Reader) *Lexer {
-	println("----")
 	ret := new(Lexer)
 	ret.scanner = newScanner(in)
 	ret.es = make([]error, 0, 1000)
@@ -254,7 +253,6 @@ func (self *Lexer) Scan() (t int, p uint32, lit string) {
 	self.skipWhites()
 
 	r := self.peek()
-	println(r, string(r))
 	p = self.pos()
 
 	if isLetter(r) {
@@ -291,6 +289,5 @@ func (self *Lexer) Scan() (t int, p uint32, lit string) {
 	}
 
 	t = self.scanSymbol(r)
-	self.accept()
-	return t, p, ""
+	return t, p, self.accept()
 }

@@ -41,7 +41,7 @@ func TestLexer(t *testing.T) {
 	}
 
 	m := func(t int, lit string) *r { return &r{t, lit} }
-	n := func(t int) *r { return &r{t, ""} }
+	n := func(t int) *r { return &r{t, TokenStr(t)} }
 	id := func(s string) *r { return &r{Ident, s} }
 	// eof := n(EOF)
 	// sc := n(Semicolon)
@@ -53,7 +53,7 @@ func TestLexer(t *testing.T) {
 	o("=", n(Assign))
 	o("==", n(Eq))
 	o("3.24 = 3", m(Float, "3.24"), n(Assign), m(Int, "3"))
-	o("func", id("func"))
+	o("fun", id("fun"))
 	o("0X3 >= 0334", m(Int, "0X3"), n(Geq), m(Int, "0334"))
 	o("3.e5", m(Float, "3.e5"))
 	o("3e5", m(Float, "3e5"))
@@ -61,8 +61,13 @@ func TestLexer(t *testing.T) {
 	o("3D5", m(Illegal, "3D5"))
 	o(".7e5", m(Float, ".7e5"))
 	o("a3", id("a3"))
-	o("_A3.come()",
-		id("_A3"), n(Dot),
+	o("_A3.come()", id("_A3"), n(Dot),
 		id("come"), n(Lparen), n(Rparen),
 	)
+	o("A3(); B3(); C3();",
+		id("A3"), n(Lparen), n(Rparen), n(Semicolon),
+		id("B3"), n(Lparen), n(Rparen), n(Semicolon),
+		id("C3"), n(Lparen), n(Rparen), n(Semicolon),
+	)
+	o("$", m(Illegal, "$"))
 }
