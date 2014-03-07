@@ -41,7 +41,7 @@ func TestLexer(t *testing.T) {
 
 		return lex
 	}
-	o := func(s string, exp ... *r) {
+	o := func(s string, exp ...*r) {
 		lex := _o(s, exp...)
 		es := lex.LexErrors()
 		if len(es) != 0 {

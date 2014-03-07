@@ -11,9 +11,10 @@ import (
 
 	"github.com/h8liu/e8/vm/inst"
 	"github.com/h8liu/e8/vm/mem"
+	"github.com/h8liu/e8/vm/regs"
 )
 
-type registers struct{ *Registers }
+type registers struct{ *regs.Registers }
 type memory struct{ *mem.Memory }
 
 /*
@@ -37,7 +38,7 @@ var _ inst.Core = new(Core)
 // Creates a core without system page. Output to os.Stdout, no debug logging.
 func NewCore() *Core {
 	ret := new(Core)
-	ret.Registers = NewRegisters()
+	ret.Registers = regs.New(inst.Nreg, inst.Nreg)
 	ret.Memory = mem.New()
 	ret.Stdout = os.Stdout
 

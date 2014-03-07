@@ -1,4 +1,4 @@
-package vm
+package regs
 
 import (
 	"fmt"
@@ -18,11 +18,11 @@ type Registers struct {
 }
 
 // Create new register containers.
-func NewRegisters() *Registers {
+func New(nint, nfloat int) *Registers {
 	ret := new(Registers)
 
-	ret.ints = make([]uint32, inst.Nreg)
-	ret.floats = make([]float64, inst.Nreg)
+	ret.ints = make([]uint32, nint)
+	ret.floats = make([]float64, nfloat)
 
 	return ret
 }
