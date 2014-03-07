@@ -17,6 +17,23 @@ func isDigit(r rune) bool {
 	return '0' <= r && r <= '9'
 }
 
+func isOctDigit(r rune) bool {
+	return '0' <= r && r <= '7'
+}
+
+func isHexDigit(r rune) bool {
+	if isDigit(r) {
+		return true
+	}
+	if 'A' <= r && r <= 'F' {
+		return true
+	}
+	if 'a' <= r && r <= 'f' {
+		return true
+	}
+	return false
+}
+
 func isWhite(r rune) bool {
 	return r == ' ' || r == '\r' || r == '\t'
 }
