@@ -65,7 +65,7 @@ const (
 	Lbrack // [
 	Lbrace // {
 	Comma  // ,
-	Period // .
+	Dot    // .
 
 	Rparen    // )
 	Rbrack    // ]

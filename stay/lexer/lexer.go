@@ -15,6 +15,7 @@ type Lexer struct {
 }
 
 func New(in io.Reader) *Lexer {
+	println("----")
 	ret := new(Lexer)
 	ret.scanner = newScanner(in)
 	ret.es = make([]error, 0, 1000)
@@ -59,6 +60,8 @@ func (self *Lexer) _scanNumber(dotLed bool) (lit string, t int) {
 			return self.accept(), tokens.Int
 		}
 
+		self.scanDigits()
+
 		if self.scanAny("eE") {
 			self.scanExpo()
 			if self.scanIdent() != 0 {
@@ -73,10 +76,12 @@ func (self *Lexer) _scanNumber(dotLed bool) (lit string, t int) {
 			}
 			return self.accept(), tokens.Int
 		}
-	}
 
-	if self.scanDigits() == 0 {
-		return self.accept(), tokens.Illegal
+		self.scanDigits()
+	} else {
+		if self.scanDigits() == 0 {
+			return self.accept(), tokens.Illegal
+		}
 	}
 
 	if self.scanAny("eE") {
@@ -121,7 +126,7 @@ func (self *Lexer) scanSymbol(r rune) int {
 			self.failf("two dots, expecting one more")
 			return tokens.Illegal
 		} else {
-			return tokens.Period
+			return tokens.Dot
 		}
 	case ',':
 		return tokens.Comma
@@ -234,10 +239,22 @@ func (self *Lexer) scanSymbol(r rune) int {
 	return tokens.Illegal
 }
 
+func (self *Lexer) Closed() bool {
+	return !self.insertSemi && self.closed
+}
+
+func (self *Lexer) Err() error {
+	if self.err == io.EOF {
+		return nil
+	}
+	return self.err
+}
+
 func (self *Lexer) Scan() (t int, p uint32, lit string) {
 	self.skipWhites()
 
 	r := self.peek()
+	println(r, string(r))
 	p = self.pos()
 
 	if isLetter(r) {
@@ -274,5 +291,6 @@ func (self *Lexer) Scan() (t int, p uint32, lit string) {
 	}
 
 	t = self.scanSymbol(r)
-	return t, p, self.accept()
+	self.accept()
+	return t, p, ""
 }

@@ -29,6 +29,8 @@ func newScanner(in io.Reader) *scanner {
 	ret.tail = newScanPos()
 	ret.buf = new(bytes.Buffer)
 
+	ret.next() // get ready for reading
+
 	return ret
 }
 
@@ -55,6 +57,8 @@ func (self *scanner) next() rune {
 		return rune(-1)
 	}
 
+	self.buf.WriteRune(self.r)
+
 	var rsize int
 	var e error
 	self.r, rsize, e = self.reader.ReadRune()
@@ -72,10 +76,6 @@ func (self *scanner) next() rune {
 		if self.head.lineOffset >= pos.MaxRunePerLine {
 			self.panicf("line too long")
 		}
-	}
-
-	if !self.closed {
-		self.buf.WriteRune(self.r)
 	}
 
 	return self.r
@@ -131,8 +131,8 @@ func (self *scanner) scanIdent() int {
 }
 
 func (self *scanner) scanAny(s string) bool {
-	for r := range s {
-		if rune(r) == self.r {
+	for _, r := range s {
+		if r == self.r {
 			self.scan(rune(r))
 			return true
 		}

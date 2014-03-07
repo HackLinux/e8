@@ -1,5 +1,9 @@
 package tokens
 
+import (
+	"fmt"
+)
+
 var tokenStr = map[int]string{
 	Illegal: "Illegal",
 	EOF:     "EOF",
@@ -56,7 +60,7 @@ var tokenStr = map[int]string{
 	Lbrack: "[",
 	Lbrace: "{",
 	Comma:  ",",
-	Period: ".",
+	Dot:    ".",
 
 	Rparen:    ")",
 	Rbrack:    "]",
@@ -81,4 +85,11 @@ var tokenStr = map[int]string{
 	Switch:      "switch",
 	Type:        "type",
 	Var:         "var",
+}
+
+func TokenStr(t int) string {
+	if s, found := tokenStr[t]; found {
+		return s
+	}
+	return fmt.Sprintf("<na-%d>", t)
 }
