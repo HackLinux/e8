@@ -16,7 +16,7 @@ type Core interface {
 }
 
 const (
-	Nreg  = 32
-	Nfreg = Nreg
-	RegPC = Nreg - 1
+	NintReg  = 32
+	NfloatReg = NintReg
+	RegPC = NintReg - 1
 )

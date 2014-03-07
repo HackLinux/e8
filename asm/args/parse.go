@@ -41,7 +41,7 @@ func parseReg(s string) (uint8, bool) {
 	if n < 0 {
 		return 0, false
 	}
-	if n >= inst.Nreg {
+	if n >= inst.NintReg {
 		return 0, false
 	}
 
