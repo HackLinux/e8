@@ -21,7 +21,6 @@ type Core interface {
 }
 
 const (
-	NintReg   = 32          // nunber of integer registers
-	NfloatReg = NintReg     // number of floating point registers
-	RegPC     = NintReg - 1 // the index of program counter
+	Nreg  = 32       // nunber of integer registers
+	RegPC = Nreg - 1 // the index of program counter
 )

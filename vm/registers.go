@@ -21,8 +21,8 @@ type Registers struct {
 func NewRegisters() *Registers {
 	ret := new(Registers)
 
-	ret.ints = make([]uint32, inst.NintReg)
-	ret.floats = make([]float64, inst.NfloatReg)
+	ret.ints = make([]uint32, inst.Nreg)
+	ret.floats = make([]float64, inst.Nreg)
 
 	return ret
 }
@@ -60,7 +60,7 @@ func (self *Registers) IncPC() uint32 {
 // Print the register values to an output stream. Useful for debugging.
 // Currently only prints integer registers.
 func (self *Registers) PrintTo(w io.Writer) {
-	for i := uint8(0); i < inst.NintReg; i++ {
+	for i := uint8(0); i < inst.Nreg; i++ {
 		fmt.Fprintf(w, "$%02d:%08x", i, self.ReadReg(i))
 		if (i+1)%4 == 0 {
 			fmt.Fprintln(w)
