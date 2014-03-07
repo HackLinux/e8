@@ -58,6 +58,7 @@ func TestLexer(t *testing.T) {
 	o("3.e5", m(Float, "3.e5"))
 	o("3e5", m(Float, "3e5"))
 	o("3E5", m(Float, "3E5"))
+	o("3D5", m(Illegal, "3D5"))
 	o(".7e5", m(Float, ".7e5"))
 	o("a3", id("a3"))
 	o("_A3.come()",
