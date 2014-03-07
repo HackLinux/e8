@@ -1,3 +1,7 @@
+/*
+Package vm maintains the basic CPU unit needed for instruction execution.
+It defines the interface for a VM core, and also implements the registers in it.
+*/
 package vm
 
 import (
@@ -93,14 +97,27 @@ func (self *Core) Run(n int) int {
 	return i
 }
 
-// Set the program counter.
+// Set the program counter. Note the last 2 bits are bind to 0, so
+// the program counter will be automatically aligned.
 func (self *Core) SetPC(pc uint32) {
 	self.Registers.WriteReg(inst.RegPC, pc)
 }
 
+// If the core halted.
+// Currently, a core can halt gracefully by writing a byte to address 0x4.
+// Or it will halt because of writing to address 0x0 to 0x3, which will
+// cause the core halts because of an address error.
 func (self *Core) Halted() bool     { return self.sys.Halted() }
+
+// If the core halted because of an address error. 
+// Address error currently only occurs when visiting the word at address 0.
 func (self *Core) AddrError() bool  { return self.sys.AddrError }
+
+// The value when the core halts. This the byte written to address 0x4.
 func (self *Core) HaltValue() uint8 { return self.sys.HaltValue }
-func (self *Core) RIP() bool {
+
+// Returns if the core rests in peace, which means it halt with a halt value of 0
+// (writing a byte 0 to 0x4).
+unc (self *Core) RIP() bool {
 	return self.Halted() && self.HaltValue() == 0 && !self.AddrError()
 }
