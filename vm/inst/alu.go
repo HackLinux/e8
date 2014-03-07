@@ -1,7 +1,8 @@
 package inst
 
-// Struct ALU carries the actual instruction.
-// Its unexported fields contains buffer for decomposing an instruction.
+// ALU is an instruction execution engine. It fulfills the definition of e8
+// RISC definition.  Its unexported fields contains buffer for decomposing
+// an instruction.
 type ALU struct {
 	fields *fields
 }
