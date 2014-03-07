@@ -70,8 +70,7 @@ func TestLexer(t *testing.T) {
 		id("C3"), n(Lparen), n(Rparen), n(Semicolon),
 	)
 	o("$", m(Illegal, "$"))
-	/*
-		o("//", m(Comment, "//"))
-		o("// something", m(Comment, "// something"))
-	*/
+	o("//", m(Comment, "//"))
+	o("// something", m(Comment, "// something"))
+	o("   /* some */ ", m(Comment, "/* some */"))
 }

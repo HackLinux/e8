@@ -304,8 +304,8 @@ func (self *Lexer) Scan() (t int, p uint32, lit string) {
 	} else if r == '/' {
 		r2 := self.peek()
 		if r2 == '/' || r2 == '*' {
-			self.scanComment()
-			return tokens.Comment, p, self.accept()
+			s := self.scanComment()
+			return tokens.Comment, p, s
 		}
 	}
 
