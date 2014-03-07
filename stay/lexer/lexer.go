@@ -19,6 +19,7 @@ type Lexer struct {
 	illegal bool
 	eof     bool  // end of file reached, or some fatal error occured
 	e       error // if any error
+	es      []error
 
 	insertSemi bool // if treat end line as whitespace
 }
@@ -27,6 +28,7 @@ func New(in io.Reader) *Lexer {
 	ret := new(Lexer)
 	ret.reader = bufio.NewReader(in)
 	ret.lineNo = 1
+	ret.es = make([]error, 0, 1000)
 
 	return ret
 }
@@ -39,12 +41,24 @@ func (self *Lexer) end(e error) rune {
 	return rune(0)
 }
 
+func (self *Lexer) report(e error) {
+	self.es = append(self.es, e)
+}
+
 func (self *Lexer) pos() uint32 {
 	return uint32(self.lineNo)<<8 + uint32(self.lineOff)
 }
 
 func (self *Lexer) errorf(f string, args ...interface{}) error {
 	return &Error{self.pos(), fmt.Errorf(f, args...)}
+}
+
+func (self *Lexer) panicf(f string, args ...interface{}) rune {
+	return self.end(self.errorf(f, args...))
+}
+
+func (self *Lexer) failf(f string, args ...interface{}) {
+	self.report(errorf(f, args...))
 }
 
 func (self *Lexer) next() rune {
@@ -54,12 +68,12 @@ func (self *Lexer) next() rune {
 
 	self.lineOff += self.rsize
 	if self.lineOff > pos.MaxCharPerLine {
-		return self.end(self.errorf("line too long"))
+		return self.panicf("line too long")
 	}
 
 	if self.r == '\n' {
 		if self.lineNo >= pos.MaxLinePerFile {
-			return self.end(self.errorf("too many lines in a file"))
+			return self.panicf("too many lines in a file")
 		}
 		self.lineNo++
 		self.lineOff = 0
@@ -152,8 +166,77 @@ func (self *Lexer) scanIdent() string {
 	return ret
 }
 
+func (self *Lexer) scanWildDigits() (lit string, max int) {
+	for {
+		r := self.peek()
+		v := digitVal(r)
+		if v < 0 {
+			return
+		}
+		lit += string(r)
+		self.accept(r)
+		if v > max {
+			max = v
+		}
+	}
+}
+
+func (self *Lexer) scanDigits() string {
+	ret := ""
+	for {
+		r := self.peek()
+		if !isDigit(r) {
+			break
+		}
+		ret += string(r)
+		self.accept(r)
+	}
+	return ret
+}
+
 func (self *Lexer) scanNumber(dotLed bool) (lit string, t int) {
-	panic("todo")
+	ret := ""
+
+	if !dotLed {
+		if self.accept('0') {
+			lit += "0"
+			r := self.peek()
+			if r == 'x' || r == 'X' {
+				lit += string(r)
+				self.accept(r)
+
+				s, m := self.scanWildDigits()
+				lit += s
+				if m >= 16 {
+					self.failf("invalid hex number")
+					return lit, tokens.Illegal
+				}
+			} else {
+				s, m := self.scanWildDigits()
+				lit += s
+				if m >= 8 {
+					self.failf("invalid octal number")
+					return lit, tokens.Illegal
+				}
+			}
+
+			return lit, tokens.Int
+		}
+
+		s, m := self.scanDigits()
+		lit += s
+		if !self.accept('.') {
+			return lit, tokens.Int
+		}
+	}
+
+	lit += "." + self.scanDigits()
+	if self.scanAny("eE") {
+		self.scanAny("-+")
+		self.scanDigits()
+	}
+
+	return self.accept(), tokens.Float
 }
 
 func (self *Lexer) scanChar() string {
@@ -184,7 +267,7 @@ func (self *Lexer) scanSymbol(r rune) int {
 			if self.accept('.') {
 				return tokens.Ellipsis
 			}
-			self.errorf("two dots, expecting one more")
+			self.failf("two dots, expecting one more")
 			return tokens.Illegal
 		} else {
 			return tokens.Period
