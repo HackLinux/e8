@@ -8,7 +8,7 @@ import (
 
 type Lexer struct {
 	*scanner
-	es []error
+	lexErrors []*Error
 
 	illegal    bool // illegal encountered
 	insertSemi bool // if treat end line as whitespace
@@ -17,16 +17,16 @@ type Lexer struct {
 func New(in io.Reader) *Lexer {
 	ret := new(Lexer)
 	ret.scanner = newScanner(in)
-	ret.es = make([]error, 0, 1000)
+	ret.lexErrors = make([]*Error, 0, 1000)
 
 	return ret
 }
 
 func (self *Lexer) failf(f string, args ...interface{}) {
-	self.es = append(self.es, self.errorf(f, args...))
+	self.lexErrors = append(self.lexErrors, self.errorf(f, args...))
 }
 
-func (self *Lexer) LexErrors() []error { return self.es }
+func (self *Lexer) LexErrors() []*Error { return self.lexErrors }
 
 const whites = " \t\r"
 

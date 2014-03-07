@@ -1,0 +1,2 @@
+tok:
+	staytok *.st

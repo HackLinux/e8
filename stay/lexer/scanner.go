@@ -34,7 +34,7 @@ func newScanner(in io.Reader) *scanner {
 	return ret
 }
 
-func (self *scanner) errorf(f string, args ...interface{}) error {
+func (self *scanner) errorf(f string, args ...interface{}) *Error {
 	return &Error{self.pos(), fmt.Errorf(f, args...)}
 }
 

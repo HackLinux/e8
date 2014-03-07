@@ -1,5 +1,4 @@
-package main
-
+// prints hello
 func main() {
 	print('h')
 	print('e')
