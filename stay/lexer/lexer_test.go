@@ -98,6 +98,9 @@ func TestLexer(t *testing.T) {
 	oe(`  ' \''`, m(Char, `' \''`), sc)
 	o(`'\n'`, m(Char, `'\n'`), sc)
 	o(`'\032'`, m(Char, `'\032'`), sc)
+	o(`'\x3a'`, m(Char, `'\x3a'`), sc)
+	o(`'\xa3'`, m(Char, `'\xa3'`), sc)
+	oe(`'\ax3'`, m(Char, `'\ax3'`), sc)
 	oe(`'\32a'`, m(Char, `'\32a'`), sc)
 	oe(`'''`, m(Char, `''`), m(Char, `'`), sc)
 }
