@@ -57,7 +57,8 @@ func (self *Registers) IncPC() uint32 {
 	return ret
 }
 
-// Print the (integer) register values to an output stream. Useful for debugging.
+// Print the register values to an output stream. Useful for debugging.
+// Currently only prints integer registers.
 func (self *Registers) PrintTo(w io.Writer) {
 	for i := uint8(0); i < inst.Nreg; i++ {
 		fmt.Fprintf(w, "$%02d:%08x", i, self.ReadReg(i))
