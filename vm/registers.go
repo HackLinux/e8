@@ -28,7 +28,7 @@ func NewRegisters() *Registers {
 }
 
 // Read integer register a
-func (self *Registers) ReadReg(a uint8) uint32   { return self.regs[a] }
+func (self *Registers) ReadReg(a uint8) uint32 { return self.regs[a] }
 
 // Read floating point register a
 func (self *Registers) ReadFreg(a uint8) float64 { return self.fregs[a] }
