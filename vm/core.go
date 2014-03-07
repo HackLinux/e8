@@ -12,12 +12,17 @@ import (
 type registers struct{ *Registers }
 type memory struct{ *mem.Memory }
 
+/*
+A VM core, consists a set of 32-bit address memory, and a set of registers.  It
+has two anonymous (but private) members of *Registers and *mem.Memory, so it
+"inherits" all methods from *Registers and *mem.Memory 
+*/
 type Core struct {
 	registers
 	memory
 
-	Stdout io.Writer
-	Log    io.Writer
+	Stdout io.Writer // standard output
+	Log    io.Writer // debug logging 
 
 	sys *SysPage
 	alu *inst.ALU
@@ -25,6 +30,7 @@ type Core struct {
 
 var _ inst.Core = new(Core)
 
+// Creates a core without system page. Output to os.Stdout, no debug logging.
 func NewCore() *Core {
 	ret := new(Core)
 	ret.Registers = NewRegisters()
@@ -36,6 +42,7 @@ func NewCore() *Core {
 	return ret
 }
 
+// Same as NewCore(), but with a system page.
 func New() *Core {
 	ret := NewCore()
 
@@ -45,6 +52,7 @@ func New() *Core {
 	return ret
 }
 
+// Run one instruction.
 func (self *Core) Step() {
 	self.sys.ClearError()
 
@@ -69,6 +77,8 @@ func (self *Core) Step() {
 	self.sys.FlushStdout(self.Stdout)
 }
 
+// Run at most n instructions. Returns the number of instructions actually
+// executed. A core may return early when the core pauses.
 func (self *Core) Run(n int) int {
 	i := 0
 	for i < n {
@@ -83,6 +93,7 @@ func (self *Core) Run(n int) int {
 	return i
 }
 
+// Set the program counter.
 func (self *Core) SetPC(pc uint32) {
 	self.Registers.WriteReg(inst.RegPC, pc)
 }
