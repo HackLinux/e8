@@ -135,7 +135,7 @@ func (self *Lexer) scanEscape(q rune) {
 func (self *Lexer) scanChar() string {
 	n := 0
 	for !self.scan('\'') {
-		if self.peek() == '\n' {
+		if self.peek() == '\n' || self.closed {
 			self.failf("char not terminated")
 			break
 		}
@@ -373,7 +373,7 @@ func (self *Lexer) scanToken() (t int, p uint32, lit string) {
 	} else if isDigit(r) {
 		lit, t = self.scanNumber(false)
 		return t, p, lit
-	} else if r == '\'' {
+	} else if self.scan('\'') {
 		self.insertSemi = true
 		lit = self.scanChar()
 		return tokens.Char, p, lit
