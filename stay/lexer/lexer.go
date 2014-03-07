@@ -17,6 +17,7 @@ type Lexer struct {
 	lineNo  int
 	lineOff int
 	illegal bool
+	literal string
 	eof     bool  // end of file reached, or some fatal error occured
 	e       error // if any error
 	es      []error
@@ -38,15 +39,16 @@ func (self *Lexer) end(e error) rune {
 	self.rsize = 0
 	self.eof = true
 	self.e = e
+	self.literal = ""
 	return rune(0)
-}
-
-func (self *Lexer) report(e error) {
-	self.es = append(self.es, e)
 }
 
 func (self *Lexer) pos() uint32 {
 	return uint32(self.lineNo)<<8 + uint32(self.lineOff)
+}
+
+func (self *Lexer) report(e error) {
+	self.es = append(self.es, e)
 }
 
 func (self *Lexer) errorf(f string, args ...interface{}) error {
@@ -91,7 +93,13 @@ func (self *Lexer) next() rune {
 	return self.r
 }
 
-func (self *Lexer) accept(r rune) bool {
+func (self *Lexer) accept() string {
+	ret := self.literal
+	self.literal = ""
+	return ret
+}
+
+func (self *Lexer) scan(r rune) bool {
 	if self.eof {
 		return false
 	}
