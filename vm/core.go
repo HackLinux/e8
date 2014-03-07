@@ -59,7 +59,7 @@ func New() *Core {
 
 // Executes one instruction.
 func (self *Core) Step() {
-	self.sys.ClearError()
+	self.sys.Reset()
 
 	pc := self.IncPC()
 	u32 := self.Memory.ReadU32(pc)
