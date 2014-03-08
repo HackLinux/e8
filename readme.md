@@ -43,19 +43,21 @@ See more on my [Motivation](https://github.com/h8liu/e8/wiki/Motivation) page.
   simple instructions set that `e8` uses only has less than 40 instructions,
   which means `e8` CPU will be very easy to port. In fact, I have already
   ported the core to Javascript: [`e8js`](https://github.com/h8liu/e8js).
-- System Page (wiki page coming soon): all IOs in `e8` will be memory mapped,
-  so there is no need for special instructions like `in` and `out`. Basic
-  system functionality will be mapped to Page 0.  Future fancy hardware will be
-  mapped to the following small-id pages in the address space.
-- Multi-core and ring protection (future plan): `e8` will not have protection
-  rings (e.g. kernel mode and user mode). Instead, it will use an approach
-  similar to ARM's TrustZone, where there will be a previledged VM that can
-  manipulate other child VMs' execution state and page tables.
-- Interrupts (future plan): Inside a VM, there will be events, but there will
-  be no interrupt handlers. A VM can suspend itself and wake up on an interrupt
+- [System Page](https://github.com/h8liu/e8/wiki/Page-0:-System-page): all IOs
+  in `e8` will be memory mapped, so there is no need for special instructions
+  like `in` and `out`. Basic system functionality will be mapped to Page 0.
+  Future fancy hardware will be mapped to the following small-id pages in the
+  address space.
+- [OS-related features](https://github.com/h8liu/e8/wiki/Interrupts-and-Operating-System): 
+  `e8` will not have protection rings (e.g. kernel mode and user mode).
+  Instead, it will use an approach similar to ARM's TrustZone, where there will
+  be a previledged VM that can manipulate other child VMs' execution state and
+  page tables. Inside a VM, there will be events, but there will be no
+  interrupt handlers. A VM can suspend itself and wake up on an interrupt
   event, so a VM can be event driven, but code execution will not be forced to
-  suspend and continue at another program counter. A previledged VM, however,
-  can simulate interrupt handling on its child VMs, if it is desired to.
+  suspend and continue with another program counter value. A previledged VM,
+  however, can simulate interrupt handling on its child VMs, if it is desired
+  to.
 - Language support: The project (simulator, assembler, compiler) is written in
   golang, and I plan to implement a subset of golang that compiles to `e8`, the
   assembler and the compiler will be ported to that subset language later in
