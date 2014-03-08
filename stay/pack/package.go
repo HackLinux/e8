@@ -35,9 +35,10 @@ func (self *Package) Add(name string, in io.Reader) error {
 		return fmt.Errorf("too many files in a package")
 	}
 
-	id := uint8(nfiles)
+	fid := uint8(nfiles)
 
-	tree, e := self.parser.Parse(id, in)
+	self.parser.PosOffset = uint32(fid) << 32
+	tree, e := self.parser.Parse(in)
 	if e != nil {
 		return e // io error on parsing
 	}

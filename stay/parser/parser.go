@@ -7,36 +7,59 @@ import (
 
 	"github.com/h8liu/e8/stay/ast"
 	"github.com/h8liu/e8/stay/lexer"
+	"github.com/h8liu/e8/stay/reporters"
 	"github.com/h8liu/e8/stay/tokens"
 )
 
 type Parser struct {
+	// the error reporter on the entire parsing process
+	ErrReporter reporters.ErrReporter 
+
+	// token position will all be offset by this value on parsing
+	PosOffset   uint32 
 }
 
 func New() *Parser {
 	ret := new(Parser)
+	ret.ErrReporter = reporters.Simple
 
 	return ret
 }
 
-func (self *Parser) Parse(id uint8, in io.Reader) (*ast.Ast, error) {
+func (self *Parser) Parse(in io.Reader) (*ast.Ast, error) {
 	lex := lexer.New(in)
+	pipe := make(chan *Token, 1)
 
-	for {
-		to, _, _ := lex.Scan()
-		if to == tokens.EOF {
-			break
+	go func() {
+		for {
+			tok, pos, lit := lex.Scan()
+			if tok == tokens.EOF {
+				break
+			}
+			pos += self.PosOffset
+			pipe <- &Token{tok, pos, lit}
 		}
+		close(pipe)
+	}()
+
+	for _ = range pipe {
+		// TODO: create the ast here
 	}
 
+	// wrap up the errors
+
+	// fatal IO error on reading
 	e := lex.ScanErr()
 	if e != nil {
 		return nil, e
 	}
 
+	// lexing error on parsing tokens
 	if lex.FirstFail != nil {
 		return nil, lex.FirstFail
 	}
+
+	// TODO: parsing error on creating ast
 
 	return nil, nil
 }
@@ -48,7 +71,9 @@ func ParseFile(path string) (*ast.Ast, error) {
 	}
 
 	parser := New()
-	ret, e := parser.Parse(0, fin)
+	parser.ErrReporter = reporters.NewPrefix(path)
+
+	ret, e := parser.Parse(fin)
 	if e != nil {
 		return nil, e
 	}
@@ -63,5 +88,5 @@ func ParseFile(path string) (*ast.Ast, error) {
 
 func ParseStr(s string) (*ast.Ast, error) {
 	p := New()
-	return p.Parse(0, strings.NewReader(s))
+	return p.Parse(strings.NewReader(s))
 }

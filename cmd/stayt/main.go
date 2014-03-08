@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/h8liu/e8/stay/lexer"
+	"github.com/h8liu/e8/stay/reporters"
 	"github.com/h8liu/e8/stay/tokens"
 )
 
@@ -20,16 +21,6 @@ func noError(e error) {
 func posString(p uint32) string {
 	line, off := p>>8, p&0xff
 	return fmt.Sprintf("%d:%d", line, off)
-}
-
-type FileErrReporter struct {
-	filename string
-}
-
-func (self *FileErrReporter) Report(lineno uint16, off uint8, e error) {
-	fmt.Fprintf(os.Stderr, "%s:%d:%d ERR: %v\n",
-		self.filename, lineno, off, e,
-	)
 }
 
 func main() {
@@ -46,7 +37,7 @@ func main() {
 	noError(e)
 
 	lex := lexer.New(fin)
-	lex.SetErrorReporter(&FileErrReporter{path})
+	lex.SetErrorReporter(reporters.NewPrefix(path))
 
 	for {
 		to, pos, lit := lex.Scan()

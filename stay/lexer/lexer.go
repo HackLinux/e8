@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/h8liu/e8/stay/reporters"
 	"github.com/h8liu/e8/stay/tokens"
 )
 
@@ -24,7 +25,7 @@ func New(in io.Reader) *Lexer {
 }
 
 // Use a particular error reporter
-func (self *Lexer) SetErrorReporter(reporter ErrReporter) {
+func (self *Lexer) SetErrorReporter(reporter reporters.ErrReporter) {
 	self.scanner.errReporter = reporter
 }
 

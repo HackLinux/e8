@@ -7,11 +7,12 @@ import (
 	"io"
 
 	"github.com/h8liu/e8/stay/pos"
+	"github.com/h8liu/e8/stay/reporters"
 )
 
 type scanner struct {
 	reader      *bufio.Reader
-	errReporter ErrReporter
+	errReporter reporters.ErrReporter
 
 	r rune
 
@@ -29,7 +30,7 @@ func newScanner(in io.Reader) *scanner {
 	ret.head = newScanPos()
 	ret.tail = newScanPos()
 	ret.buf = new(bytes.Buffer)
-	ret.errReporter = StderrReporter
+	ret.errReporter = reporters.Simple
 
 	ret.next() // get ready for reading
 
