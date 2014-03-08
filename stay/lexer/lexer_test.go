@@ -21,7 +21,10 @@ func TestLexer(t *testing.T) {
 		for lex.Scan() {
 			to, _, lit := lex.Token()
 			if to == EOF {
-				break
+				if i != len(exp) {
+					t.Errorf("lex %q: unexpect EOF %d", i)
+				}
+				continue
 			}
 			if i >= len(exp) || exp[i].t != to || exp[i].lit != lit {
 				t.Errorf("lex %q: #%d: %q(%s)",
