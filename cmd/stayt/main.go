@@ -27,7 +27,7 @@ type FileErrReporter struct {
 }
 
 func (self *FileErrReporter) Report(lineno uint16, off uint8, e error) {
-	fmt.Fprintf(os.Stderr, "%s:%d:%d %v",
+	fmt.Fprintf(os.Stderr, "%s:%d:%d ERR: %v\n",
 		self.filename, lineno, off, e,
 	)
 }

@@ -48,7 +48,9 @@ func (self *scanner) report(e error) {
 }
 
 func (self *scanner) shutdown(e error) {
-	self.report(e)
+	if e != nil {
+		self.report(e)
+	}
 	self.r = rune(-1)
 	self.closed = true
 	self.err = e
@@ -72,7 +74,9 @@ func (self *scanner) next() rune {
 	var rsize int
 	var e error
 	self.r, rsize, e = self.reader.ReadRune()
-	if e != nil {
+	if e == io.EOF {
+		self.shutdown(nil)
+	} else if e != nil {
 		self.shutdown(e)
 	}
 
