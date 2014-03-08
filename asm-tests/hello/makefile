@@ -1,2 +1,2 @@
 run:
-	@e8asm hello.s
+	@e8s hello.s

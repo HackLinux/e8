@@ -1,3 +1,4 @@
+/* Prints a number */
 func printNum(i int) {
 	if i == 0 {
 		print('0')

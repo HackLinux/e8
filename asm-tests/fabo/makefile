@@ -1,2 +1,2 @@
 run:
-	@e8asm fabo.s
+	@e8s fabo.s

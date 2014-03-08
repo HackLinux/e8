@@ -1,2 +1,2 @@
 run:
-	@e8asm printnum.s
+	@e8s printnum.s
