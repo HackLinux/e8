@@ -21,8 +21,8 @@ func TestHelloWorld(t *testing.T) {
 	copy(dpage.Bytes(), []byte(str+"\000"))
 
 	ipage := mem.NewPage()
-	c.Map(mem.PageStart(1), ipage)
-	c.Map(mem.PageStart(2), dpage)
+	c.MapPage(mem.PageStart(1), ipage)
+	c.MapPage(mem.PageStart(2), dpage)
 
 	a := &mem.Align{ipage}
 

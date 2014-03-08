@@ -9,7 +9,7 @@ import (
 	"github.com/h8liu/e8/vm/mem"
 )
 
-func Make(in io.Reader) (*vm.Core, error) {
+func Make(in io.Reader) (*vm.VM, error) {
 	c := vm.New()
 	e := LoadInto(c, in)
 	if e != nil {
@@ -18,7 +18,7 @@ func Make(in io.Reader) (*vm.Core, error) {
 	return c, nil
 }
 
-func Open(path string) (*vm.Core, error) {
+func Open(path string) (*vm.VM, error) {
 	fin, e := os.Open(path)
 	if e != nil {
 		return nil, e
@@ -29,7 +29,7 @@ func Open(path string) (*vm.Core, error) {
 	return Make(fin)
 }
 
-func LoadInto(c *vm.Core, in io.Reader) error {
+func LoadInto(c *vm.VM, in io.Reader) error {
 	header := new(Header)
 	var p mem.Page
 	cur := uint32(0)
@@ -58,9 +58,9 @@ func LoadInto(c *vm.Core, in io.Reader) error {
 
 			if cur == 0 || cur != id {
 				cur = id
-				if !c.Check(addr) {
+				if !c.CheckPage(addr) {
 					p = mem.NewPage()
-					c.Map(addr, p)
+					c.MapPage(addr, p)
 				}
 			}
 

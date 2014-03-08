@@ -116,11 +116,11 @@ func main() {
 	}
 
 	if *regdmp == "-" {
-		core.PrintTo(os.Stdout)
+		core.DumpRegs(os.Stdout)
 	} else if *regdmp != "" {
 		fdmp, e := os.Create(*regdmp)
 		err(e != nil, e)
 		defer fdmp.Close()
-		core.PrintTo(fdmp)
+		core.DumpRegs(fdmp)
 	}
 }
