@@ -39,12 +39,8 @@ func main() {
 	lex := lexer.New(fin)
 	lex.SetErrorReporter(reporters.NewPrefix(path))
 
-	for {
-		to, pos, lit := lex.Scan()
-		if to == tokens.EOF {
-			break
-		}
-
+	for lex.Scan() {
+		to, pos, lit := lex.Token()
 		fmt.Printf("%s:%s: %q - %s\n",
 			path, posString(pos),
 			lit, tokens.TokenStr(to),

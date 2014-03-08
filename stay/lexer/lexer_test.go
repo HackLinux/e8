@@ -18,12 +18,11 @@ func TestLexer(t *testing.T) {
 		lex := lexer.New(strings.NewReader(s))
 		lex.SetErrorReporter(nil) // silence the error reporter
 		i := 0
-		for {
-			to, _, lit := lex.Scan()
+		for lex.Scan() {
+			to, _, lit := lex.Token()
 			if to == EOF {
 				break
 			}
-			// t.Logf("#%d, %s(%s)", i, lit, TokenStr(to))
 			if i >= len(exp) || exp[i].t != to || exp[i].lit != lit {
 				t.Errorf("lex %q: #%d: %q(%s)",
 					s, i, lit, TokenStr(to),

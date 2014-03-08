@@ -8,15 +8,14 @@ import (
 	"github.com/h8liu/e8/stay/ast"
 	"github.com/h8liu/e8/stay/lexer"
 	"github.com/h8liu/e8/stay/reporters"
-	"github.com/h8liu/e8/stay/tokens"
 )
 
 type Parser struct {
 	// the error reporter on the entire parsing process
-	ErrReporter reporters.ErrReporter 
+	ErrReporter reporters.ErrReporter
 
 	// token position will all be offset by this value on parsing
-	PosOffset   uint32 
+	PosOffset uint32
 }
 
 func New() *Parser {
@@ -31,11 +30,8 @@ func (self *Parser) Parse(in io.Reader) (*ast.Ast, error) {
 	pipe := make(chan *Token, 1)
 
 	go func() {
-		for {
-			tok, pos, lit := lex.Scan()
-			if tok == tokens.EOF {
-				break
-			}
+		for lex.Scan() {
+			tok, pos, lit := lex.Token()
 			pos += self.PosOffset
 			pipe <- &Token{tok, pos, lit}
 		}

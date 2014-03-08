@@ -13,6 +13,7 @@ type Lexer struct {
 
 	illegal    bool  // illegal encountered
 	insertSemi bool  // if treat end line as whitespace
+	eof        bool  // end of file returned
 	FirstFail  error // lex error encountered
 }
 
@@ -322,10 +323,6 @@ func (self *Lexer) scanOperator(r rune) int {
 	return tokens.Illegal
 }
 
-func (self *Lexer) Closed() bool {
-	return !self.insertSemi && self.closed
-}
-
 // Scanning error
 func (self *Lexer) ScanErr() error {
 	if self.err == io.EOF {
@@ -358,7 +355,11 @@ var insertSemiTokenMap = func() map[int]bool {
 	return ret
 }()
 
-func (self *Lexer) Scan() (t int, p uint32, lit string) {
+// Returns the next token.
+// t is the token code, p is the position code,
+// and lit is the string literal.
+// Returns tokens.EOF in t for the last token.
+func (self *Lexer) Token() (t int, p uint32, lit string) {
 	t, p, lit = self.scanToken()
 
 	if t != tokens.Illegal {
@@ -368,11 +369,27 @@ func (self *Lexer) Scan() (t int, p uint32, lit string) {
 	return
 }
 
+// Returns if the scanner has anything to return
+func (self *Lexer) Scan() bool { return !self.eof }
+
 func (self *Lexer) scanToken() (t int, p uint32, lit string) {
+	if self.eof {
+		return tokens.EOF, self.pos(), ""
+	}
+
 	self.skipWhites()
+	p = self.pos()
+
+	if self.closed {
+		if self.insertSemi {
+			self.insertSemi = false
+			return tokens.Semicolon, p, ";"
+		}
+		self.eof = true
+		return tokens.EOF, p, ""
+	}
 
 	r := self.peek()
-	p = self.pos()
 
 	if isLetter(r) {
 		self.scanIdent()
@@ -387,12 +404,6 @@ func (self *Lexer) scanToken() (t int, p uint32, lit string) {
 		self.insertSemi = true
 		lit = self.scanChar()
 		return tokens.Char, p, lit
-	} else if self.closed {
-		if self.insertSemi {
-			self.insertSemi = false
-			return tokens.Semicolon, p, ";"
-		}
-		return tokens.EOF, p, ""
 	}
 
 	self.next()
