@@ -1,3 +1,4 @@
+// Breaks a stay file into tokens and print the result out.
 package main
 
 import (
