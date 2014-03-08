@@ -11,7 +11,6 @@ import (
 )
 
 type Parser struct {
-	lexErrors []*lexer.Error
 }
 
 func New() *Parser {
@@ -30,15 +29,13 @@ func (self *Parser) Parse(id uint8, in io.Reader) (*ast.Ast, error) {
 		}
 	}
 
-	e := lex.Err()
+	e := lex.ScanErr()
 	if e != nil {
 		return nil, e
 	}
 
-	self.lexErrors = lex.LexErrors()
-
-	if len(self.lexErrors) > 0 {
-		return nil, self.lexErrors[0]
+	if lex.FirstFail != nil {
+		return nil, lex.FirstFail
 	}
 
 	return nil, nil

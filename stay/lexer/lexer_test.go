@@ -16,6 +16,7 @@ type r struct {
 func TestLexer(t *testing.T) {
 	_o := func(s string, exp ...*r) *lexer.Lexer {
 		lex := lexer.New(strings.NewReader(s))
+		lex.SetErrorReporter(nil) // silence the error reporter
 		i := 0
 		for {
 			to, _, lit := lex.Scan()
@@ -35,23 +36,22 @@ func TestLexer(t *testing.T) {
 			t.Errorf("lex %q: ntoken exp %d, got %d", s, len(exp), i)
 		}
 
-		if lex.Err() != nil {
-			t.Errorf("lex %q: got error %s", s, lex.Err())
+		if lex.ScanErr() != nil {
+			t.Errorf("lex %q: got scan error %s", s, lex.ScanErr())
 		}
 
 		return lex
 	}
 	o := func(s string, exp ...*r) {
 		lex := _o(s, exp...)
-		es := lex.LexErrors()
-		if len(es) != 0 {
-			t.Errorf("lex %q: got error %s", s, es[0])
+		e := lex.FirstFail
+		if e != nil {
+			t.Errorf("lex %q: got lex error %s", s, e)
 		}
 	}
 	oe := func(s string, exp ...*r) {
 		lex := _o(s, exp...)
-		es := lex.LexErrors()
-		if len(es) == 0 {
+		if lex.FirstFail == nil {
 			t.Errorf("lex %q: should be illegal", s)
 		}
 	}

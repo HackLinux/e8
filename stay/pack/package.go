@@ -12,17 +12,21 @@ import (
 
 type Package struct {
 	parser    *parser.Parser
-	fileNames []string
+	filenames []string
 	files     []*ast.Ast
 }
 
 func NewPackage() *Package {
 	ret := new(Package)
 	ret.parser = parser.New()
-	ret.fileNames = make([]string, 0, pos.MaxFile)
+	ret.filenames = make([]string, 0, pos.MaxFile)
 	ret.files = make([]*ast.Ast, 0, pos.MaxFile)
 
 	return ret
+}
+
+func (self *Package) QueryFilename(id uint8) string {
+	return self.filenames[id]
 }
 
 func (self *Package) Add(name string, in io.Reader) error {
@@ -38,7 +42,7 @@ func (self *Package) Add(name string, in io.Reader) error {
 		return e // io error on parsing
 	}
 
-	self.fileNames = append(self.fileNames, name)
+	self.filenames = append(self.filenames, name)
 	self.files = append(self.files, tree)
 
 	return nil

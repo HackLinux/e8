@@ -1,6 +1,7 @@
 package lexer
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/h8liu/e8/stay/tokens"
@@ -8,33 +9,40 @@ import (
 
 type Lexer struct {
 	*scanner
-	lexErrors []*Error
 
-	illegal    bool // illegal encountered
-	insertSemi bool // if treat end line as whitespace
+	illegal    bool  // illegal encountered
+	insertSemi bool  // if treat end line as whitespace
+	FirstFail  error // lex error encountered
 }
 
+// Creates a new lexer
 func New(in io.Reader) *Lexer {
 	ret := new(Lexer)
 	ret.scanner = newScanner(in)
-	ret.lexErrors = make([]*Error, 0, 1000)
 
 	return ret
 }
 
-func (self *Lexer) failf(f string, args ...interface{}) {
-	self.lexErrors = append(self.lexErrors, self.errorf(f, args...))
+// Use a particular error reporter
+func (self *Lexer) SetErrorReporter(reporter ErrReporter) {
+	self.scanner.errReporter = reporter
 }
 
-func (self *Lexer) LexErrors() []*Error { return self.lexErrors }
+// Reports a lex error
+func (self *Lexer) failf(f string, args ...interface{}) {
+	e := fmt.Errorf(f, args...)
+	self.report(e)
 
-const whites = " \t\r"
+	if self.FirstFail == nil {
+		self.FirstFail = e
+	}
+}
 
 func (self *Lexer) skipWhites() {
 	if self.insertSemi {
-		self.skipAnys(whites)
+		self.skipAnys(" \t\r")
 	} else {
-		self.skipAnys(whites + "\n")
+		self.skipAnys(" \t\r\n")
 	}
 }
 
@@ -317,7 +325,8 @@ func (self *Lexer) Closed() bool {
 	return !self.insertSemi && self.closed
 }
 
-func (self *Lexer) Err() error {
+// Scanning error
+func (self *Lexer) ScanErr() error {
 	if self.err == io.EOF {
 		return nil
 	}
@@ -380,7 +389,7 @@ func (self *Lexer) scanToken() (t int, p uint32, lit string) {
 	} else if self.closed {
 		if self.insertSemi {
 			self.insertSemi = false
-			return tokens.Semicolon, self.pos(), ";"
+			return tokens.Semicolon, p, ";"
 		}
 		return tokens.EOF, p, ""
 	}

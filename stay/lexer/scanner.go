@@ -10,7 +10,8 @@ import (
 )
 
 type scanner struct {
-	reader *bufio.Reader
+	reader      *bufio.Reader
+	errReporter ErrReporter
 
 	r rune
 
@@ -28,28 +29,37 @@ func newScanner(in io.Reader) *scanner {
 	ret.head = newScanPos()
 	ret.tail = newScanPos()
 	ret.buf = new(bytes.Buffer)
+	ret.errReporter = StderrReporter
 
 	ret.next() // get ready for reading
 
 	return ret
 }
 
-func (self *scanner) errorf(f string, args ...interface{}) *Error {
-	return &Error{self.pos(), fmt.Errorf(f, args...)}
-}
-
-func (self *scanner) pos() uint32 {
-	return self.tail.Pos()
+func (self *scanner) report(e error) {
+	if self.errReporter == nil {
+		return
+	}
+	self.errReporter.Report(
+		uint16(self.tail.lineNo),
+		uint8(self.tail.lineOffset),
+		e,
+	)
 }
 
 func (self *scanner) shutdown(e error) {
+	self.report(e)
 	self.r = rune(-1)
 	self.closed = true
 	self.err = e
 }
 
 func (self *scanner) panicf(f string, args ...interface{}) {
-	self.shutdown(self.errorf(f, args...))
+	self.shutdown(fmt.Errorf(f, args...))
+}
+
+func (self *scanner) pos() uint32 {
+	return self.tail.Pos()
 }
 
 func (self *scanner) next() rune {

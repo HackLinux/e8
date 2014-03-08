@@ -22,6 +22,16 @@ func posString(p uint32) string {
 	return fmt.Sprintf("%d:%d", line, off)
 }
 
+type FileErrReporter struct {
+	filename string
+}
+
+func (self *FileErrReporter) Report(lineno uint16, off uint8, e error) {
+	fmt.Fprintf(os.Stderr, "%s:%d:%d %v",
+		self.filename, lineno, off, e,
+	)
+}
+
 func main() {
 	flag.Parse()
 	args := flag.Args()
@@ -36,6 +46,8 @@ func main() {
 	noError(e)
 
 	lex := lexer.New(fin)
+	lex.SetErrorReporter(&FileErrReporter{path})
+
 	for {
 		to, pos, lit := lex.Scan()
 		if to == tokens.EOF {
@@ -45,15 +57,6 @@ func main() {
 		fmt.Printf("%s:%s: %q - %s\n",
 			path, posString(pos),
 			lit, tokens.TokenStr(to),
-		)
-	}
-
-	noError(lex.Err())
-
-	es := lex.LexErrors()
-	for _, e := range es {
-		fmt.Fprintf(os.Stderr, "%s:%s: %s\n",
-			path, posString(e.Pos), e,
 		)
 	}
 
