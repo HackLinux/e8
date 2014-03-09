@@ -7,3 +7,7 @@ func IsOperator(t int) bool {
 func IsKeyword(t int) bool {
 	return keywordBegin < t && t < keywordEnd
 }
+
+func IsLiteral(t int) bool {
+	return literalBegin < t && t < literalEnd
+}

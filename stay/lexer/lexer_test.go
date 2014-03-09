@@ -68,6 +68,16 @@ func TestLexer(t *testing.T) {
 	sc := n(Semicolon)
 	// eof := n(EOF)
 
+	kwords := ListKeywords()
+	for _, t := range kwords {
+		o(TokenStr(t) + ";", n(t), sc)
+	}
+
+	ops := ListOperators()
+	for _, t := range ops {
+		o(TokenStr(t) + ";", n(t), sc)
+	}
+
 	o("")
 	o("   ")
 	o("  =", n(Assign))
