@@ -1,2 +1,2 @@
 tok:
-	stayt *.st
+	staytok *.stay

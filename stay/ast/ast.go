@@ -1,8 +1,5 @@
 package ast
 
-type Ast struct {
-}
-
 type ImportDecl struct {
 	As   string
 	Path string

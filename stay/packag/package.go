@@ -12,7 +12,7 @@ import (
 type Package struct {
 	parser    *parser.Parser
 	filenames []string
-	files     []*ast.Ast
+	files     []*ast.Program
 }
 
 const (
@@ -23,7 +23,7 @@ func NewPackage() *Package {
 	ret := new(Package)
 	ret.parser = parser.New()
 	ret.filenames = make([]string, 0, MaxFile)
-	ret.files = make([]*ast.Ast, 0, MaxFile)
+	ret.files = make([]*ast.Program, 0, MaxFile)
 
 	return ret
 }

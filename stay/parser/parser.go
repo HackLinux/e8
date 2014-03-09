@@ -45,7 +45,7 @@ func (self *Parser) fail(line, col int, e error) {
 	}
 }
 
-func (self *Parser) Parse(in io.Reader) (*ast.Ast, error) {
+func (self *Parser) Parse(in io.Reader) (*ast.Program, error) {
 	lex := lexer.New(in)
 	pipe := make(chan *Token, 1)
 
@@ -85,10 +85,10 @@ func (self *Parser) Parse(in io.Reader) (*ast.Ast, error) {
 		return nil, self.e
 	}
 
-	return nil, nil
+	return self.prog, nil
 }
 
-func ParseFile(path string) (*ast.Ast, error) {
+func ParseFile(path string) (*ast.Program, error) {
 	fin, e := os.Open(path)
 	if e != nil {
 		return nil, e
@@ -110,7 +110,7 @@ func ParseFile(path string) (*ast.Ast, error) {
 	return ret, nil
 }
 
-func ParseStr(s string) (*ast.Ast, error) {
+func ParseStr(s string) (*ast.Program, error) {
 	p := New()
 	return p.Parse(strings.NewReader(s))
 }
