@@ -17,7 +17,7 @@ func (self *Parser) parseBlockStmt() *ast.BlockStmt {
 	// statement list
 	for !s.Scan(tokens.Rbrace) {
 		if s.Scan(tokens.EOF) || s.Closed() {
-			self.failf("expecting rbrace, but reached eof")
+			self.failf("expecting end of block, but reached file end")
 			return ret
 		}
 
@@ -36,7 +36,7 @@ func (self *Parser) parseBlockStmt() *ast.BlockStmt {
 	}
 
 	if !s.Accept(tokens.Rbrace) {
-		self.failf("missing rbrace")
+		self.failf("missing right brace")
 	}
 
 	return ret
