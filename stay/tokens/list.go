@@ -12,7 +12,7 @@ func ListKeywords() []int {
 // List all the operators
 func ListOperators() []int {
 	ret := make([]int, 0, operatorEnd-operatorBegin-1)
-	for i := keywordBegin + 1; i < keywordEnd; i++ {
+	for i := operatorBegin + 1; i < operatorEnd; i++ {
 		ret = append(ret, i)
 	}
 	return ret
