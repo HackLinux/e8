@@ -31,4 +31,7 @@ import (
 import "\t"
 import "3c"
 
+import ( "a"; "b"; "c" )
+import ( a "a"; b "b"; c "c"; )
+
 //so
