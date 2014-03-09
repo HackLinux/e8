@@ -176,6 +176,10 @@ func (self *Lexer) scanChar() string {
 	return s.Accept()
 }
 
+func (self *Lexer) scanString() string {
+	panic("todo")
+}
+
 func (self *Lexer) scanComment() string {
 	s := self.s
 
@@ -238,6 +242,7 @@ var insertSemiTokens = []int{
 	tokens.Fallthrough,
 	tokens.Return,
 	tokens.Char,
+	tokens.String,
 	tokens.Rparen,
 	tokens.Rbrack,
 	tokens.Rbrace,
@@ -312,10 +317,13 @@ func (self *Lexer) scanToken() *Token {
 		lit, t := self.scanNumber(false)
 		return self.token(t, lit)
 	} else if r == '\'' {
-		self.insertSemi = true
 		s.Next()
 		lit := self.scanChar()
 		return self.token(tokens.Char, lit)
+	} else if r == '"' {
+		s.Next()
+		lit := self.scanString()
+		return self.token(tokens.String, lit)
 	}
 
 	s.Next() // at this time, we will always make some progress
