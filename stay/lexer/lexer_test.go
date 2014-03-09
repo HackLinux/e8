@@ -77,11 +77,28 @@ func TestLexer(t *testing.T) {
 	o("3.24 = 3", m(Float, "3.24"), n(Assign), m(Int, "3"), sc)
 	o("fun", id("fun"), sc)
 	o("0X3 >= 0334", m(Int, "0X3"), n(Geq), m(Int, "0334"), sc)
+
+	// numbers
+	o("0", m(Int, "0"), sc)
+	o("0.", m(Float, "0."), sc)
+	o("9.", m(Float, "9."), sc)
+	o("0.7", m(Float, "0.7"), sc)
 	o("3.e5", m(Float, "3.e5"), sc)
 	o("3e5", m(Float, "3e5"), sc)
 	o("3E5", m(Float, "3E5"), sc)
-	oe("3D5", m(Int, "3D5"), sc)
+	o("3D5", m(Int, "3"), m(Ident, "D5"), sc)
+	oe("3e", m(Int, "3e"), sc)
+	oe("3.e", m(Int, "3.e"), sc)
+	o(".3", m(Float, ".3"), sc)
+	oe(".3e", m(Int, ".3e"), sc)
+	oe(".3ef", m(Int, ".3e"), id("f"), sc)
+	oe("f.3e", id("f"), m(Int, ".3e"), sc)
+	o(".357e-32", m(Float, ".357e-32"), sc)
+	o("0.357e-32", m(Float, "0.357e-32"), sc)
+	o("03.357e-32", m(Int, "03"), m(Float, ".357e-32"), sc)
+	o("3.357e+32", m(Float, "3.357e+32"), sc)
 	o(".7e5", m(Float, ".7e5"), sc)
+
 	o("a3", id("a3"), sc)
 	o("_A3.come()", id("_A3"), n(Dot),
 		id("come"), n(Lparen), n(Rparen),

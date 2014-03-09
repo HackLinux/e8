@@ -71,15 +71,14 @@ func (self *Lexer) _scanNumber(dotLed bool) (lit string, t int) {
 				if s.ScanHexDigits() == 0 {
 					return s.Accept(), tokens.Illegal
 				}
-			} else {
+			} else if s.ScanOctDigit() {
 				s.ScanOctDigits()
+				return s.Accept(), tokens.Int
 			}
 
-			if s.ScanIdent() != 0 {
-				return s.Accept(), tokens.Illegal
+			if s.Peek() != '.' {
+				return s.Accept(), tokens.Int
 			}
-
-			return s.Accept(), tokens.Int
 		}
 
 		s.ScanDigits()
@@ -93,9 +92,6 @@ func (self *Lexer) _scanNumber(dotLed bool) (lit string, t int) {
 		}
 
 		if !s.Scan('.') {
-			if s.ScanIdent() != 0 {
-				return s.Accept(), tokens.Illegal
-			}
 			return s.Accept(), tokens.Int
 		}
 
