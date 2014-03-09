@@ -44,6 +44,9 @@ func (self *Parser) Parse(in io.Reader) (*ast.Ast, error) {
 	lex := lexer.New(in)
 	pipe := make(chan *Token, 1)
 
+	// TODO: get another pipe for *Token recycle, so it won't
+	// go to garbage collection
+
 	go func() {
 		for lex.Scan() {
 			t := lex.Token()

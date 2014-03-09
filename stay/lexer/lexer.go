@@ -14,8 +14,7 @@ type Lexer struct {
 	s        *scanner.Scanner
 	reporter reporter.Interface
 
-	line int
-	col  int
+	buf *Token
 
 	illegal    bool  // illegal encountered
 	insertSemi bool  // if treat end line as whitespace
@@ -27,6 +26,7 @@ type Lexer struct {
 func New(in io.Reader) *Lexer {
 	ret := new(Lexer)
 	ret.s = scanner.New(in)
+	ret.buf = new(Token)
 
 	return ret
 }
@@ -253,9 +253,13 @@ var insertSemiTokenMap = func() map[int]bool {
 	return ret
 }()
 
-func (self *Lexer) savePos() { self.line, self.col = self.s.Pos() }
+func (self *Lexer) savePos() { 
+	self.buf.Line, self.buf.Col = self.s.Pos() 
+}
 func (self *Lexer) token(t int, lit string) *Token {
-	return &Token{t, self.line, self.col, lit}
+	self.buf.Token = t
+	self.buf.Lit = lit
+	return self.buf
 }
 
 // Returns if the scanner has anything to return
