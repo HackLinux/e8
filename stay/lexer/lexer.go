@@ -32,7 +32,7 @@ func New(in io.Reader) *Lexer {
 }
 
 // Use a particular error reporter
-func (self *Lexer) SetReporter(r reporter.Interface) {
+func (self *Lexer) ReportTo(r reporter.Interface) {
 	self.reporter = r
 }
 

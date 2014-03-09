@@ -32,7 +32,7 @@ func main() {
 	noError(e)
 
 	lex := lexer.New(fin)
-	lex.SetReporter(reporter.NewPrefix(path))
+	lex.ReportTo(reporter.NewPrefix(path))
 
 	for lex.Scan() {
 		t := lex.Token()

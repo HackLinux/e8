@@ -16,7 +16,7 @@ type r struct {
 func TestLexer(t *testing.T) {
 	_o := func(s string, exp ...*r) *lexer.Lexer {
 		lex := lexer.New(strings.NewReader(s))
-		lex.SetReporter(nil) // silence the error reporter
+		lex.ReportTo(nil) // silence the error reporter
 		i := 0
 		for lex.Scan() {
 			tok := lex.Token()
@@ -112,6 +112,8 @@ func TestLexer(t *testing.T) {
 	oe(`'\328'`, m(Char, `'\328'`), sc)
 	o(`'\x3a'`, m(Char, `'\x3a'`), sc)
 	o(`'\xa3'`, m(Char, `'\xa3'`), sc)
+	oe(`'\xa'`, m(Char, `'\xa'`), sc)
+	oe(`'\xaaa'`, m(Char, `'\xaaa'`), sc)
 	o(`'永'`, m(Char, `'永'`), sc)
 	oe(`'\ax3'`, m(Char, `'\ax3'`), sc)
 	oe(`'\32a'`, m(Char, `'\32a'`), sc)
