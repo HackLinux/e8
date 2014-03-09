@@ -25,8 +25,14 @@ func main() {
 	}
 
 	path := args[0]
-	ast, e := parser.ParseFile(path)
+	prog, e := parser.ParseFile(path)
 	noError(e)
 
-	fmt.Println(ast)
+	for _, imp := range prog.Imports {
+		if imp.As == "" {
+			fmt.Printf("import %q\n", imp.Path)
+		} else {
+			fmt.Printf("import %s %q\n", imp.As, imp.Path)
+		}
+	}
 }

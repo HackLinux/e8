@@ -1,0 +1,34 @@
+// prints hello
+
+import "a"
+
+import fmt "b"
+import f "c"
+import . "dd"
+
+/** dafe */
+
+import (
+    "fmt"
+    "something"
+)
+
+import ()
+
+import (
+
+
+
+)
+
+import "\tt"
+
+import (
+    // t2 "t2"
+    tx "tx"
+)
+
+import "\t"
+import "3c"
+
+//so

@@ -22,12 +22,22 @@ func (self *TokenScanner) Next() *Token {
 
 	for {
 		self.cur = <-self.c
+		if self.cur == nil {
+			break
+		}
 		if self.cur.tok != tokens.Comment {
 			break
 		}
 	}
 
 	return ret
+}
+
+func (self *TokenScanner) Pos() (int, int) {
+	pos := self.cur.pos
+	line := int((pos >> 8) & 0xffff)
+	col := int(pos & 0xff)
+	return line, col
 }
 
 func (self *TokenScanner) Peek() *Token {

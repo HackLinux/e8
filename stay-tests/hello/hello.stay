@@ -1,7 +1,5 @@
 // prints hello
 
-import "fmt"
-
 func main() {
 	print('h')
 	print('e')

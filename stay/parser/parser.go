@@ -24,16 +24,17 @@ type Parser struct {
 	// token position will all be offset by this value on parsing
 	PosOffset uint32
 
-	s      *TokenScanner
-	e      error
-	prog   *ast.Program
-	errors []error
+	s        *TokenScanner
+	e        error
+	prog     *ast.Program
+	errors   []*reporter.Error
+	lastLine int
 }
 
 func New() *Parser {
 	ret := new(Parser)
 	ret.Reporter = reporter.Simple
-	ret.errors = make([]error, 0, MaxError)
+	ret.errors = make([]*reporter.Error, 0, MaxError)
 
 	return ret
 }
@@ -45,8 +46,25 @@ func (self *Parser) fail(line, col int, e error) {
 	}
 }
 
+func (self *Parser) failf(f string, args ...interface{}) {
+	if len(self.errors) < MaxError {
+		e := fmt.Errorf(f, args...)
+		line, col := self.s.Pos()
+		if self.lastLine == line {
+			return
+		}
+		self.lastLine = line
+		self.errors = append(self.errors, &reporter.Error{line, col, e})
+	}
+}
+
+func (self *Parser) expectSemicolon() {
+	self.failf("expect semicolon")
+}
+
 func (self *Parser) Parse(in io.Reader) (*ast.Program, error) {
 	lex := lexer.New(in)
+	lex.ReportTo(self.Reporter)
 	pipe := make(chan *Token, 1)
 
 	// TODO: get another pipe for *Token recycle, so it won't
@@ -83,6 +101,14 @@ func (self *Parser) Parse(in io.Reader) (*ast.Program, error) {
 	// return lex error first
 	if self.e != nil {
 		return nil, self.e
+	}
+
+	// return parse error
+	if len(self.errors) > 0 {
+		for _, re := range self.errors {
+			self.Reporter.Report(re.Line, re.Col, re.E)
+		}
+		return nil, self.errors[0]
 	}
 
 	return self.prog, nil

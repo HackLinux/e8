@@ -1,18 +1,12 @@
 package ast
 
-type ImportDecl struct {
-	As   string
-	Path string
-	Pos  uint32
-}
-
 type Program struct {
 	Imports []*ImportDecl
 }
 
 func NewProgram() *Program {
 	ret := new(Program)
-	ret.Imports = make([]*ImportDecl, 32)
+	ret.Imports = make([]*ImportDecl, 0, 32)
 
 	return ret
 }

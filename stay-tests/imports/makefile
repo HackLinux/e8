@@ -1,5 +1,6 @@
+ast:
+	stayast *.stay
+
 tok:
 	staytok *.stay
 
-ast:
-	stayast *.stay
