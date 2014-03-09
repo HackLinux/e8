@@ -103,6 +103,7 @@ var keywords = func() map[string]int {
 	return ret
 }()
 
+// Returns the related keyword token if it is a keyword; returns Ident otherwise.
 func IdentToken(s string) int {
 	if i, found := keywords[s]; found {
 		return i
