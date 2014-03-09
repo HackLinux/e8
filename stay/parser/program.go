@@ -11,6 +11,8 @@ func (self *Parser) parseProgram() {
 	for {
 		if !self.parseDecls() {
 			if s.Closed() {
+				self.failf("missing EOF token")
+			} else if s.Accept(tokens.EOF) {
 				break
 			} else if s.Accept(tokens.Func) {
 				// TODO: parse function here
