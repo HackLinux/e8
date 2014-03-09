@@ -9,10 +9,11 @@ var tokenStr = map[int]string{
 	EOF:     "EOF",
 	Comment: "Comment",
 
-	Ident: "Ident",
-	Int:   "Int",
-	Float: "Float",
-	Char:  "Char",
+	Ident:  "Ident",
+	Int:    "Int",
+	Float:  "Float",
+	Char:   "Char",
+	String: "String",
 
 	Add: "+",
 	Sub: "-",

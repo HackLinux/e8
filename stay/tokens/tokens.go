@@ -12,7 +12,7 @@ const (
 	Int
 	Float
 	Char
-	// String
+	String
 	literalEnd
 
 	// operators

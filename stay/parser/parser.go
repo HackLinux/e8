@@ -12,8 +12,9 @@ import (
 )
 
 const (
-	MaxLine = 50000 // 16 bit
-	MaxCol  = 250   // 8 bit
+	MaxLine  = 50000 // 16 bit
+	MaxCol   = 250   // 8 bit
+	MaxError = 128
 )
 
 type Parser struct {
@@ -23,12 +24,16 @@ type Parser struct {
 	// token position will all be offset by this value on parsing
 	PosOffset uint32
 
-	e error
+	s      *TokenScanner
+	e      error
+	prog   *ast.Program
+	errors []error
 }
 
 func New() *Parser {
 	ret := new(Parser)
 	ret.Reporter = reporter.Simple
+	ret.errors = make([]error, 0, MaxError)
 
 	return ret
 }
@@ -70,10 +75,12 @@ func (self *Parser) Parse(in io.Reader) (*ast.Ast, error) {
 		close(pipe)
 	}()
 
-	for _ = range pipe {
-		// TODO: create the ast here
-	}
+	self.s = NewTokenScanner(pipe)
 
+	self.prog = ast.NewProgram()
+	self.scanProgram()
+
+	// return lex error first
 	if self.e != nil {
 		return nil, self.e
 	}
