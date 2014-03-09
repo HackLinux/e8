@@ -70,7 +70,7 @@ func (self *Parser) parseImportSpec() bool {
 	}
 
 	t := s.Next()
-	path := unquote(t.lit)
+	path := self.unquote(t.lit)
 	self.prog.AddImport(&ast.ImportDecl{as, path, t.pos})
 
 	return true
