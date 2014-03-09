@@ -177,7 +177,35 @@ func (self *Lexer) scanChar() string {
 }
 
 func (self *Lexer) scanString() string {
-	panic("todo")
+	s := self.s
+
+	for !s.Scan('"') {
+		if s.Peek() == '\n' || s.Closed() {
+			self.failf("string not terminated")
+			break
+		}
+
+		if s.Scan('\\') {
+			self.scanEscape('"')
+		} else {
+			s.Next()
+		}
+	}
+
+	return s.Accept()
+}
+
+func (self *Lexer) scanRawString() string {
+	s := self.s
+
+	for !s.Scan('`') {
+		if s.Closed() {
+			self.failf("raw string not terminated")
+			break
+		}
+		s.Next()
+	}
+	return s.Accept()
 }
 
 func (self *Lexer) scanComment() string {
@@ -323,6 +351,10 @@ func (self *Lexer) scanToken() *Token {
 	} else if r == '"' {
 		s.Next()
 		lit := self.scanString()
+		return self.token(tokens.String, lit)
+	} else if r == '`' {
+		s.Next()
+		lit := self.scanRawString()
 		return self.token(tokens.String, lit)
 	}
 

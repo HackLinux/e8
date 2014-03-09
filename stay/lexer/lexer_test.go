@@ -106,6 +106,11 @@ func TestLexer(t *testing.T) {
 	o("03.357e-32", m(Int, "03"), m(Float, ".357e-32"), sc)
 	o("3.357e+32", m(Float, "3.357e+32"), sc)
 	o(".7e5", m(Float, ".7e5"), sc)
+	o("``", m(String, "``"), sc)
+	o(`""`, m(String, `""`), sc)
+	o(`"string"`, m(String, `"string"`), sc)
+	oe(`"str`, m(String, `"str`), sc)
+	oe("\"string\n\"", m(String, `"string`), sc, m(String, `"`), sc)
 
 	o("a3", id("a3"), sc)
 	o("_A3.come()", id("_A3"), n(Dot),
