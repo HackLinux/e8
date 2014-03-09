@@ -16,34 +16,42 @@ const (
 	ShamtMask = 0x1f << ShamtShift
 	FunctMask = 0x3f
 	ImMask    = 0xffff
+
+	Nfunct = 64
+	Nop    = 64
 )
 
+// Returns the uint32 representation
 func (i Inst) U32() uint32 { return uint32(i) }
-func (i Inst) Op() uint8   { return uint8(i >> 26) }
-func (i Inst) Rs() uint8   { return uint8(i>>21) & 0x1f }
-func (i Inst) Rt() uint8   { return uint8(i>>16) & 0x1f }
-func (i Inst) Rd() uint8   { return uint8(i>>11) & 0x1f }
-func (i Inst) Sh() uint8   { return uint8(i>>6) & 0x1f }
-func (i Inst) Fn() uint8   { return uint8(i) & 0x3f }
-func (i Inst) Ims() int16  { return int16(uint16(i)) }
+
+// Returns the op field
+func (i Inst) Op() uint8 { return uint8(i >> 26) }
+
+// Returns the rs field
+func (i Inst) Rs() uint8 { return uint8(i>>21) & 0x1f }
+
+// Returns the rt field
+func (i Inst) Rt() uint8 { return uint8(i>>16) & 0x1f }
+
+// Returns the rd field
+func (i Inst) Rd() uint8 { return uint8(i>>11) & 0x1f }
+
+// Returns the shamt field
+func (i Inst) Sh() uint8 { return uint8(i>>6) & 0x1f }
+
+// Returns the funct field
+func (i Inst) Fn() uint8 { return uint8(i) & 0x3f }
+
+// Returns the immediate (16-bit) field as an unsigned int
 func (i Inst) Imu() uint16 { return uint16(i) }
-func (i Inst) Ad() int32   { return int32(i) << 6 >> 6 }
 
-/*
-func (i Inst) SetIms(ims int16) Inst {
-	ret := i & 0xffff0000
-	ret |= Inst(uint16(ims))
-	return ret
-}
+// Returns the immediate (16-bit) field as an signed int
+func (i Inst) Ims() int16 { return int16(uint16(i)) }
 
-func (i Inst) SetImu(imu uint16) Inst {
-	ret := i & 0xffff0000
-	ret |= Inst(imu)
-	return ret
-}
-*/
+// Returns the address field
+func (i Inst) Ad() int32 { return int32(i) << 6 >> 6 }
 
-type instFunc func(c Core, fields *fields)
+type instFunc func(c Core, i Inst)
 
 func makeInstList(m map[uint8]instFunc, n uint8) []instFunc {
 	ret := make([]instFunc, n)
@@ -152,26 +160,14 @@ var rInstList = makeInstList(
 	}, Nfunct,
 )
 
-func opInst(c Core, f *fields) {
-	op := uint8(f.inst >> 26)
-	f.rs = uint8(f.inst>>21) & 0x1f
-	f.rt = uint8(f.inst>>16) & 0x1f
-	f.im = uint16(f.inst)
+// Executes an instruction.
+func Exec(c Core, i Inst) { instList[i.Op()](c, i) }
 
-	instList[op](c, f)
-}
+func opRinst(c Core, i Inst) { rInstList[i.Fn()](c, i) }
 
-func opRinst(c Core, f *fields) {
-	f.rd = uint8(f.inst>>11) & 0x1f
-	f.shamt = uint8(f.inst>>6) & 0x1f
-	funct := uint8(f.inst) & 0x3f
-
-	rInstList[funct](c, f)
-}
-
-func opJ(c Core, f *fields) {
+func opJ(c Core, i Inst) {
 	pc := c.ReadReg(RegPC)
-	c.WriteReg(RegPC, pc+uint32(int32(f.inst<<6)>>4))
+	c.WriteReg(RegPC, pc+uint32(int32(i<<6)>>4))
 }
 
-func opNoop(c Core, f *fields) {}
+func opNoop(c Core, i Inst) {}

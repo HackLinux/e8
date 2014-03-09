@@ -1,8 +1,8 @@
 package inst
 
-func memAddr(c Core, f *fields) uint32 {
-	s := c.ReadReg(f.rs)
-	return s + signExt(f.im)
+func memAddr(c Core, i Inst) uint32 {
+	s := c.ReadReg(i.Rs())
+	return s + signExt(i.Imu())
 }
 
 func signExt(im uint16) uint32 {
@@ -21,91 +21,91 @@ func unsignExt8(a uint8) uint32 {
 	return uint32(a)
 }
 
-func opAddi(c Core, f *fields) {
-	s := c.ReadReg(f.rs)
-	c.WriteReg(f.rt, s+signExt(f.im))
+func opAddi(c Core, i Inst) {
+	s := c.ReadReg(i.Rs())
+	c.WriteReg(i.Rt(), s+signExt(i.Imu()))
 }
 
-func opLw(c Core, f *fields) {
-	addr := memAddr(c, f)
-	c.WriteReg(f.rt, c.ReadU32(addr))
+func opLw(c Core, i Inst) {
+	addr := memAddr(c, i)
+	c.WriteReg(i.Rt(), c.ReadU32(addr))
 }
 
-func opLhs(c Core, f *fields) {
-	addr := memAddr(c, f)
-	c.WriteReg(f.rt, signExt(c.ReadU16(addr)))
+func opLhs(c Core, i Inst) {
+	addr := memAddr(c, i)
+	c.WriteReg(i.Rt(), signExt(c.ReadU16(addr)))
 }
 
-func opLhu(c Core, f *fields) {
-	addr := memAddr(c, f)
-	c.WriteReg(f.rt, unsignExt(c.ReadU16(addr)))
+func opLhu(c Core, i Inst) {
+	addr := memAddr(c, i)
+	c.WriteReg(i.Rt(), unsignExt(c.ReadU16(addr)))
 }
 
-func opLbs(c Core, f *fields) {
-	addr := memAddr(c, f)
-	c.WriteReg(f.rt, signExt8(c.ReadU8(addr)))
+func opLbs(c Core, i Inst) {
+	addr := memAddr(c, i)
+	c.WriteReg(i.Rt(), signExt8(c.ReadU8(addr)))
 }
 
-func opLbu(c Core, f *fields) {
-	addr := memAddr(c, f)
-	c.WriteReg(f.rt, unsignExt8(c.ReadU8(addr)))
+func opLbu(c Core, i Inst) {
+	addr := memAddr(c, i)
+	c.WriteReg(i.Rt(), unsignExt8(c.ReadU8(addr)))
 }
 
-func opSw(c Core, f *fields) {
-	t := c.ReadReg(f.rt)
-	addr := memAddr(c, f)
+func opSw(c Core, i Inst) {
+	t := c.ReadReg(i.Rt())
+	addr := memAddr(c, i)
 	c.WriteU32(addr, t)
 }
 
-func opSh(c Core, f *fields) {
-	t := uint16(c.ReadReg(f.rt))
-	addr := memAddr(c, f)
+func opSh(c Core, i Inst) {
+	t := uint16(c.ReadReg(i.Rt()))
+	addr := memAddr(c, i)
 	c.WriteU16(addr, t)
 }
 
-func opSb(c Core, f *fields) {
-	t := uint8(c.ReadReg(f.rt))
-	addr := memAddr(c, f)
+func opSb(c Core, i Inst) {
+	t := uint8(c.ReadReg(i.Rt()))
+	addr := memAddr(c, i)
 	c.WriteU8(addr, t)
 }
 
-func opLui(c Core, f *fields) {
-	c.WriteReg(f.rt, unsignExt(f.im)<<16)
+func opLui(c Core, i Inst) {
+	c.WriteReg(i.Rt(), unsignExt(i.Imu())<<16)
 }
 
-func opAndi(c Core, f *fields) {
-	s := c.ReadReg(f.rs)
-	c.WriteReg(f.rt, s&unsignExt(f.im))
+func opAndi(c Core, i Inst) {
+	s := c.ReadReg(i.Rs())
+	c.WriteReg(i.Rt(), s&unsignExt(i.Imu()))
 }
 
-func opOri(c Core, f *fields) {
-	s := c.ReadReg(f.rs)
-	c.WriteReg(f.rt, s|unsignExt(f.im))
+func opOri(c Core, i Inst) {
+	s := c.ReadReg(i.Rs())
+	c.WriteReg(i.Rt(), s|unsignExt(i.Imu()))
 }
 
-func opSlti(c Core, f *fields) {
-	s := int32(c.ReadReg(f.rs))
-	if s < int32(signExt(f.im)) {
-		c.WriteReg(f.rt, 1)
+func opSlti(c Core, i Inst) {
+	s := int32(c.ReadReg(i.Rs()))
+	if s < int32(signExt(i.Imu())) {
+		c.WriteReg(i.Rt(), 1)
 	} else {
-		c.WriteReg(f.rt, 0)
+		c.WriteReg(i.Rt(), 0)
 	}
 }
 
-func opBeq(c Core, f *fields) {
-	s := c.ReadReg(f.rs)
-	t := c.ReadReg(f.rt)
+func opBeq(c Core, i Inst) {
+	s := c.ReadReg(i.Rs())
+	t := c.ReadReg(i.Rt())
 	if s == t {
 		pc := c.ReadReg(RegPC)
-		c.WriteReg(RegPC, pc+(signExt(f.im)<<2))
+		c.WriteReg(RegPC, pc+(signExt(i.Imu())<<2))
 	}
 }
 
-func opBne(c Core, f *fields) {
-	s := c.ReadReg(f.rs)
-	t := c.ReadReg(f.rt)
+func opBne(c Core, i Inst) {
+	s := c.ReadReg(i.Rs())
+	t := c.ReadReg(i.Rt())
 	if s != t {
 		pc := c.ReadReg(RegPC)
-		c.WriteReg(RegPC, pc+(signExt(f.im)<<2))
+		c.WriteReg(RegPC, pc+(signExt(i.Imu())<<2))
 	}
 }

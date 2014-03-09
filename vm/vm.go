@@ -20,7 +20,6 @@ type VM struct {
 
 	core *Core
 	sys  *SysPage
-	alu  *inst.ALU
 }
 
 func New() *VM {
@@ -29,7 +28,6 @@ func New() *VM {
 
 	ret.core = NewCore()
 	ret.sys = NewSysPage()
-	ret.alu = inst.NewALU()
 
 	ret.MapPage(0, ret.sys)
 
@@ -56,7 +54,7 @@ func (self *VM) Step() {
 		fmt.Fprintf(self.Log, "\n")
 		// self.Registers.PrintTo(self.Log)
 	}
-	self.alu.Inst(self.core, in)
+	inst.Exec(self.core, in)
 
 	self.sys.FlushStdout(self.Stdout)
 }

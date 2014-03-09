@@ -12,7 +12,6 @@ func TestSingleInst(t *testing.T) {
 	c := vm.NewCore()
 	p := mem.NewPage()
 	c.Map(0, p)
-	alu := NewALU()
 
 	s := func(i Inst) {
 		c.WriteReg(1, 0x1)
@@ -23,7 +22,7 @@ func TestSingleInst(t *testing.T) {
 		c.WriteReg(5, 0x31)
 		c.WriteReg(6, 0xfffffff0)
 
-		alu.Inst(c, i)
+		Exec(c, i)
 	}
 
 	r := Rinst
