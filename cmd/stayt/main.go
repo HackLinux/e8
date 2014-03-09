@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/h8liu/e8/stay/lexer"
-	"github.com/h8liu/e8/stay/reporters"
+	"github.com/h8liu/e8/stay/reporter"
 	"github.com/h8liu/e8/stay/tokens"
 )
 
@@ -16,11 +16,6 @@ func noError(e error) {
 		fmt.Fprintln(os.Stderr, "error:", e.Error())
 		os.Exit(-1)
 	}
-}
-
-func posString(p uint32) string {
-	line, off := p>>8, p&0xff
-	return fmt.Sprintf("%d:%d", line, off)
 }
 
 func main() {
@@ -37,13 +32,13 @@ func main() {
 	noError(e)
 
 	lex := lexer.New(fin)
-	lex.SetErrorReporter(reporters.NewPrefix(path))
+	lex.SetReporter(reporter.NewPrefix(path))
 
 	for lex.Scan() {
-		to, pos, lit := lex.Token()
-		fmt.Printf("%s:%s: %q - %s\n",
-			path, posString(pos),
-			lit, tokens.TokenStr(to),
+		t := lex.Token()
+		fmt.Printf("%s:%d:%d: %q - %s\n",
+			path, t.Line, t.Col,
+			t.Lit, tokens.TokenStr(t.Token),
 		)
 	}
 

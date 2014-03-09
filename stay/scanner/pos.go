@@ -1,26 +1,26 @@
-package lexer
+package scanner
 
-type scanPos struct {
+type pos struct {
 	lineNo     int
 	lineOffset int
 }
 
-func newScanPos() *scanPos {
-	ret := new(scanPos)
+func newPos() *pos {
+	ret := new(pos)
 	ret.lineNo = 1
 	return ret
 }
 
-func (self *scanPos) Pos() uint32 {
+func (self *pos) Pos() uint32 {
 	return uint32(self.lineNo)<<8 + uint32(self.lineOffset)
 }
 
-func (self *scanPos) NewLine() {
+func (self *pos) NewLine() {
 	self.lineNo++
 	self.lineOffset = 0
 }
 
-func (self *scanPos) SyncTo(p *scanPos) {
+func (self *pos) SyncTo(p *pos) {
 	self.lineNo = p.lineNo
 	self.lineOffset = p.lineOffset
 }

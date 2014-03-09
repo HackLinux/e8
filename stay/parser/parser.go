@@ -1,28 +1,43 @@
 package parser
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"strings"
 
 	"github.com/h8liu/e8/stay/ast"
 	"github.com/h8liu/e8/stay/lexer"
-	"github.com/h8liu/e8/stay/reporters"
+	"github.com/h8liu/e8/stay/reporter"
+)
+
+const (
+	MaxLine = 50000 // 16 bit
+	MaxCol  = 250   // 8 bit
 )
 
 type Parser struct {
 	// the error reporter on the entire parsing process
-	ErrReporter reporters.ErrReporter
+	Reporter reporter.Interface
 
 	// token position will all be offset by this value on parsing
 	PosOffset uint32
+
+	e error
 }
 
 func New() *Parser {
 	ret := new(Parser)
-	ret.ErrReporter = reporters.Simple
+	ret.Reporter = reporter.Simple
 
 	return ret
+}
+
+func (self *Parser) fail(line, col int, e error) {
+	self.Reporter.Report(line, col, e)
+	if self.e == nil {
+		self.e = e
+	}
 }
 
 func (self *Parser) Parse(in io.Reader) (*ast.Ast, error) {
@@ -31,10 +46,24 @@ func (self *Parser) Parse(in io.Reader) (*ast.Ast, error) {
 
 	go func() {
 		for lex.Scan() {
-			tok, pos, lit := lex.Token()
-			pos += self.PosOffset
-			pipe <- &Token{tok, pos, lit}
+			t := lex.Token()
+
+			if t.Line > MaxLine {
+				self.fail(t.Line, t.Col, fmt.Errorf("too many lines"))
+				break
+			} else if t.Col > MaxCol {
+				self.fail(t.Line, t.Col, fmt.Errorf("line too long"))
+				break
+			}
+
+			pos := self.PosOffset + (uint32(t.Line) << 8) + uint32(t.Col)
+			pipe <- &Token{t.Token, pos, t.Lit}
 		}
+
+		if self.e == nil {
+			self.e = lex.Err()
+		}
+
 		close(pipe)
 	}()
 
@@ -42,20 +71,9 @@ func (self *Parser) Parse(in io.Reader) (*ast.Ast, error) {
 		// TODO: create the ast here
 	}
 
-	// wrap up the errors
-
-	// fatal IO error on reading
-	e := lex.ScanErr()
-	if e != nil {
-		return nil, e
+	if self.e != nil {
+		return nil, self.e
 	}
-
-	// lexing error on parsing tokens
-	if lex.FirstFail != nil {
-		return nil, lex.FirstFail
-	}
-
-	// TODO: parsing error on creating ast
 
 	return nil, nil
 }
@@ -67,7 +85,7 @@ func ParseFile(path string) (*ast.Ast, error) {
 	}
 
 	parser := New()
-	parser.ErrReporter = reporters.NewPrefix(path)
+	parser.Reporter = reporter.NewPrefix(path)
 
 	ret, e := parser.Parse(fin)
 	if e != nil {

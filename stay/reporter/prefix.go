@@ -1,4 +1,4 @@
-package reporters
+package reporter
 
 import (
 	"fmt"
@@ -10,9 +10,9 @@ type Prefix struct {
 	prefix string
 }
 
-func (self *Prefix) Report(lineno uint16, off uint8, e error) {
+func (self *Prefix) Report(line int, col int, e error) {
 	fmt.Fprintf(os.Stderr, "%s:%d:%d: %v\n",
-		self.prefix, lineno, off, e,
+		self.prefix, line, col, e,
 	)
 }
 

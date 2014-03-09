@@ -16,19 +16,23 @@ type r struct {
 func TestLexer(t *testing.T) {
 	_o := func(s string, exp ...*r) *lexer.Lexer {
 		lex := lexer.New(strings.NewReader(s))
-		lex.SetErrorReporter(nil) // silence the error reporter
+		lex.SetReporter(nil) // silence the error reporter
 		i := 0
 		for lex.Scan() {
-			to, _, lit := lex.Token()
-			if to == EOF {
+			tok := lex.Token()
+			if tok.Token == EOF {
 				if i != len(exp) {
 					t.Errorf("lex %q: unexpect EOF %d", i)
 				}
 				continue
 			}
-			if i >= len(exp) || exp[i].t != to || exp[i].lit != lit {
+
+			if i >= len(exp) || 
+				exp[i].t != tok.Token || 
+				exp[i].lit != tok.Lit {
+
 				t.Errorf("lex %q: #%d: %q(%s)",
-					s, i, lit, TokenStr(to),
+					s, i, tok.Lit, TokenStr(tok.Token),
 				)
 			}
 			i++
@@ -39,21 +43,21 @@ func TestLexer(t *testing.T) {
 		}
 
 		if lex.ScanErr() != nil {
-			t.Errorf("lex %q: got scan error %s", s, lex.ScanErr())
+			t.Errorf("lex %q: got scan error %s", s, lex.Err())
 		}
 
 		return lex
 	}
 	o := func(s string, exp ...*r) {
 		lex := _o(s, exp...)
-		e := lex.FirstFail
+		e := lex.LexErr()
 		if e != nil {
 			t.Errorf("lex %q: got lex error %s", s, e)
 		}
 	}
 	oe := func(s string, exp ...*r) {
 		lex := _o(s, exp...)
-		if lex.FirstFail == nil {
+		if lex.LexErr() == nil {
 			t.Errorf("lex %q: should be illegal", s)
 		}
 	}
@@ -104,6 +108,8 @@ func TestLexer(t *testing.T) {
 	oe(`  ' \''`, m(Char, `' \''`), sc)
 	o(`'\n'`, m(Char, `'\n'`), sc)
 	o(`'\032'`, m(Char, `'\032'`), sc)
+	o(`'\327'`, m(Char, `'\327'`), sc)
+	oe(`'\328'`, m(Char, `'\328'`), sc)
 	o(`'\x3a'`, m(Char, `'\x3a'`), sc)
 	o(`'\xa3'`, m(Char, `'\xa3'`), sc)
 	o(`'永'`, m(Char, `'永'`), sc)

@@ -4,30 +4,44 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/h8liu/e8/stay/reporters"
+	"github.com/h8liu/e8/stay/reporter"
+	"github.com/h8liu/e8/stay/runes"
+	"github.com/h8liu/e8/stay/scanner"
 	"github.com/h8liu/e8/stay/tokens"
 )
 
 type Lexer struct {
-	*scanner
+	s        *scanner.Scanner
+	reporter reporter.Interface
+
+	line int
+	col int
 
 	illegal    bool  // illegal encountered
 	insertSemi bool  // if treat end line as whitespace
 	eof        bool  // end of file returned
-	FirstFail  error // lex error encountered
+	firstFail  error // lex error encountered
 }
 
 // Creates a new lexer
 func New(in io.Reader) *Lexer {
 	ret := new(Lexer)
-	ret.scanner = newScanner(in)
+	ret.s = scanner.New(in)
 
 	return ret
 }
 
 // Use a particular error reporter
-func (self *Lexer) SetErrorReporter(reporter reporters.ErrReporter) {
-	self.scanner.errReporter = reporter
+func (self *Lexer) SetReporter(r reporter.Interface) {
+	self.reporter = r
+}
+
+func (self *Lexer) report(e error) {
+	if self.reporter == nil {
+		return
+	}
+	line, col := self.s.Pos()
+	self.reporter.Report(line, col, e)
 }
 
 // Reports a lex error
@@ -35,74 +49,71 @@ func (self *Lexer) failf(f string, args ...interface{}) {
 	e := fmt.Errorf(f, args...)
 	self.report(e)
 
-	if self.FirstFail == nil {
-		self.FirstFail = e
+	if self.firstFail == nil {
+		self.firstFail = e
 	}
 }
 
 func (self *Lexer) skipWhites() {
 	if self.insertSemi {
-		self.skipAnys(" \t\r")
+		self.s.SkipAnys(" \t\r")
 	} else {
-		self.skipAnys(" \t\r\n")
+		self.s.SkipAnys(" \t\r\n")
 	}
-}
-
-func (self *Lexer) scanExpo() {
-	self.scanAny("-+")
-	self.scanDigits()
 }
 
 func (self *Lexer) _scanNumber(dotLed bool) (lit string, t int) {
+	s := self.s
+
 	if !dotLed {
-		if self.scan('0') {
-			if self.scan('x') || self.scan('X') {
-				if self.scanHexDigits() == 0 {
-					return self.accept(), tokens.Illegal
+		if s.Scan('0') {
+			if s.Scan('x') || self.s.Scan('X') {
+				if s.ScanHexDigits() == 0 {
+					return s.Accept(), tokens.Illegal
 				}
 			} else {
-				self.scanOctDigits()
+				s.ScanOctDigits()
 			}
 
-			if self.scanIdent() != 0 {
-				return self.accept(), tokens.Illegal
+			if s.ScanIdent() != 0 {
+				return s.Accept(), tokens.Illegal
 			}
 
-			return self.accept(), tokens.Int
+			return s.Accept(), tokens.Int
 		}
 
-		self.scanDigits()
+		s.ScanDigits()
 
-		if self.scanAny("eE") {
-			self.scanExpo()
-			if self.scanIdent() != 0 {
-				return self.accept(), tokens.Illegal
+		if s.ScanAny("eE") {
+			s.ScanAny("-+")
+			if s.ScanDigits() == 0 {
+				return s.Accept(), tokens.Illegal
 			}
-			return self.accept(), tokens.Float
+			return s.Accept(), tokens.Float
 		}
 
-		if !self.scan('.') {
-			if self.scanIdent() != 0 {
-				return self.accept(), tokens.Illegal
+		if !s.Scan('.') {
+			if s.ScanIdent() != 0 {
+				return s.Accept(), tokens.Illegal
 			}
-			return self.accept(), tokens.Int
+			return s.Accept(), tokens.Int
 		}
 
-		self.scanDigits()
+		s.ScanDigits()
 	} else {
-		if self.scanDigits() == 0 {
-			return self.accept(), tokens.Illegal
+		if s.ScanDigits() == 0 {
+			return s.Accept(), tokens.Illegal
 		}
 	}
 
-	if self.scanAny("eE") {
-		self.scanAny("-+")
-		if self.scanDigits() == 0 {
-			return self.accept(), tokens.Illegal
+	if s.ScanAny("eE") {
+		s.ScanAny("-+")
+		if s.ScanDigits() == 0 {
+			return s.Accept(), tokens.Illegal
 		}
 	}
 
-	return self.accept(), tokens.Float
+	return s.Accept(), tokens.Float
 }
 
 func (self *Lexer) scanNumber(dotLed bool) (lit string, t int) {
@@ -116,44 +127,48 @@ func (self *Lexer) scanNumber(dotLed bool) (lit string, t int) {
 }
 
 func (self *Lexer) scanEscape(q rune) {
-	if self.scanAny("abfnrtv\\") {
+	s := self.s
+
+	if s.ScanAny("abfnrtv\\") {
 		return
 	}
-	if self.scan(q) {
+	if s.Scan(q) {
 		return
 	}
 
-	if self.scan('x') {
-		if !(self.scanHexDigit() && self.scanHexDigit()) {
+	if s.Scan('x') {
+		if !(s.ScanHexDigit() && s.ScanHexDigit()) {
 			self.failf("invalid hex escape")
 		}
 		return
 	}
 
-	if self.scanOctDigit() {
-		if !(self.scanOctDigit() && self.scanOctDigit()) {
-			self.failf("invalid oct escape")
+	if s.ScanOctDigit() {
+		if !(s.ScanOctDigit() && s.ScanOctDigit()) {
+			self.failf("invalid octal escape")
 		}
 		return
 	}
 
-	self.failf("unknown escape char %q", self.peek())
-	self.next()
+	self.failf("unknown escape char %q", s.Peek())
+	s.Next()
+
 	return
 }
 
 func (self *Lexer) scanChar() string {
+	s := self.s
 	n := 0
-	for !self.scan('\'') {
-		if self.peek() == '\n' || self.closed {
+	for !s.Scan('\'') {
+		if s.Peek() == '\n' || s.Closed() {
 			self.failf("char not terminated")
 			break
 		}
 
-		if self.scan('\\') {
+		if s.Scan('\\') {
 			self.scanEscape('\'')
 		} else {
-			self.next()
+			s.Next()
 		}
 		n++
 	}
@@ -162,33 +177,35 @@ func (self *Lexer) scanChar() string {
 		self.failf("illegal char")
 	}
 
-	return self.accept()
+	return s.Accept()
 }
 
 func (self *Lexer) scanComment() string {
-	if self.scan('*') {
+	s := self.s
+
+	if s.Scan('*') {
 		for {
-			if self.scan('*') {
-				if self.scan('/') {
-					return self.accept()
+			if s.Scan('*') {
+				if s.Scan('/') {
+					return s.Accept()
 				}
 				continue
 			}
 
-			if self.closed {
+			if s.Closed() {
 				self.failf("incomplete block comment")
-				return self.accept()
+				return s.Accept()
 			}
-			self.next()
+			s.Next()
 		}
 	}
 
-	if self.scan('/') {
+	if s.Scan('/') {
 		for {
-			if self.peek() == '\n' || self.closed {
-				return self.accept()
+			if s.Peek() == '\n' || s.Closed() {
+				return s.Accept()
 			}
-			self.next()
+			s.Next()
 		}
 	}
 
@@ -196,6 +213,8 @@ func (self *Lexer) scanComment() string {
 }
 
 func (self *Lexer) scanOperator(r rune) int {
+	s := self.s
+
 	switch r {
 	case '\n':
 		self.insertSemi = false
@@ -203,8 +222,8 @@ func (self *Lexer) scanOperator(r rune) int {
 	case ':':
 		return tokens.Colon
 	case '.':
-		if self.scan('.') {
-			if self.scan('.') {
+		if s.Scan('.') {
+			if s.Scan('.') {
 				return tokens.Ellipsis
 			}
 			self.failf("two dots, expecting one more")
@@ -229,89 +248,89 @@ func (self *Lexer) scanOperator(r rune) int {
 	case '}':
 		return tokens.Rbrack
 	case '+':
-		if self.scan('+') {
+		if s.Scan('+') {
 			return tokens.Inc
-		} else if self.scan('=') {
+		} else if s.Scan('=') {
 			return tokens.AddAssign
 		} else {
 			return tokens.Add
 		}
 	case '-':
-		if self.scan('-') {
+		if s.Scan('-') {
 			return tokens.Dec
-		} else if self.scan('=') {
+		} else if s.Scan('=') {
 			return tokens.SubAssign
 		}
 		return tokens.Sub
 	case '*':
-		if self.scan('=') {
+		if s.Scan('=') {
 			return tokens.MulAssign
 		}
 		return tokens.Mul
 	case '/':
-		if self.scan('=') {
+		if s.Scan('=') {
 			return tokens.DivAssign
 		}
 		return tokens.Div
 	case '%':
-		if self.scan('=') {
+		if s.Scan('=') {
 			return tokens.ModAssign
 		}
 		return tokens.Mod
 	case '^':
-		if self.scan('=') {
+		if s.Scan('=') {
 			return tokens.XorAssign
 		}
 		return tokens.Xor
 	case '<':
-		if self.scan('=') {
+		if s.Scan('=') {
 			return tokens.Leq
-		} else if self.scan('<') {
-			if self.scan('=') {
+		} else if s.Scan('<') {
+			if s.Scan('=') {
 				return tokens.ShiftLeftAssign
 			}
 			return tokens.ShiftLeft
 		}
 		return tokens.Less
 	case '>':
-		if self.scan('=') {
+		if s.Scan('=') {
 			return tokens.Geq
-		} else if self.scan('>') {
-			if self.scan('=') {
+		} else if s.Scan('>') {
+			if s.Scan('=') {
 				return tokens.ShiftRightAssign
 			}
 			return tokens.ShiftRight
 		}
 		return tokens.Greater
 	case '=':
-		if self.scan('=') {
+		if s.Scan('=') {
 			return tokens.Eq
 		}
 		return tokens.Assign
 	case '!':
-		if self.scan('=') {
+		if s.Scan('=') {
 			return tokens.Neq
 		}
 		return tokens.Not
 	case '&':
-		if self.scan('^') {
-			if self.scan('=') {
+		if s.Scan('^') {
+			if s.Scan('=') {
 				return tokens.NandAssign
 			} else {
 				return tokens.Nand
 			}
 		}
-		if self.scan('=') {
+		if s.Scan('=') {
 			return tokens.AndAssign
-		} else if self.scan('&') {
+		} else if s.Scan('&') {
 			return tokens.Land
 		}
 
 		return tokens.And
 	case '|':
-		if self.scan('=') {
+		if s.Scan('=') {
 			return tokens.OrAssign
-		} else if self.scan('|') {
+		} else if s.Scan('|') {
 			return tokens.Lor
 		}
 	}
@@ -323,12 +342,25 @@ func (self *Lexer) scanOperator(r rune) int {
 	return tokens.Illegal
 }
 
-// Scanning error
-func (self *Lexer) ScanErr() error {
-	if self.err == io.EOF {
-		return nil
+func (self *Lexer) Err() error {
+	e := self.s.Err()
+	if e != nil {
+		return e
 	}
-	return self.err
+
+	if self.firstFail != nil {
+		return self.firstFail
+	}
+
+	return nil
+}
+
+func (self *Lexer) ScanErr() error {
+	return self.s.Err()
+}
+
+func (self *Lexer) LexErr() error {
+	return self.firstFail
 }
 
 var insertSemiTokens = []int{
@@ -355,74 +387,85 @@ var insertSemiTokenMap = func() map[int]bool {
 	return ret
 }()
 
-// Returns the next token.
-// t is the token code, p is the position code,
-// and lit is the string literal.
-// Returns tokens.EOF in t for the last token.
-func (self *Lexer) Token() (t int, p uint32, lit string) {
-	t, p, lit = self.scanToken()
-
-	if t != tokens.Illegal {
-		self.insertSemi = insertSemiTokenMap[t]
-	}
-
-	return
+func (self *Lexer) savePos() { self.line, self.col = self.s.Pos() }
+func (self *Lexer) token(t int, lit string) *Token {
+	return &Token{t, self.line, self.col, lit}
 }
 
 // Returns if the scanner has anything to return
 func (self *Lexer) Scan() bool { return !self.eof }
 
-func (self *Lexer) scanToken() (t int, p uint32, lit string) {
+// Returns the next token.
+// t is the token code, p is the position code,
+// and lit is the string literal.
+// Returns tokens.EOF in t for the last token.
+func (self *Lexer) Token() *Token {
+	ret := self.scanToken()
+	if ret.Token != tokens.Illegal {
+		self.insertSemi = insertSemiTokenMap[ret.Token]
+	}
+	return ret
+}
+
+func (self *Lexer) scanToken() *Token {
 	if self.eof {
-		return tokens.EOF, self.pos(), ""
+		self.savePos()
+		return self.token(tokens.EOF, "")
 	}
 
 	self.skipWhites()
-	p = self.pos()
+	self.savePos()
 
-	if self.closed {
+	if self.s.Closed() {
 		if self.insertSemi {
 			self.insertSemi = false
-			return tokens.Semicolon, p, ";"
+			return self.token(tokens.Semicolon, ";")
 		}
 		self.eof = true
-		return tokens.EOF, p, ""
+
+		e := self.s.Err()
+		if e != nil {
+			self.report(e)
+		}
+		return self.token(tokens.EOF, "")
 	}
 
-	r := self.peek()
+	s := self.s
+	r := s.Peek()
 
-	if isLetter(r) {
-		self.scanIdent()
-		lit = self.accept()
-		t = tokens.IdentToken(lit)
-
-		return t, p, lit
-	} else if isDigit(r) {
-		lit, t = self.scanNumber(false)
-		return t, p, lit
-	} else if self.scan('\'') {
+	if runes.IsLetter(r) {
+		s.ScanIdent()
+		lit := s.Accept()
+		t := tokens.IdentToken(lit)
+		return self.token(t, lit)
+	} else if runes.IsDigit(r) {
+		lit, t := self.scanNumber(false)
+		return self.token(t, lit)
+	} else if r == '\'' {
 		self.insertSemi = true
-		lit = self.scanChar()
-		return tokens.Char, p, lit
+		s.Next()
+		lit := self.scanChar()
+		return self.token(tokens.Char, lit)
 	}
 
-	self.next()
+	s.Next() // at this time, we will always make some progress
 
-	if r == '.' && isDigit(self.peek()) {
-		lit, t = self.scanNumber(true)
-		return t, p, lit
+	if r == '.' && runes.IsDigit(s.Peek()) {
+		lit, t := self.scanNumber(true)
+		return self.token(t, lit)
 	} else if r == '/' {
-		r2 := self.peek()
+		r2 := s.Peek()
 		if r2 == '/' || r2 == '*' {
 			s := self.scanComment()
-			return tokens.Comment, p, s
+			return self.token(tokens.Comment, s)
 		}
 	}
 
-	t = self.scanOperator(r)
-	lit = self.accept()
+	t := self.scanOperator(r)
+	lit := s.Accept()
 	if t == tokens.Semicolon {
 		lit = ";"
 	}
-	return t, p, lit
+
+	return self.token(t, lit)
 }
