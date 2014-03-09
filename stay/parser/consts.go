@@ -1,5 +1,5 @@
 package parser
 
-func (self *Parser) parseConsts() {
+func (self *Parser) parseConstDecls() {
 	panic("todo")
 }

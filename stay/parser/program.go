@@ -15,8 +15,7 @@ func (self *Parser) parseProgram() {
 			} else if s.Accept(tokens.EOF) {
 				break
 			} else if s.Accept(tokens.Func) {
-				// TODO: parse function here
-				panic("todo")
+				self.parseFuncDecl()
 			} else {
 				self.failf("expect declaration")
 				break
@@ -37,13 +36,11 @@ func (self *Parser) parseProgram() {
 func (self *Parser) parseDecls() bool {
 	s := self.s
 	if s.Accept(tokens.Const) {
-		self.parseConsts()
+		self.parseConstDecls()
 	} else if s.Accept(tokens.Type) {
-		// TODO: parse type
-		panic("todo")
+		self.parseTypeDecls()
 	} else if s.Accept(tokens.Var) {
-		// TODO: parse variable
-		panic("todo")
+		self.parseVarDecls()
 	} else {
 		return false
 	}
