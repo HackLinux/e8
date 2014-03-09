@@ -15,7 +15,7 @@ type Lexer struct {
 	reporter reporter.Interface
 
 	line int
-	col int
+	col  int
 
 	illegal    bool  // illegal encountered
 	insertSemi bool  // if treat end line as whitespace

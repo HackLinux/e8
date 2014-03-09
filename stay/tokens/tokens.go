@@ -12,7 +12,6 @@ const (
 	Int
 	Float
 	Char
-	InvalidNum
 	// String
 	literalEnd
 

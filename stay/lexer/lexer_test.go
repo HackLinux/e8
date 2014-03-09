@@ -27,8 +27,8 @@ func TestLexer(t *testing.T) {
 				continue
 			}
 
-			if i >= len(exp) || 
-				exp[i].t != tok.Token || 
+			if i >= len(exp) ||
+				exp[i].t != tok.Token ||
 				exp[i].lit != tok.Lit {
 
 				t.Errorf("lex %q: #%d: %q(%s)",
