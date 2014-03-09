@@ -253,8 +253,8 @@ var insertSemiTokenMap = func() map[int]bool {
 	return ret
 }()
 
-func (self *Lexer) savePos() { 
-	self.buf.Line, self.buf.Col = self.s.Pos() 
+func (self *Lexer) savePos() {
+	self.buf.Line, self.buf.Col = self.s.Pos()
 }
 func (self *Lexer) token(t int, lit string) *Token {
 	self.buf.Token = t
