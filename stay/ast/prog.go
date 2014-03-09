@@ -1,5 +1,9 @@
 package ast
 
+import (
+	"github.com/h8liu/e8/printer"
+)
+
 type Program struct {
 	Imports []*ImportDecl
 	Funcs   []*FuncDecl
@@ -19,4 +23,21 @@ func (self *Program) AddImport(i *ImportDecl) {
 
 func (self *Program) AddFunc(f *FuncDecl) {
 	self.Funcs = append(self.Funcs, f)
+}
+
+func (self *Program) PrintTo(p printer.Interface) {
+	if len(self.Imports) > 0 {
+		p.Println("import (")
+		p.ShiftIn()
+
+		for _, imp := range self.Imports {
+			imp.PrintTo(p)
+		}
+
+		p.ShiftOut(")")
+	}
+
+	for _, f := range self.Funcs {
+		f.PrintTo(p)
+	}
 }

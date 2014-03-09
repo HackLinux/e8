@@ -1,6 +1,11 @@
 package ast
 
+import (
+	"github.com/h8liu/e8/printer"
+)
+
 type Stmt interface {
+	PrintTo(p printer.Interface)
 }
 
 type BlockStmt struct {
@@ -18,5 +23,13 @@ func (self *BlockStmt) Add(s Stmt) {
 	self.Stmts = append(self.Stmts, s)
 }
 
-type CallStmt struct {
+func (self *BlockStmt) PrintTo(p printer.Interface) {
+	p.Println("{")
+	p.ShiftIn()
+
+	for _, s := range self.Stmts {
+		s.PrintTo(p)
+	}
+
+	p.ShiftOut("}")
 }

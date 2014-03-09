@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/h8liu/e8/stay/parser"
+	"github.com/h8liu/e8/printer"
 )
 
 func noError(e error) {
@@ -27,6 +28,10 @@ func main() {
 	path := args[0]
 	prog, e := parser.ParseFile(path)
 	noError(e)
+
+	pr := printer.New(os.Stdout)
+	prog.PrintTo(pr)
+	noError(pr.Error)
 
 	for _, imp := range prog.Imports {
 		if imp.As == "" {
