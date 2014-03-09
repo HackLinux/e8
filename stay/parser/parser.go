@@ -96,7 +96,7 @@ func (self *Parser) Parse(in io.Reader) (*ast.Program, error) {
 	self.s = NewTokenScanner(pipe)
 
 	self.prog = ast.NewProgram()
-	self.scanProgram()
+	self.parseProgram()
 
 	// return lex error first
 	if self.e != nil {

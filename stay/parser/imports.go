@@ -5,7 +5,7 @@ import (
 	"github.com/h8liu/e8/stay/tokens"
 )
 
-func (self *Parser) scanImports() {
+func (self *Parser) parseImports() {
 	s := self.s
 
 	for s.Accept(tokens.Import) {
@@ -16,7 +16,7 @@ func (self *Parser) scanImports() {
 					return
 				}
 
-				self.scanImportSpec()
+				self.parseImportSpec()
 				if !s.Accept(tokens.Semicolon) {
 					if s.Scan(tokens.Rparen) {
 						break
@@ -38,7 +38,7 @@ func (self *Parser) scanImports() {
 				return
 			}
 
-			if self.scanImportSpec() {
+			if self.parseImportSpec() {
 				if !s.Accept(tokens.Semicolon) {
 					self.expectSemicolon()
 				}
@@ -49,7 +49,7 @@ func (self *Parser) scanImports() {
 	}
 }
 
-func (self *Parser) scanImportSpec() bool {
+func (self *Parser) parseImportSpec() bool {
 	s := self.s
 
 	var as string
