@@ -1,4 +1,4 @@
-package pack
+package packag
 
 import (
 	"fmt"
@@ -7,7 +7,6 @@ import (
 
 	"github.com/h8liu/e8/stay/ast"
 	"github.com/h8liu/e8/stay/parser"
-	"github.com/h8liu/e8/stay/pos"
 )
 
 type Package struct {
@@ -16,11 +15,15 @@ type Package struct {
 	files     []*ast.Ast
 }
 
+const (
+	MaxFile = 200
+)
+
 func NewPackage() *Package {
 	ret := new(Package)
 	ret.parser = parser.New()
-	ret.filenames = make([]string, 0, pos.MaxFile)
-	ret.files = make([]*ast.Ast, 0, pos.MaxFile)
+	ret.filenames = make([]string, 0, MaxFile)
+	ret.files = make([]*ast.Ast, 0, MaxFile)
 
 	return ret
 }
@@ -31,7 +34,7 @@ func (self *Package) QueryFilename(id uint8) string {
 
 func (self *Package) Add(name string, in io.Reader) error {
 	nfiles := len(self.files)
-	if nfiles == pos.MaxFile {
+	if nfiles == MaxFile {
 		return fmt.Errorf("too many files in a package")
 	}
 
