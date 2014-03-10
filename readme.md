@@ -2,27 +2,14 @@
 
 **Road Plan**
 
-- Build a MIPS-like very simple virtual machine
-- Build an assembler
-- Build a compiler for a Go-like system language `stay`
+- Build a MIPS-like very simple virtual machine (*mostly done*)
+- Build an assembler (*mostly done*)
+- Build a compiler for a Go-like system language `stay` (*work in progress*)
 - Port the assembler and compiler to `stay`.
-- Reimplement the VM in Javascript. (Maybe NaCl for golang will come out at that time.)
+- Implement the VM in Javascript. (*mostly done*, see [here](https://github.com/h8liu/e8js) )
 - Write a small OS in `stay`, so that is runs in the browser.
-- Build an online platform where people can submit interfaces, test cases, and
-  implementations
-- Test cases works like executables (`package main`, but maybe `package test`
-  is better). A test case link with other interface and implementation modules,
-  and generate test scores as output. It could be testing the actual implementation, or 
-  just defining the public interfaces of a type of module.
-- Interfaces and implementations are general library modules.
-- A module can only access other modules via publicly defined interfaces,
-  methods, functions, types, consts.
-- Users write modules under version control (perferable the website works like
-  something similar to github, but more language aware, where tests are automatically
-  performed.)
-- This is just for single vm open source testing
-- For more complex stuff, we can have multiple vm testing, where all calls are
-  performed over network RPC calls
+- Launch it online.
+- Add file system support.
 
 **Why**
 
@@ -75,9 +62,3 @@ This should grab all `e8` into you `$GOPATH` folder.
 
 Incomplete now. However, you can try type `make doc` under this project folder, 
 and visit `http://localhost:8000` for the API document.
-
-**TODO**
-
-- Const immediates support in assembly.
-- Data section support in assembly.
-- Assemble a project of multiple files.

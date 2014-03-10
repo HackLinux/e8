@@ -82,18 +82,28 @@ func (self *BadExpr) PrintTo(p printer.Interface) {
 }
 
 func (self *CallExpr) PrintTo(p printer.Interface) {
-	p.Println("call (")
+	p.Println("call {")
 	p.ShiftIn()
-	self.Func.PrintTo(p)
-	p.ShiftOut()
-	p.Println(") (")
-	p.ShiftIn()
+	
+	if ident, ok := self.Func.(*Ident); ok {
+		p.Printf("func %s", ident.Ident)
+	} else {
+		p.Println("func {")
+		self.Func.PrintTo(p)
+		p.ShiftIn()
+		self.Func.PrintTo(p)
+		p.ShiftOut("}")
+	}
 
+	p.Println("args {")
+	p.ShiftIn()
 	for i, arg := range self.ArgList {
 		if i > 0 {
 			p.Println(",")
 		}
 		arg.PrintTo(p)
 	}
-	p.ShiftOut(")")
+	p.ShiftOut("}")
+
+	p.ShiftOut("}")
 }
