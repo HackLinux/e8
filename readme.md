@@ -4,6 +4,9 @@
 
 - Build a MIPS-like very simple virtual machine (*mostly done*)
 - Build an assembler (*mostly done*)
+- Build a SSA/TCA-like language `sand`. This serves as the intermediate language for the
+  more fancy compiler. It will also enable some simple optimization (like constant
+  propagation and register allocation).
 - Build a compiler for a Go-like system language `stay` (*work in progress*)
 - Port the assembler and compiler to `stay`.
 - Implement the VM in Javascript. (*mostly done*, see [here](https://github.com/h8liu/e8js) )
