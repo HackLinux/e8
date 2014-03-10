@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/h8liu/e8/stay/reporter"
-	"github.com/h8liu/e8/stay/runes"
-	"github.com/h8liu/e8/stay/scanner"
+	"github.com/h8liu/e8/text/runes"
+	"github.com/h8liu/e8/text/scanner"
+
 	"github.com/h8liu/e8/stay/tokens"
+	"github.com/h8liu/e8/stay/reporter"
 )
 
 type Lexer struct {

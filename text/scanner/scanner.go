@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"io"
 
-	"github.com/h8liu/e8/stay/runes"
+	"github.com/h8liu/e8/text/runes"
 )
 
 const (
