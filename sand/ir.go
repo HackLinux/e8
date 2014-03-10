@@ -1,4 +1,4 @@
-package ir
+package sand
 
 type Func struct {
 	
