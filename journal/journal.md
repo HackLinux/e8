@@ -24,6 +24,9 @@ implemented.
 I think I probably should implement the SSA/TAC first. Rather than directly jump
 to the entire language.
 
+Another way might be first try to connect our RISC to LLVM backend, although
+I am not sure if it is easy to do.
+
 **2014.3.7**
 
 Finished most of the part of the lexer. Now a program can be parsed into tokens.
