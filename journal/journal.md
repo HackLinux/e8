@@ -21,6 +21,9 @@ and scan over. So I also do not need to write another scanner/parser.
 Maybe I really should have a deep look at how other SSAs (like go's and llvm's) are
 implemented.
 
+I think I probably should implement the SSA/TAC first. Rather than directly jump
+to the entire language.
+
 **2014.3.7**
 
 Finished most of the part of the lexer. Now a program can be parsed into tokens.
