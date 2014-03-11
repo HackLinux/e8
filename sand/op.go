@@ -2,7 +2,7 @@ package sand
 
 const (
 	TypPointer = iota
-	TypInt32 
+	TypInt32
 	TypUint32
 	TypInt16
 	TypUint16
@@ -36,14 +36,30 @@ const (
 	OpCall
 )
 
+type StackVar struct {
+	typ int
+	pos uint32
+}
+
+type HeapVar struct {
+	typ int
+	pos uint32
+}
+
 type Op struct {
-	op int 
-	typ int // integer type
-	x *Op // the first operand
-	y *Op // the second operand
+	op      int
+	typ     int // integer type
+	x       *Op // the first operand
+	y       *Op // the second operand
 	isConst bool
-	v int64 // the const value
+
+	stackPos uint32
+	reg      int // register assignment
+
+	// const values
+	v  int64   // the const value
 	vf float64 // the floating point value
+
 	// lab string // label lookup for const
 	jump string // label to jump if true
 }

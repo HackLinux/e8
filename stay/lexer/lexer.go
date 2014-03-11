@@ -7,8 +7,8 @@ import (
 	"github.com/h8liu/e8/text/runes"
 	"github.com/h8liu/e8/text/scanner"
 
-	"github.com/h8liu/e8/stay/tokens"
 	"github.com/h8liu/e8/stay/reporter"
+	"github.com/h8liu/e8/stay/tokens"
 )
 
 type Lexer struct {

@@ -84,7 +84,7 @@ func (self *BadExpr) PrintTo(p printer.Interface) {
 func (self *CallExpr) PrintTo(p printer.Interface) {
 	p.Println("call {")
 	p.ShiftIn()
-	
+
 	if ident, ok := self.Func.(*Ident); ok {
 		p.Printf("func %s", ident.Ident)
 	} else {
