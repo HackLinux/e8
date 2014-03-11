@@ -27,11 +27,12 @@ func foo (
 	_5 u32 = *_4 // interpret the pointed value as a uint32
 	_6 ptr = *_4 // interpret the pointed value as pointer
 	
-	call bar {
-		x // push the arg
-		_4 // push another arg
-		_ //
-	}
+    // if this is constant, then use j
+    // otherwise, use 
+	push x // push the arg
+	push _4 // push another arg
+	push _ // padding
+    call bar
 
 	ret = x / y
 }
