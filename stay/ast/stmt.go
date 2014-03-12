@@ -5,7 +5,7 @@ import (
 )
 
 type Stmt interface {
-	PrintTo(p printer.Interface)
+	printer.Printable
 }
 
 type BlockStmt struct {
