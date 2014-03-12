@@ -19,6 +19,9 @@ func IsIdent(s string) bool {
 		if c >= 'A' && c <= 'Z' {
 			continue
 		}
+		if c == '/' {
+			continue
+		}
 		if c >= '0' && c <= '9' {
 			if i == 0 {
 				return false
