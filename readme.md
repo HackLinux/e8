@@ -14,6 +14,26 @@
 - Launch it online.
 - Add file system support.
 
+**TODO list**
+
+- Compiler side
+  - Package parsing and package aliasing
+  - Package namespace building, types
+  - Consts
+  - Global variables
+  - Simple functions and linking
+  - Function code generation
+  - Simple optimizations
+- VM side
+  - Event support
+  - More sample programs in ASM
+  - Web visualization, stepping demo and debugger
+  - A simple console with some built-in programs
+  - User VM support
+  - Fancier console
+  - Simple canvas support
+  - Tic-tac-toe
+
 **Why**
 
 - This could be an online platform for ACM training
