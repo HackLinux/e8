@@ -1,4 +1,6 @@
 /* Prints a number */
+
+/*
 func printNum(i int) {
 	if i == 0 {
 		print('0')
@@ -22,3 +24,4 @@ func main() {
 	printNum(3927)
 	print('\n')
 }
+*/
