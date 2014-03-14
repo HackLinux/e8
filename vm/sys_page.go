@@ -70,7 +70,7 @@ func (self *SysPage) addrError() {
 
 // Reads a byte at address offset
 func (self *SysPage) Read(offset uint32) uint8 {
-	if offset < 4 {
+	if offset < 8 {
 		self.addrError()
 		return 0
 	}
@@ -98,7 +98,7 @@ func (self *SysPage) Read(offset uint32) uint8 {
 
 // Writes a byte at address offset
 func (self *SysPage) Write(offset uint32, b uint8) {
-	if offset < 4 {
+	if offset < 8 {
 		self.addrError()
 		return
 	}
