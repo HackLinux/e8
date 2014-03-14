@@ -20,17 +20,17 @@ type SysPage struct {
 // Special addresses on Sys page
 const (
 	// write: sets the halt value, halts the machine
-	Halt = 4
+	Halt = 8
 
 	// read: if stdout is ready for output
 	// write: output a byte to stdout
-	Stdout = 5
+	Stdout = 9
 
 	// read: if stdin is ready
-	StdinReady = 6
+	StdinReady = 10
 
 	// read: fetch a byte if any, returns 0 if stdin is not ready
-	Stdin = 7
+	Stdin = 11
 )
 
 var _ mem.Page = new(SysPage)

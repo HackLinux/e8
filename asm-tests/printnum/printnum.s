@@ -35,12 +35,12 @@
     addi $30, $31, 4    ; save the return point
     j printChar
     
-    sb $0, 0x4($0)   ; halt
+    sb $0, 0x8($0)   ; halt
     
 ; print the digit in $1 to output
 printChar:
 .loop:
-    lbu $29, 5           ; is output ready?
+    lbu $29, 9           ; is output ready?
     bne $29, $0, .loop
-    sb $1, 5
+    sb $1, 9
     add $31, $0, $30    ; return

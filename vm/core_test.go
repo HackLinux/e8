@@ -40,13 +40,13 @@ func TestHelloWorld(t *testing.T) {
 			lbu $2, $1[0x2000] 	; load byte
 			beq $2, $0, end 	; +5
 		wait:
-			lbu $3, $0[0x5]    	; is output ready?
+			lbu $3, $0[0x9]    	; is output ready?
 			bne $3, $0, wait 	; -2
-			sb $2, $0[0x5]		; output byte
+			sb $2, $0[0x9]		; output byte
 			addi $1, $1, 1		; increase counter
 			j loop 				; -7
 		end:
-			sb $0, [0x4]
+			sb $0, [0x8]
 	*/
 
 	Rinst := inst.Rinst
@@ -56,12 +56,12 @@ func TestHelloWorld(t *testing.T) {
 	w(Rinst(0, 0, 1, inst.FnAdd))       // 000
 	w(Iinst(inst.OpLbu, 1, 2, 0x2000))  // 004
 	w(Iinst(inst.OpBeq, 2, 0, 0x0005))  // 008
-	w(Iinst(inst.OpLbu, 0, 3, 0x0005))  // 00c
+	w(Iinst(inst.OpLbu, 0, 3, 0x0009))  // 00c
 	w(Iinst(inst.OpBne, 3, 0, 0xfffe))  // 010
-	w(Iinst(inst.OpSb, 0, 2, 0x0005))   // 014
+	w(Iinst(inst.OpSb, 0, 2, 0x0009))   // 014
 	w(Iinst(inst.OpAddi, 1, 1, 0x0001)) // 018
 	w(Jinst(-7))                        // 01c
-	w(Iinst(inst.OpSb, 0, 0, 0x0004))   // 020
+	w(Iinst(inst.OpSb, 0, 0, 0x0008))   // 020
 
 	c.SetPC(mem.PageStart(1))
 	used := c.Run(1000)
