@@ -6,20 +6,20 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/h8liu/e8/stay/packag"
+	"github.com/h8liu/e8/stay/module"
 )
 
-func parseDir(ps []*packag.Package, p string) ([]*packag.Package, error) {
-	pack, e := packag.LoadPackage(p)
+func parseDir(ms []*module.Module, p string) ([]*module.Module, error) {
+	mod, e := module.LoadModule(p)
 	if e != nil {
-		return ps, e
+		return ms, e
 	}
-	fmt.Println(pack.Name)
-	ps = append(ps, pack)
+	fmt.Println(mod.Name)
+	ms = append(ms, mod)
 
 	files, e := ioutil.ReadDir(p)
 	if e != nil {
-		return ps, e
+		return ms, e
 	}
 
 	for _, f := range files {
@@ -27,13 +27,13 @@ func parseDir(ps []*packag.Package, p string) ([]*packag.Package, error) {
 			continue
 		}
 
-		ps, e = parseDir(ps, filepath.Join(p, f.Name()))
+		ms, e = parseDir(ms, filepath.Join(p, f.Name()))
 		if e != nil {
-			return ps, e
+			return ms, e
 		}
 	}
 
-	return ps, nil
+	return ms, nil
 }
 
 func main() {
@@ -42,8 +42,8 @@ func main() {
 		panic("STAYPATH undefined")
 	}
 
-	ps := make([]*packag.Package, 0, 100)
-	ps, e := parseDir(ps, p)
+	ms := make([]*module.Module, 0, 100)
+	ms, e := parseDir(ms, p)
 	if e != nil {
 		panic(e)
 	}

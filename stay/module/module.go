@@ -1,4 +1,4 @@
-package packag
+package module
 
 import (
 	"fmt"
@@ -13,7 +13,7 @@ import (
 	"github.com/h8liu/e8/stay/reporter"
 )
 
-type Package struct {
+type Module struct {
 	Name      string
 	parser    *parser.Parser
 	filenames []string
@@ -24,8 +24,8 @@ const (
 	MaxFile = 200
 )
 
-func NewPackage() *Package {
-	ret := new(Package)
+func NewModule() *Module {
+	ret := new(Module)
 	ret.parser = parser.New()
 	ret.filenames = make([]string, 0, MaxFile)
 	ret.files = make([]*ast.Program, 0, MaxFile)
@@ -62,13 +62,13 @@ func packagePath(p string) (string, error) {
 	return p, nil
 }
 
-func LoadPackage(p string) (*Package, error) {
+func LoadModule(p string) (*Module, error) {
 	p, e := packagePath(p)
 	if e != nil {
 		return nil, e
 	}
 
-	ret := NewPackage()
+	ret := NewModule()
 	ret.Name = p
 	if !strings.HasSuffix(p, string(os.PathSeparator)) {
 		p = p + string(os.PathSeparator)
@@ -99,11 +99,11 @@ func LoadPackage(p string) (*Package, error) {
 	return ret, nil
 }
 
-func (self *Package) QueryFilename(id uint8) string {
+func (self *Module) QueryFilename(id uint8) string {
 	return self.filenames[id]
 }
 
-func (self *Package) Add(name string, in io.Reader) error {
+func (self *Module) Add(name string, in io.Reader) error {
 	nfiles := len(self.files)
 	if nfiles == MaxFile {
 		return fmt.Errorf("too many files in a package")
@@ -125,7 +125,7 @@ func (self *Package) Add(name string, in io.Reader) error {
 	return nil
 }
 
-func (self *Package) AddFile(path string) error {
+func (self *Module) AddFile(path string) error {
 	fin, e := os.Open(path)
 	if e != nil {
 		return e

@@ -1,4 +1,4 @@
-package packag
+package module
 
 import (
 	"fmt"
@@ -6,12 +6,12 @@ import (
 )
 
 type Reporter struct {
-	p      *Package
+	p      *Module
 	fid    uint32
 	errors []*Error
 }
 
-func NewReporter(p *Package, fid uint8) *Reporter {
+func NewReporter(p *Module, fid uint8) *Reporter {
 	ret := new(Reporter)
 	ret.p = p
 	ret.fid = uint32(fid) << 24
