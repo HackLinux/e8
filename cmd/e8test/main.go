@@ -1,19 +1,32 @@
 package main
 
 import (
-	"os"
+	"fmt"
 
-	"github.com/h8liu/e8/printer"
-	"github.com/h8liu/e8/sand"
+	"github.com/h8liu/e8/stay/module"
 )
 
 func main() {
-	f := sand.NewFunc("test")
-	v := f.NewVar(sand.TypUint8, 1)
+	fmt.Println(module.StayPath())
+	
+	/*
+	// scan all the modules and return in dependency order
+	module.ScanModules()
 
-	c := f.NewCall("print", nil)
-	c.AddArg(v)
+	// Scan a module and return the modules based on dependency order
+	// 
+	mods, e := module.ScanModule("m")
 
-	p := printer.New(os.Stdout)
-	f.PrintTo(p)
+	for _, mod := range mods {
+		// Check if the module signature changed
+		// the signature is a hash of the list of files with 
+		// the files last update time
+		if mod.Changed() {
+			mod.Compile()
+		}
+	}
+
+
+
+	*/
 }

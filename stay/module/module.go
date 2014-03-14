@@ -33,15 +33,6 @@ func NewModule() *Module {
 	return ret
 }
 
-var stayPath string
-func init() {
-	stayPath = os.Getenv("STAYPATH")
-	n := len(stayPath)
-	if n > 0 && stayPath[n-1] == os.PathSeparator {
-		stayPath = stayPath[:n-1]
-	}
-}
-
 func packagePath(p string) (string, error) {
 	p, e := filepath.Abs(p)
 	if e != nil {
