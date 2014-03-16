@@ -2,16 +2,15 @@
 
 So I have a pretty-much working but not very well tested lexer now.
 
-Now I started to build my abstract syntax tree. It pretty tedious.
+Now I started to build my abstract syntax tree. It's pretty tedious.
 
 And I also need to formalize the spec of my language.
 
-I thought golang is pretty simple and implementing it would also be pretty
-simple. However I was sort of wrong. Just parsing the abstract syntax tree
-needs to take some extra care on programming. Well, I write the lexer and parser
-all by hand, so that somehow makes things harder, but not so hard. Anyway, golang
-is certainly simpler than C++, but it is not that simple. Scheme might be the much
-simpler to implement.
+I thought golang is pretty simple to implementing; I was wrong. Just parsing
+the abstract syntax tree needs to take some extra care on programming. Well, I
+write the lexer and parser all by hand, so that somehow makes things harder,
+but not so hard. Anyway, golang is certainly simpler than C++, but it is not
+that simple. Scheme might be the much simpler to implement.
 
 And after that, if I follow the traditional way of writing a compiler. I also need
 to write an intermediate representation. This IR probably won't need a parser,

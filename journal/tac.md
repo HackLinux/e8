@@ -1,4 +1,4 @@
-// ssa design
+// tac design
 
 // global heap data
 data {
@@ -13,8 +13,7 @@ func foo (
     x u32
     y u32
     f f64
-)
-{
+) {
 	t u32 = 0 
 	f i32 = -1
 	p ptr = 0
