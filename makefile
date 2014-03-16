@@ -25,7 +25,7 @@ doc:
 	godoc -http=:8000
 
 asmt:
-	make -C asm-tests --no-print-directory
+	make -C asm/tests --no-print-directory
 
 stayall:
 	STAYPATH=`pwd`/stay-tests stayall
