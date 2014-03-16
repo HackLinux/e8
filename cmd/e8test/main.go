@@ -1,55 +1,19 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 
 	"github.com/h8liu/e8/stay/module"
 )
 
 func main() {
 	list, _ := module.ListModules()
+	maker := module.NewMaker()
+
 	for _, m := range list {
-		meta, e := module.NewMeta(m)
+		_, e := maker.Open(m)
 		if e != nil {
 			panic(e)
 		}
-
-		if meta.Updated() {
-			fmt.Println(m)
-			meta.PrintFiles()
-			e = meta.Save()
-			if e != nil {
-				panic(e)
-			}
-		}
 	}
-
-	/*
-		// scan all the modules and return in dependency order
-		mods := module.ScanModules()
-
-		// Scan a module and return the modules based on dependency order
-		//
-		mods := module.ScanModule("m")
-
-		for _, mod := range mods {
-			// Check if the module signature changed
-			// the signature is a hash of the list of files with
-			// the files last update time
-			e = mod.Error()
-			if e != nil {
-				fmt.Println(e)
-			}
-
-			if mod.DepError() {
-				continue
-			}
-			if !mod.Changed() && !mod.DepChanged() {
-				continue
-			}
-
-			mod.Compile()
-		}
-
-	*/
 }
