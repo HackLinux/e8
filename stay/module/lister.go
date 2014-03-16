@@ -56,7 +56,7 @@ func isDir(p string) (bool, error) {
 	if e != nil {
 		return false, e
 	}
-	return stat.Mode().IsDir(), nil
+	return stat.IsDir(), nil
 }
 
 func (self *Lister) scan(m string) {

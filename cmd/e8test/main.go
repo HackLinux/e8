@@ -9,7 +9,19 @@ import (
 func main() {
 	list, _ := module.ListModules()
 	for _, m := range list {
-		fmt.Println(m)
+		meta, e := module.NewMeta(m)
+		if e != nil {
+			panic(e)
+		}
+
+		if meta.Updated() {
+			fmt.Println(m)
+			meta.PrintFiles()
+			e = meta.Save()
+			if e != nil {
+				panic(e)
+			}
+		}
 	}
 
 	/*

@@ -2,6 +2,9 @@ package module
 
 func IsValidName(name string) bool {
 	for i, r := range name {
+		if r == '_' {
+			continue
+		}
 		if 'a' <= r && r <= 'z' {
 			continue
 		}

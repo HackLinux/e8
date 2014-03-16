@@ -1,16 +1,16 @@
 // prints hello
 
-import "a"
+import "hello"
 
-import fmt "b"
-import f "c"
-import . "dd"
+import fmt "hello"
+import f "hello"
+import . "hello"
 
 /** dafe */
 
 import (
-    "fmt"
-    "something"
+    "ho"
+    "hello/ho"
 )
 
 import ()
@@ -21,17 +21,17 @@ import (
 
 )
 
-import "\tt"
+import "hello"
 
 import (
-    // t2 "t2"
-    tx "tx"
+    // t2 "ho"
+    tx "hello/ho"
 )
 
-import "\t"
-import "3c"
+import "hello"
+import "ho"
 
-import ( "a"; "b"; "c" )
-import ( a "a"; b "b"; c "c"; )
+import ( "ho"; "ho"; "ho" )
+import ( a "ho"; b "ho"; c "ho"; )
 
 //so
