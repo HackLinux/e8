@@ -59,8 +59,6 @@ func (self *Meta) Save() error {
 }
 
 func (self *Meta) PrintFiles() {
-	fmt.Println(self.oldMeta.modTime)
-	fmt.Println(self.newMeta.modTime)
 	for _, f := range self.newMeta.files {
 		fmt.Println("  ", f)
 	}
