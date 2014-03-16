@@ -5,7 +5,11 @@ import (
 	"path/filepath"
 )
 
-var stayPath string
+var (
+	stayPath    string
+	staySrcPath string
+	stayLibPath string
+)
 
 func parseStayPath() string {
 	p := os.Getenv("STAYPATH")
@@ -37,8 +41,10 @@ func init() {
 	}
 
 	stayPath = p
+	staySrcPath = filepath.Join(p, "src")
+	stayLibPath = filepath.Join(p, "lib")
 }
 
-func StayPath() string {
-	return stayPath
-}
+func StayPath(m string) string { return filepath.Join(stayPath, m) }
+func SrcPath(m string) string  { return filepath.Join(staySrcPath, m) }
+func LibPath(m string) string  { return filepath.Join(stayLibPath, m) }
