@@ -1,2 +1,5 @@
 all:
-	@e8test
+	@sake
+
+reb:
+	@sake -B

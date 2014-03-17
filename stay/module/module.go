@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"path/filepath"
 	"strings"
+
+	"github.com/h8liu/e8/stay/parser"
 )
 
 const (
@@ -23,50 +25,23 @@ func (self *Module) Path() string {
 	return self.path
 }
 
-func (maker *Maker) Open(p string) (*Module, error) {
-	m := maker.FindModule(p)
-	if m != nil {
-		return m, nil
-	}
-
-	ret := new(Module)
-	ret.path = p
-
-	var e error
-	ret.meta, e = NewMeta(p)
-	if e != nil {
-		return nil, e
-	}
-	ret.files = ret.meta.newMeta.files
-
-	if maker.ForceRebuild || ret.meta.Updated() {
-		e = ret.meta.Save()
-		if e != nil {
-			return nil, e
-		}
-		e = ret.ScanImports()
-		if e != nil {
-			e = ret.SaveImports()
-		}
-	} else {
-		e = ret.LoadImports()
-	}
-
-	if e != nil {
-		return nil, e
-	}
-
-	maker.addModule(ret)
-	return ret, nil
-}
-
 func (self *Module) ScanImports() error {
 	srcpath := self.meta.srcpath
 	files := self.files
 
 	for _, file := range files {
+		if file == ".imports" {
+			continue
+		}
+
 		path := filepath.Join(srcpath, file)
-		println(path)
+
+		// println("  ", file)
+		_, e := parser.ParseFile(path)
+		if e != nil {
+			return e
+		}
+
 		// TODO:
 	}
 
