@@ -72,6 +72,8 @@ func (self *Parser) Parse(in io.Reader) (*ast.Program, error) {
 	// TODO: get another pipe for *Token recycle, so it won't
 	// go to garbage collection
 
+	// TODO: need to change this pipe structure since we might not need
+	// to read the entire file.
 	go func() {
 		for lex.Scan() {
 			t := lex.Token()
@@ -96,7 +98,6 @@ func (self *Parser) Parse(in io.Reader) (*ast.Program, error) {
 	}()
 
 	self.s = NewTokenScanner(pipe)
-
 	self.prog = ast.NewProgram()
 	self.parseProgram()
 
