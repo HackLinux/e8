@@ -1,10 +1,10 @@
 package module
 
 import (
-	"io/ioutil"
-	"strings"
 	"bytes"
 	"fmt"
+	"io/ioutil"
+	"strings"
 )
 
 func readLines(path string) ([]string, error) {
