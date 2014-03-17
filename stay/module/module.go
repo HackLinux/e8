@@ -1,11 +1,7 @@
 package module
 
 import (
-	"bytes"
-	"fmt"
-	"io/ioutil"
 	"path/filepath"
-	"strings"
 
 	"github.com/h8liu/e8/stay/parser"
 )
@@ -49,37 +45,15 @@ func (self *Module) ScanImports() error {
 	return nil
 }
 
-func (self *Module) SaveImports() error {
-	libpath := self.meta.libpath
-	path := filepath.Join(libpath, "imports")
-
-	buf := new(bytes.Buffer)
-	for _, im := range self.imports {
-		fmt.Fprintln(buf, im)
-	}
-
-	return ioutil.WriteFile(path, buf.Bytes(), 0644)
+func (self *Module) importsPath() string {
+	return filepath.Join(self.meta.libpath, "imports")
 }
 
-func (self *Module) LoadImports() error {
-	libpath := self.meta.libpath
-	path := filepath.Join(libpath, "imports")
-	bytes, e := ioutil.ReadFile(path)
-	if e != nil {
-		return e
-	}
+func (self *Module) SaveImports() error {
+	return writeLines(self.importsPath(), self.imports)
+}
 
-	s := string(bytes)
-	lines := strings.Split(s, "\n")
-	ret := make([]string, 0, len(lines))
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if line == "" {
-			continue
-		}
-		ret = append(ret, line)
-	}
-
-	self.imports = ret
-	return nil
+func (self *Module) LoadImports() (e error) {
+	self.imports, e = readLines(self.importsPath())
+	return e
 }
