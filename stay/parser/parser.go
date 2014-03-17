@@ -24,6 +24,8 @@ type Parser struct {
 	// token position will all be offset by this value on parsing
 	PosOffset uint32
 
+	ImportsOnly bool
+
 	s        *TokenScanner
 	e        error
 	prog     *ast.Program

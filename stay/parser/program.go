@@ -7,6 +7,10 @@ import (
 func (self *Parser) parseProgram() {
 	self.parseImports()
 
+	if self.ImportsOnly {
+		return
+	}
+
 	s := self.s
 	for {
 		if !self.parseDecls() {
