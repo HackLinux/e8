@@ -5,9 +5,9 @@ import (
 )
 
 type FuncDecl struct {
-	Name    string
-	DeclPos uint32
-	Body    *BlockStmt
+	Name     string
+	DeclLine int // XXX: fix me
+	Body     *BlockStmt
 }
 
 func (self *FuncDecl) PrintTo(p printer.Interface) {

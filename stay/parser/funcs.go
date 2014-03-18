@@ -16,8 +16,8 @@ func (self *Parser) parseFuncDecl() {
 	t := s.Next()
 
 	decl := new(ast.FuncDecl)
-	decl.Name = t.lit
-	decl.DeclPos = t.pos
+	decl.Name = t.Lit
+	decl.DeclLine = t.Line
 
 	// TODO: parameter list
 	if !s.Accept(tokens.Lparen) {
