@@ -1,8 +1,10 @@
-package tokens
+package token
+
+type Token int
 
 const (
 	// misc
-	Illegal = iota
+	Illegal = Token(iota)
 	EOF
 	Comment
 

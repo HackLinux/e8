@@ -1,10 +1,10 @@
-package tokens
+package token
 
 import (
 	"fmt"
 )
 
-var tokenStr = map[int]string{
+var tokenStr = map[Token]string{
 	Illegal: "Illegal",
 	EOF:     "EOF",
 	Comment: "Comment",
@@ -88,15 +88,15 @@ var tokenStr = map[int]string{
 	Var:         "var",
 }
 
-func TokenStr(t int) string {
-	if s, found := tokenStr[t]; found {
+func (self Token) String() string {
+	if s, found := tokenStr[self]; found {
 		return s
 	}
-	return fmt.Sprintf("<na-%d>", t)
+	return fmt.Sprintf("<na-%d>", int(self))
 }
 
-var keywords = func() map[string]int {
-	ret := make(map[string]int)
+var keywords = func() map[string]Token {
+	ret := make(map[string]Token)
 	for i := keywordBegin + 1; i < keywordEnd; i++ {
 		s := tokenStr[i]
 		ret[s] = i
@@ -105,7 +105,7 @@ var keywords = func() map[string]int {
 }()
 
 // Returns the related keyword token if it is a keyword; returns Ident otherwise.
-func IdentToken(s string) int {
+func IdentToken(s string) Token {
 	if i, found := keywords[s]; found {
 		return i
 	}

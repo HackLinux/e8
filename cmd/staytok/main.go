@@ -8,7 +8,6 @@ import (
 
 	"github.com/h8liu/e8/stay/lexer"
 	"github.com/h8liu/e8/stay/reporter"
-	"github.com/h8liu/e8/stay/tokens"
 )
 
 func noError(e error) {
@@ -38,7 +37,7 @@ func main() {
 		t := lex.Token()
 		fmt.Printf("%s:%d:%d: %q - %s\n",
 			path, t.Line, t.Col,
-			t.Lit, tokens.TokenStr(t.Token),
+			t.Lit, t.Token,
 		)
 	}
 

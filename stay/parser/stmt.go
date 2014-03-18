@@ -2,20 +2,20 @@ package parser
 
 import (
 	"github.com/h8liu/e8/stay/ast"
-	"github.com/h8liu/e8/stay/tokens"
+	"github.com/h8liu/e8/stay/token"
 )
 
 func (self *Parser) parseBlockStmt() *ast.BlockStmt {
 	s := self.s
 
-	if !s.Scan(tokens.Lbrace) {
+	if !s.Scan(token.Lbrace) {
 		self.failf("expecting left brace")
 	}
 
 	ret := ast.NewBlock()
 
 	// statement list
-	for !s.CurIs(tokens.Rbrace) {
+	for !s.CurIs(token.Rbrace) {
 		if s.Closed() {
 			self.failf("expecting end of block, but reached file end")
 			return ret
@@ -26,16 +26,16 @@ func (self *Parser) parseBlockStmt() *ast.BlockStmt {
 			ret.Add(stmt)
 		}
 
-		if s.CurIs(tokens.Rbrace) {
+		if s.CurIs(token.Rbrace) {
 			break
 		}
 
-		if !s.Scan(tokens.Semicolon) {
+		if !s.Scan(token.Semicolon) {
 			self.failf("missing semicolon")
 		}
 	}
 
-	if !s.Scan(tokens.Rbrace) {
+	if !s.Scan(token.Rbrace) {
 		self.failf("missing right brace")
 	}
 
@@ -47,9 +47,9 @@ func (self *Parser) parseStmt() ast.Stmt {
 
 	t := s.Cur()
 	switch t.Token {
-	case tokens.Var, tokens.Type, tokens.Const:
+	case token.Var, token.Type, token.Const:
 		// TODO: parseDecls
-	case tokens.Semicolon:
+	case token.Semicolon:
 		// TODO: empty statement
 	}
 

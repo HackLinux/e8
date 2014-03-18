@@ -2,7 +2,7 @@ package parser
 
 import (
 	"github.com/h8liu/e8/stay/ast"
-	"github.com/h8liu/e8/stay/tokens"
+	"github.com/h8liu/e8/stay/token"
 )
 
 func (self *Parser) parseExpr() ast.Expr {
@@ -18,7 +18,7 @@ func (self *Parser) parsePrimaryExpr() ast.Expr {
 	op := self.parseOperand()
 	t := s.Cur()
 	switch t.Token {
-	case tokens.Lparen:
+	case token.Lparen:
 		s.Next()
 		return self.parseCallExpr(op)
 	}
@@ -32,16 +32,16 @@ func (self *Parser) parseCallExpr(f ast.Expr) *ast.CallExpr {
 	ret := ast.NewCallExpr()
 	ret.Func = f
 
-	if !s.Scan(tokens.Rparen) {
+	if !s.Scan(token.Rparen) {
 		// non empty arg list
 		for {
 			exp := self.parseExpr()
 			ret.AddArg(exp)
 
-			if s.Scan(tokens.Rparen) {
+			if s.Scan(token.Rparen) {
 				break
 			}
-			if !s.Scan(tokens.Comma) {
+			if !s.Scan(token.Comma) {
 				self.failf("expect comma")
 			}
 			if s.Closed() {
@@ -60,25 +60,25 @@ func (self *Parser) parseOperand() ast.Expr {
 	lit := s.Cur().Lit
 
 	switch {
-	case s.Scan(tokens.Ident):
+	case s.Scan(token.Ident):
 		return &ast.Ident{lit}
-	case s.Scan(tokens.Int):
+	case s.Scan(token.Int):
 		return &ast.IntLit{self.parseInt(lit)}
-	case s.Scan(tokens.Float):
+	case s.Scan(token.Float):
 		return &ast.FloatLit{self.parseFloat(lit)}
-	case s.Scan(tokens.String):
+	case s.Scan(token.String):
 		return &ast.StringLit{self.unquote(lit)}
-	case s.Scan(tokens.Char):
+	case s.Scan(token.Char):
 		return &ast.CharLit{self.unquoteChar(lit)}
-	case s.Scan(tokens.Lparen):
+	case s.Scan(token.Lparen):
 		e := self.parseExpr()
-		if !s.Scan(tokens.Rparen) {
+		if !s.Scan(token.Rparen) {
 			self.failf("expect right parenthesis")
 		}
 		return &ast.ParenExpr{e}
 	}
 
 	self.failf("expect operand")
-	s.SkipUtil(tokens.Semicolon)
+	s.SkipUtil(token.Semicolon)
 	return new(ast.BadExpr)
 }

@@ -1,10 +1,10 @@
 package lexer
 
 import (
-	. "github.com/h8liu/e8/stay/tokens"
+	. "github.com/h8liu/e8/stay/token"
 )
 
-var simpleOps = map[rune]int{
+var simpleOps = map[rune]Token{
 	':': Colon,
 	',': Comma,
 	';': Semicolon,
@@ -16,7 +16,7 @@ var simpleOps = map[rune]int{
 	'}': Rbrace,
 }
 
-var eqOps = map[rune]*struct{ t, eqt int }{
+var eqOps = map[rune]*struct{ t, eqt Token }{
 	'*': {Mul, MulAssign},
 	'/': {Div, DivAssign},
 	'%': {Mod, ModAssign},
@@ -26,7 +26,7 @@ var eqOps = map[rune]*struct{ t, eqt int }{
 }
 
 var xeqOps = map[rune]*struct {
-	t, eqt, xt int
+	t, eqt, xt Token
 	x          rune
 }{
 	'+': {Add, AddAssign, Inc, '+'},
@@ -34,7 +34,7 @@ var xeqOps = map[rune]*struct {
 	'|': {Or, OrAssign, Lor, '|'},
 }
 
-func (self *Lexer) scanOperator(r rune) int {
+func (self *Lexer) scanOperator(r rune) Token {
 	s := self.s
 
 	if r == '\n' {

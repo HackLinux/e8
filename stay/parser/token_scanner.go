@@ -2,12 +2,12 @@ package parser
 
 import (
 	"github.com/h8liu/e8/stay/lexer"
-	"github.com/h8liu/e8/stay/tokens"
+	"github.com/h8liu/e8/stay/token"
 )
 
 type TokenScanner struct {
 	lexer *lexer.Lexer
-	cur   *lexer.Token
+	cur   *lexer.LexToken
 }
 
 func NewTokenScanner(lex *lexer.Lexer) *TokenScanner {
@@ -19,13 +19,13 @@ func NewTokenScanner(lex *lexer.Lexer) *TokenScanner {
 }
 
 func (self *TokenScanner) Next() {
-	if self.cur != nil && self.cur.Token == tokens.EOF {
+	if self.cur != nil && self.cur.Token == token.EOF {
 		return
 	}
 
 	for self.lexer.Scan() {
 		self.cur = self.lexer.Token()
-		if self.cur.Token == tokens.Comment {
+		if self.cur.Token == token.Comment {
 			continue
 		}
 		return
@@ -38,15 +38,15 @@ func (self *TokenScanner) Pos() (int, int) {
 	return self.cur.Line, self.cur.Col
 }
 
-func (self *TokenScanner) Cur() *lexer.Token {
+func (self *TokenScanner) Cur() *lexer.LexToken {
 	return self.cur
 }
 
-func (self *TokenScanner) CurIs(t int) bool {
+func (self *TokenScanner) CurIs(t token.Token) bool {
 	return self.cur.Token == t
 }
 
-func (self *TokenScanner) Scan(t int) bool {
+func (self *TokenScanner) Scan(t token.Token) bool {
 	if self.CurIs(t) {
 		self.Next()
 		return true
@@ -56,10 +56,10 @@ func (self *TokenScanner) Scan(t int) bool {
 }
 
 func (self *TokenScanner) Closed() bool {
-	return self.CurIs(tokens.EOF)
+	return self.CurIs(token.EOF)
 }
 
-func (self *TokenScanner) SkipUtil(t int) int {
+func (self *TokenScanner) SkipUtil(t token.Token) int {
 	ret := 0
 	for self.cur.Token != t {
 		self.Next()

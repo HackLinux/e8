@@ -2,13 +2,13 @@ package parser
 
 import (
 	"github.com/h8liu/e8/stay/ast"
-	"github.com/h8liu/e8/stay/tokens"
+	"github.com/h8liu/e8/stay/token"
 )
 
 func (self *Parser) parseFuncDecl() {
 	s := self.s
 
-	if !s.CurIs(tokens.Ident) {
+	if !s.CurIs(token.Ident) {
 		self.failf("missing function name")
 		return
 	}
@@ -21,12 +21,12 @@ func (self *Parser) parseFuncDecl() {
 	s.Next()
 
 	// TODO: parameter list
-	if !s.Scan(tokens.Lparen) {
+	if !s.Scan(token.Lparen) {
 		self.failf("expecting left parenthesis")
 		return
 	}
 
-	if !s.Scan(tokens.Rparen) {
+	if !s.Scan(token.Rparen) {
 		self.failf("expecting right parenthesis")
 		return
 	}

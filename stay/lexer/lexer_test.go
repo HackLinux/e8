@@ -5,11 +5,11 @@ import (
 	"testing"
 
 	"github.com/h8liu/e8/stay/lexer"
-	. "github.com/h8liu/e8/stay/tokens"
+	. "github.com/h8liu/e8/stay/token"
 )
 
 type r struct {
-	t   int
+	t   Token
 	lit string
 }
 
@@ -32,7 +32,7 @@ func TestLexer(t *testing.T) {
 				exp[i].lit != tok.Lit {
 
 				t.Errorf("lex %q: #%d: %q(%s)",
-					s, i, tok.Lit, TokenStr(tok.Token),
+					s, i, tok.Lit, tok.Token,
 				)
 			}
 			i++
@@ -62,18 +62,18 @@ func TestLexer(t *testing.T) {
 		}
 	}
 
-	m := func(t int, lit string) *r { return &r{t, lit} }
-	n := func(t int) *r { return &r{t, TokenStr(t)} }
+	m := func(t Token, lit string) *r { return &r{t, lit} }
+	n := func(t Token) *r { return &r{t, t.String()} }
 	id := func(s string) *r { return &r{Ident, s} }
 	sc := n(Semicolon)
 	// eof := n(EOF)
 
 	for _, t := range Keywords() {
-		o(TokenStr(t)+";", n(t), sc)
+		o(t.String()+";", n(t), sc)
 	}
 
 	for _, t := range Operators() {
-		o(TokenStr(t)+";", n(t), sc)
+		o(t.String()+";", n(t), sc)
 	}
 
 	o("")
