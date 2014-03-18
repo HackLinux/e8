@@ -8,10 +8,6 @@ import (
 	"github.com/h8liu/e8/stay/reporter"
 )
 
-func ParseImports(path string) ([]*ast.ImportDecl, error) {
-	panic("todo")
-}
-
 func ParseFile(path string) (*ast.Program, error) {
 	fin, e := os.Open(path)
 	if e != nil {
