@@ -1,4 +1,4 @@
-// Package printer provides a general indent printing interface 
+// Package printer provides a general indent printing interface
 // and an implementation.
 package printer
 
