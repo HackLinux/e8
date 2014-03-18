@@ -16,7 +16,6 @@ func (self *Parser) parseUnaryExpr() ast.Expr {
 func (self *Parser) parsePrimaryExpr() ast.Expr {
 	s := self.s
 	op := self.parseOperand()
-
 	t := s.Cur()
 	switch t.Token {
 	case tokens.Lparen:
@@ -33,21 +32,22 @@ func (self *Parser) parseCallExpr(f ast.Expr) *ast.CallExpr {
 	ret := ast.NewCallExpr()
 	ret.Func = f
 
-	for !s.Accept(tokens.Rparen) {
-		exp := self.parseExpr()
-		ret.AddArg(exp)
+	if !s.Scan(tokens.Rparen) {
+		// non empty arg list
+		for {
+			exp := self.parseExpr()
+			ret.AddArg(exp)
 
-		if s.Accept(tokens.Rparen) {
-			break
-		}
-
-		if !s.Accept(tokens.Comma) {
-			self.failf("expect comma")
-		}
-
-		if s.Closed() || s.Scan(tokens.EOF) {
-			self.failf("incomplete call expression")
-			return ret
+			if s.Scan(tokens.Rparen) {
+				break
+			}
+			if !s.Scan(tokens.Comma) {
+				self.failf("expect comma")
+			}
+			if s.Closed() {
+				self.failf("incomplete call expression")
+				return ret
+			}
 		}
 	}
 
@@ -57,43 +57,28 @@ func (self *Parser) parseCallExpr(f ast.Expr) *ast.CallExpr {
 func (self *Parser) parseOperand() ast.Expr {
 	s := self.s
 
-	t := s.Cur()
-	lit := t.Lit
-	switch t.Token {
-	case tokens.Ident:
-		s.Next()
+	lit := s.Cur().Lit
+
+	switch {
+	case s.Scan(tokens.Ident):
 		return &ast.Ident{lit}
-	case tokens.Int:
-		s.Next()
+	case s.Scan(tokens.Int):
 		return &ast.IntLit{self.parseInt(lit)}
-	case tokens.Float:
-		s.Next()
+	case s.Scan(tokens.Float):
 		return &ast.FloatLit{self.parseFloat(lit)}
-	case tokens.String:
-		s.Next()
+	case s.Scan(tokens.String):
 		return &ast.StringLit{self.unquote(lit)}
-	case tokens.Char:
-		s.Next()
+	case s.Scan(tokens.Char):
 		return &ast.CharLit{self.unquoteChar(lit)}
-	case tokens.Lparen:
-		s.Accept(tokens.Lparen)
+	case s.Scan(tokens.Lparen):
 		e := self.parseExpr()
-		if !s.Accept(tokens.Rparen) {
+		if !s.Scan(tokens.Rparen) {
 			self.failf("expect right parenthesis")
 		}
 		return &ast.ParenExpr{e}
 	}
 
 	self.failf("expect operand")
-
-	for {
-		if s.Scan(tokens.Semicolon) {
-			break
-		}
-		if s.Scan(tokens.EOF) || s.Closed() {
-			break
-		}
-	}
-
+	s.SkipUtil(tokens.Semicolon)
 	return new(ast.BadExpr)
 }

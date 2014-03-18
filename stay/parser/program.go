@@ -41,13 +41,15 @@ func (self *Parser) parseProgram() {
 
 func (self *Parser) parseDecls() bool {
 	s := self.s
-	if s.Accept(tokens.Const) {
+
+	switch {
+	case s.Scan(tokens.Const):
 		self.parseConstDecls()
-	} else if s.Accept(tokens.Type) {
+	case s.Scan(tokens.Type):
 		self.parseTypeDecls()
-	} else if s.Accept(tokens.Var) {
+	case s.Scan(tokens.Var):
 		self.parseVarDecls()
-	} else {
+	default:
 		return false
 	}
 

@@ -8,7 +8,7 @@ import (
 func (self *Parser) parseFuncDecl() {
 	s := self.s
 
-	if !s.Scan(tokens.Ident) {
+	if !s.CurIs(tokens.Ident) {
 		self.failf("missing function name")
 		return
 	}
@@ -21,12 +21,12 @@ func (self *Parser) parseFuncDecl() {
 	s.Next()
 
 	// TODO: parameter list
-	if !s.Accept(tokens.Lparen) {
+	if !s.Scan(tokens.Lparen) {
 		self.failf("expecting left parenthesis")
 		return
 	}
 
-	if !s.Accept(tokens.Rparen) {
+	if !s.Scan(tokens.Rparen) {
 		self.failf("expecting right parenthesis")
 		return
 	}

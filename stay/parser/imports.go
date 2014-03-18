@@ -8,38 +8,38 @@ import (
 func (self *Parser) parseImports() {
 	s := self.s
 
-	for s.Accept(tokens.Import) {
-		if s.Accept(tokens.Lparen) {
-			for !s.Scan(tokens.Rparen) {
-				if s.Scan(tokens.EOF) {
+	for s.Scan(tokens.Import) {
+		if s.Scan(tokens.Lparen) {
+			for !s.CurIs(tokens.Rparen) {
+				if s.CurIs(tokens.EOF) {
 					self.failf("incomplete imports")
 					return
 				}
 
 				self.parseImportSpec()
-				if !s.Accept(tokens.Semicolon) {
-					if s.Scan(tokens.Rparen) {
+				if !s.Scan(tokens.Semicolon) {
+					if s.CurIs(tokens.Rparen) {
 						break
 					}
 					self.expectSemicolon()
 				}
 			}
 
-			if s.Accept(tokens.Rparen) {
-				if !s.Accept(tokens.Semicolon) {
+			if s.Scan(tokens.Rparen) {
+				if !s.Scan(tokens.Semicolon) {
 					self.expectSemicolon()
 				}
 			} else {
 				self.failf("expect right parenthesis")
 			}
 		} else {
-			if s.Scan(tokens.EOF) {
+			if s.CurIs(tokens.EOF) {
 				self.failf("incomplete imports")
 				return
 			}
 
 			if self.parseImportSpec() {
-				if !s.Accept(tokens.Semicolon) {
+				if !s.Scan(tokens.Semicolon) {
 					self.expectSemicolon()
 				}
 			} else {
@@ -53,14 +53,14 @@ func (self *Parser) parseImportSpec() bool {
 	s := self.s
 
 	var as string
-	if s.Accept(tokens.Dot) {
+	if s.Scan(tokens.Dot) {
 		as = "."
-	} else if s.Scan(tokens.Ident) {
+	} else if s.CurIs(tokens.Ident) {
 		as = s.Cur().Lit
 		s.Next()
 	}
 
-	if !s.Scan(tokens.String) {
+	if !s.CurIs(tokens.String) {
 		self.failf("expect import path")
 		if as != "" {
 			return true
