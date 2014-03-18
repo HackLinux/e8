@@ -1,80 +1,90 @@
 package parser_test
 
 import (
-	"os"
+	"bytes"
+	"testing"
 
 	"github.com/h8liu/e8/printer"
 	"github.com/h8liu/e8/stay/parser"
 )
 
-func ExampleParser_imports() {
-	const testProg = `
-	// prints hello
+const testProg = `
+// prints hello
 
-	import "hello"
+import "hello"
 
-	import fmt "hello"
-	import f "hello"
-	import . "hello"
+import fmt "hello"
+import f "hello"
+import . "hello"
 
-	/** dafe */
+/** dafe */
 
-	import (
-	    "ho"
-	    "hello/ho"
-	)
+import (
+	"ho"
+	"hello/ho"
+)
 
-	import ()
+import ()
 
-	import (
-
+import (
 
 
-	)
 
-	import "hello"
+)
 
-	import (
-	    // t2 "ho"
-	    tx "hello/ho"
-	)
+import "hello"
 
-	import "hello"
-	import "ho"
+import (
+	// t2 "ho"
+	tx "hello/ho"
+)
 
-	import ( "ho"; "ho"; "ho" )
-	import ( a "ho"; b "ho"; c "ho"; )
+import "hello"
+import "ho"
 
-	//so
-	`
+import ( "ho"; "ho"; "ho" )
+import ( a "ho"; b "ho"; c "ho"; )
+
+//so
+`
+
+const expectOutput = `import (
+    "hello"
+    fmt "hello"
+    f "hello"
+    . "hello"
+    "ho"
+    "hello/ho"
+    "hello"
+    tx "hello/ho"
+    "hello"
+    "ho"
+    "ho"
+    "ho"
+    "ho"
+    a "ho"
+    b "ho"
+    c "ho"
+)
+`
+
+func TestImports(t *testing.T) {
 
 	prog, e := parser.ParseString(testProg)
 	if e != nil {
-		panic(e)
+		t.Fatal(e)
+		return
 	}
 
-	pr := printer.New(os.Stdout)
+	buf := new(bytes.Buffer)
+	pr := printer.New(buf)
 	prog.PrintTo(pr)
 	if pr.Error != nil {
-		panic(pr.Error)
+		t.Fatal(pr.Error)
 	}
-	// Output:
-	// import (
-	//     "hello"
-	//     fmt "hello"
-	//     f "hello"
-	//     . "hello"
-	//     "ho"
-	//     "hello/ho"
-	//     "hello"
-	//     tx "hello/ho"
-	//     "hello"
-	//     "ho"
-	//     "ho"
-	//     "ho"
-	//     "ho"
-	//     a "ho"
-	//     b "ho"
-	//     c "ho"
-	// )
+
+	s := buf.String()
+	if s != expectOutput {
+		t.Fatal(s)
+	}
 }
