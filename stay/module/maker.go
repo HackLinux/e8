@@ -18,12 +18,12 @@ func (self *Maker) addModule(m *Module) {
 	self.modules[path] = m
 }
 
-func (self *Maker) FindModule(p string) *Module {
+func (self *Maker) Get(p string) *Module {
 	return self.modules[p]
 }
 
-func (self *Maker) Open(p string) (*Module, error) {
-	m := self.FindModule(p)
+func (self *Maker) Add(p string) (*Module, error) {
+	m := self.Get(p)
 	if m != nil {
 		return m, nil
 	}
@@ -59,7 +59,7 @@ func (self *Maker) Open(p string) (*Module, error) {
 
 	if !self.NotFollowImports {
 		for _, imp := range ret.imports {
-			_, e := self.Open(imp)
+			_, e := self.Add(imp)
 			if e != nil {
 				return nil, e
 			}
@@ -67,4 +67,8 @@ func (self *Maker) Open(p string) (*Module, error) {
 	}
 
 	return ret, nil
+}
+
+func (self *Maker) Make() {
+	// TODO:
 }

@@ -19,7 +19,7 @@ func main() {
 	maker.ForceRebuild = *forceRebuild
 
 	for _, m := range list {
-		_, e := maker.Open(m)
+		_, e := maker.Add(m)
 		if e != nil {
 			panic(e)
 		}
