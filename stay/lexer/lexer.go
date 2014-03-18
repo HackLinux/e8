@@ -313,6 +313,7 @@ func (self *Lexer) Token() *Token {
 
 func (self *Lexer) scanToken() *Token {
 	if self.eof {
+		// once it reached eof, it will repeatedly return EOF
 		self.savePos()
 		return self.token(tokens.EOF, "")
 	}
