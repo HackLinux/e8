@@ -18,27 +18,21 @@ func NewTokenScanner(lex *lexer.Lexer) *TokenScanner {
 	return ret
 }
 
-func (self *TokenScanner) Next() *lexer.Token {
-	// TODO: bind comments with tokens
-	ret := self.cur
-
+func (self *TokenScanner) Next() {
 	for self.lexer.Scan() {
 		self.cur = self.lexer.Token()
 		if self.cur.Token == tokens.Comment {
 			continue
 		}
-
 		break
 	}
-
-	return ret
 }
 
 func (self *TokenScanner) Pos() (int, int) {
 	return self.cur.Line, self.cur.Col
 }
 
-func (self *TokenScanner) Peek() *lexer.Token {
+func (self *TokenScanner) Cur() *lexer.Token {
 	return self.cur
 }
 

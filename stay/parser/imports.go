@@ -11,7 +11,7 @@ func (self *Parser) parseImports() {
 	for s.Accept(tokens.Import) {
 		if s.Accept(tokens.Lparen) {
 			for !s.Scan(tokens.Rparen) {
-				if s.Closed() {
+				if s.Scan(tokens.EOF) {
 					self.failf("incomplete imports")
 					return
 				}
@@ -33,7 +33,7 @@ func (self *Parser) parseImports() {
 				self.failf("expect right parenthesis")
 			}
 		} else {
-			if s.Closed() {
+			if s.Scan(tokens.EOF) {
 				self.failf("incomplete imports")
 				return
 			}
@@ -56,8 +56,8 @@ func (self *Parser) parseImportSpec() bool {
 	if s.Accept(tokens.Dot) {
 		as = "."
 	} else if s.Scan(tokens.Ident) {
-		t := s.Next()
-		as = t.Lit
+		as = s.Cur().Lit
+		s.Next()
 	}
 
 	if !s.Scan(tokens.String) {
@@ -69,9 +69,10 @@ func (self *Parser) parseImportSpec() bool {
 		}
 	}
 
-	t := s.Next()
+	t := s.Cur()
 	path := self.unquote(t.Lit)
 	self.prog.AddImport(&ast.ImportDecl{as, path, t.Line})
+	s.Next()
 
 	return true
 }

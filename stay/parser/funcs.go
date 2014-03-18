@@ -13,11 +13,12 @@ func (self *Parser) parseFuncDecl() {
 		return
 	}
 
-	t := s.Next()
-
+	t := s.Cur()
 	decl := new(ast.FuncDecl)
 	decl.Name = t.Lit
 	decl.DeclLine = t.Line
+
+	s.Next()
 
 	// TODO: parameter list
 	if !s.Accept(tokens.Lparen) {

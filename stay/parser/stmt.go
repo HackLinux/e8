@@ -45,7 +45,7 @@ func (self *Parser) parseBlockStmt() *ast.BlockStmt {
 func (self *Parser) parseStmt() ast.Stmt {
 	s := self.s
 
-	t := s.Peek()
+	t := s.Cur()
 	switch t.Token {
 	case tokens.Var, tokens.Type, tokens.Const:
 		// TODO: parseDecls

@@ -12,8 +12,8 @@ type ImportDecl struct {
 
 func (self *ImportDecl) PrintTo(p printer.Interface) {
 	if self.As == "" {
-		p.Printf("%q\n", self.Path)
+		p.Printf("%q", self.Path)
 	} else {
-		p.Printf("%s %q\n", self.As, self.Path)
+		p.Printf("%s %q", self.As, self.Path)
 	}
 }

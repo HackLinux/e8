@@ -32,12 +32,4 @@ func main() {
 	pr := printer.New(os.Stdout)
 	prog.PrintTo(pr)
 	noError(pr.Error)
-
-	for _, imp := range prog.Imports {
-		if imp.As == "" {
-			fmt.Printf("import %q\n", imp.Path)
-		} else {
-			fmt.Printf("import %s %q\n", imp.As, imp.Path)
-		}
-	}
 }
