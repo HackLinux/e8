@@ -7,7 +7,7 @@ import (
 	"github.com/h8liu/e8/stay/parser"
 )
 
-func ExampleImports() {
+func ExampleParser_imports() {
 	const testProg = `
 	// prints hello
 
