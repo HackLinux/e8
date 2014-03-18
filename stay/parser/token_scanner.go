@@ -6,13 +6,13 @@ import (
 )
 
 type TokenScanner struct {
-	tokener Tokener
-	cur     *lexer.Token
+	lexer *lexer.Lexer
+	cur   *lexer.Token
 }
 
-func NewTokenScanner(tokener Tokener) *TokenScanner {
+func NewTokenScanner(lex *lexer.Lexer) *TokenScanner {
 	ret := new(TokenScanner)
-	ret.tokener = tokener
+	ret.lexer = lex
 	ret.Next()
 
 	return ret
@@ -22,8 +22,8 @@ func (self *TokenScanner) Next() *lexer.Token {
 	// TODO: bind comments with tokens
 	ret := self.cur
 
-	for self.tokener.Scan() {
-		self.cur = self.tokener.Token()
+	for self.lexer.Scan() {
+		self.cur = self.lexer.Token()
 		if self.cur.Token == tokens.Comment {
 			continue
 		}
