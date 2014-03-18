@@ -46,7 +46,7 @@ func (self *Parser) parseStmt() ast.Stmt {
 	s := self.s
 
 	t := s.Peek()
-	switch t.tok {
+	switch t.Token {
 	case tokens.Var, tokens.Type, tokens.Const:
 		// TODO: parseDecls
 	case tokens.Semicolon:

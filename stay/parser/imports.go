@@ -57,7 +57,7 @@ func (self *Parser) parseImportSpec() bool {
 		as = "."
 	} else if s.Scan(tokens.Ident) {
 		t := s.Next()
-		as = t.lit
+		as = t.Lit
 	}
 
 	if !s.Scan(tokens.String) {
@@ -70,8 +70,8 @@ func (self *Parser) parseImportSpec() bool {
 	}
 
 	t := s.Next()
-	path := self.unquote(t.lit)
-	self.prog.AddImport(&ast.ImportDecl{as, path, t.pos})
+	path := self.unquote(t.Lit)
+	self.prog.AddImport(&ast.ImportDecl{as, path, t.Line})
 
 	return true
 }

@@ -7,7 +7,7 @@ import (
 type ImportDecl struct {
 	As   string
 	Path string
-	Pos  uint32
+	Line int
 }
 
 func (self *ImportDecl) PrintTo(p printer.Interface) {

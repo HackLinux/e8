@@ -1,46 +1,44 @@
 package parser
 
 import (
+	"github.com/h8liu/e8/stay/lexer"
 	"github.com/h8liu/e8/stay/tokens"
 )
 
 type TokenScanner struct {
-	cur *Token
-	c   <-chan *Token
+	tokener Tokener
+	cur     *lexer.Token
 }
 
-func NewTokenScanner(c <-chan *Token) *TokenScanner {
+func NewTokenScanner(tokener Tokener) *TokenScanner {
 	ret := new(TokenScanner)
-	ret.c = c
+	ret.tokener = tokener
 	ret.Next()
+
 	return ret
 }
 
-func (self *TokenScanner) Next() *Token {
+func (self *TokenScanner) Next() *lexer.Token {
 	// TODO: bind comments with tokens
 	ret := self.cur
 
-	for {
-		self.cur = <-self.c
-		if self.cur == nil {
-			break
+	for self.tokener.Scan() {
+		self.cur = self.tokener.Token()
+		if self.cur.Token == tokens.Comment {
+			continue
 		}
-		if self.cur.tok != tokens.Comment {
-			break
-		}
+
+		break
 	}
 
 	return ret
 }
 
 func (self *TokenScanner) Pos() (int, int) {
-	pos := self.cur.pos
-	line := int((pos >> 8) & 0xffff)
-	col := int(pos & 0xff)
-	return line, col
+	return self.cur.Line, self.cur.Col
 }
 
-func (self *TokenScanner) Peek() *Token {
+func (self *TokenScanner) Peek() *lexer.Token {
 	return self.cur
 }
 
@@ -48,7 +46,7 @@ func (self *TokenScanner) Scan(t int) bool {
 	if self.cur == nil {
 		return false
 	}
-	return self.cur.tok == t
+	return self.cur.Token == t
 }
 
 func (self *TokenScanner) Accept(t int) bool {

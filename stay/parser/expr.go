@@ -18,7 +18,7 @@ func (self *Parser) parsePrimaryExpr() ast.Expr {
 	op := self.parseOperand()
 
 	t := s.Peek()
-	switch t.tok {
+	switch t.Token {
 	case tokens.Lparen:
 		s.Next()
 		return self.parseCallExpr(op)
@@ -58,22 +58,22 @@ func (self *Parser) parseOperand() ast.Expr {
 	s := self.s
 
 	t := s.Peek()
-	switch t.tok {
+	switch t.Token {
 	case tokens.Ident:
 		n := s.Next()
-		return &ast.Ident{n.lit}
+		return &ast.Ident{n.Lit}
 	case tokens.Int:
 		n := s.Next()
-		return &ast.IntLit{self.parseInt(n.lit)}
+		return &ast.IntLit{self.parseInt(n.Lit)}
 	case tokens.Float:
 		n := s.Next()
-		return &ast.FloatLit{self.parseFloat(n.lit)}
+		return &ast.FloatLit{self.parseFloat(n.Lit)}
 	case tokens.String:
 		n := s.Next()
-		return &ast.StringLit{self.unquote(n.lit)}
+		return &ast.StringLit{self.unquote(n.Lit)}
 	case tokens.Char:
 		n := s.Next()
-		return &ast.CharLit{self.unquoteChar(n.lit)}
+		return &ast.CharLit{self.unquoteChar(n.Lit)}
 	case tokens.Lparen:
 		s.Accept(tokens.Lparen)
 		e := self.parseExpr()
