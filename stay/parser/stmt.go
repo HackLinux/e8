@@ -8,17 +8,16 @@ import (
 func (self *Parser) parseBlockStmt() *ast.BlockStmt {
 	s := self.s
 
-	if !s.Scan(token.Lbrace) {
-		self.failf("expecting left brace")
+	if self.expect(token.Lbrace) {
+		return nil
 	}
 
 	ret := ast.NewBlock()
 
 	// statement list
 	for !s.CurIs(token.Rbrace) {
-		if s.Closed() {
-			self.failf("expecting end of block, but reached file end")
-			return ret
+		if self.unexpectedEOF() {
+			return nil
 		}
 
 		stmt := self.parseStmt()
@@ -30,13 +29,11 @@ func (self *Parser) parseBlockStmt() *ast.BlockStmt {
 			break
 		}
 
-		if !s.Scan(token.Semicolon) {
-			self.failf("missing semicolon")
-		}
+		self.expect(token.Semicolon)
 	}
 
-	if !s.Scan(token.Rbrace) {
-		self.failf("missing right brace")
+	if self.expect(token.Rbrace) {
+		return nil
 	}
 
 	return ret

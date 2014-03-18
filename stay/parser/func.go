@@ -9,25 +9,24 @@ func (self *Parser) parseFunc() {
 	s := self.s
 
 	if !s.CurIs(token.Ident) {
-		self.failf("missing function name")
+		self.expect(token.Ident)
 		return
 	}
 
 	t := s.Cur()
-	decl := new(ast.FuncDecl)
-	decl.Name = t.Lit
-	decl.DeclLine = t.Line
-
+	decl := &ast.FuncDecl{
+		Name:     t.Lit,
+		DeclLine: t.Line,
+	}
 	s.Next()
 
-	// TODO: parameter list
-	if !s.Scan(token.Lparen) {
-		self.failf("expecting left parenthesis")
+	if !self.expect(token.Lparen) {
 		return
 	}
 
-	if !s.Scan(token.Rparen) {
-		self.failf("expecting right parenthesis")
+	// TODO: parameter list
+
+	if !self.expect(token.Rparen) {
 		return
 	}
 
