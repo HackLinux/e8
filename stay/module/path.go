@@ -45,6 +45,6 @@ func init() {
 	stayLibPath = filepath.Join(p, "lib")
 }
 
-func StayPath(m string) string { return filepath.Join(stayPath, m) }
-func SrcPath(m string) string  { return filepath.Join(staySrcPath, m) }
-func LibPath(m string) string  { return filepath.Join(stayLibPath, m) }
+func SrcPath(m string) string { return filepath.Join(staySrcPath, m) }
+func LibPath(m string) string { return filepath.Join(stayLibPath, m) }
+func StayPath() string        { return stayPath }

@@ -1,3 +1,4 @@
+// Package ast defines the data structures for the abstract syntax tree.
 package ast
 
 import (

@@ -1,3 +1,4 @@
+// Package modules defines module organizing structure and project making procedure.
 package module
 
 import (

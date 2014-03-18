@@ -1,3 +1,4 @@
+// Package parser parses an input file into an abstract syntax tree.
 package parser
 
 import (

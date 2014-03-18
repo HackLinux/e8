@@ -1,3 +1,4 @@
+// Package lexer parses an input file into tokens.
 package lexer
 
 import (

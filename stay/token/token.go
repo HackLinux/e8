@@ -1,3 +1,4 @@
+// Package token defines the tokens for the stay language.
 package token
 
 type Token int
