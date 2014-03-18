@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"io"
 
 	"github.com/h8liu/e8/stay/ast"
@@ -22,7 +21,7 @@ type Parser struct {
 
 	ImportsOnly bool
 
-	s        *TokenScanner
+	s        *Scanner
 	prog     *ast.Program
 	errors   []*reporter.Error
 	lastLine int
@@ -36,28 +35,12 @@ func New() *Parser {
 	return ret
 }
 
-func (self *Parser) failf(f string, args ...interface{}) {
-	if len(self.errors) < MaxError {
-		e := fmt.Errorf(f, args...)
-		line, col := self.s.Pos()
-		if self.lastLine == line {
-			return
-		}
-		self.lastLine = line
-		self.errors = append(self.errors, &reporter.Error{line, col, e})
-	}
-}
-
-func (self *Parser) expectSemicolon() {
-	self.failf("expect semicolon")
-}
-
 func (self *Parser) Parse(in io.Reader) (*ast.Program, error) {
 	lex := lexer.New(in)
 	lex.ReportTo(self.Reporter)
 
 	// Prepare the scanner
-	self.s = NewTokenScanner(lex)
+	self.s = NewScanner(lex)
 
 	// Parse the program now
 	self.prog = ast.NewProgram()
