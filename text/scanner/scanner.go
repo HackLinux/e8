@@ -1,3 +1,4 @@
+// Package scanner defines a general text scanner.
 package scanner
 
 import (

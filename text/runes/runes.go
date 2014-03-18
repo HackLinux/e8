@@ -1,3 +1,4 @@
+// Package runes provides some handy functions for rune processing.
 package runes
 
 func IsLetter(r rune) bool {
