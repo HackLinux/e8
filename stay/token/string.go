@@ -88,11 +88,11 @@ var tokenStr = map[Token]string{
 	Var:         "var",
 }
 
-func (self Token) String() string {
-	if s, found := tokenStr[self]; found {
+func (t Token) String() string {
+	if s, found := tokenStr[t]; found {
 		return s
 	}
-	return fmt.Sprintf("<na-%d>", int(self))
+	return fmt.Sprintf("<na-%d>", int(t))
 }
 
 var keywords = func() map[string]Token {
