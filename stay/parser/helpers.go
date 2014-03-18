@@ -30,7 +30,7 @@ func ParseFile(path string) (*ast.Program, error) {
 	return ret, nil
 }
 
-func ParseStr(s string) (*ast.Program, error) {
+func ParseString(s string) (*ast.Program, error) {
 	p := New()
 	return p.Parse(strings.NewReader(s))
 }
