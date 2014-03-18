@@ -6,6 +6,7 @@ import (
 	"github.com/h8liu/e8/stay/ast"
 	"github.com/h8liu/e8/stay/lexer"
 	"github.com/h8liu/e8/stay/reporter"
+	"github.com/h8liu/e8/stay/token"
 )
 
 const (
@@ -61,4 +62,29 @@ func (self *Parser) Parse(in io.Reader) (*ast.Program, error) {
 	}
 
 	return self.prog, nil
+}
+
+func (self *Parser) parseProgram() {
+	self.parseImports()
+
+	if self.ImportsOnly {
+		return
+	}
+
+	s := self.s
+	for !s.Closed() {
+		switch {
+		case s.Scan(token.Func):
+			self.parseFunc()
+		case s.Scan(token.Const):
+			self.parseConst()
+		case s.Scan(token.Var):
+			self.parseVar()
+		case s.Scan(token.Type):
+			self.parseType()
+		default:
+			self.failExpect("declare")
+			return
+		}
+	}
 }

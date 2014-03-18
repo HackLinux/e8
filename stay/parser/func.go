@@ -5,7 +5,7 @@ import (
 	"github.com/h8liu/e8/stay/token"
 )
 
-func (self *Parser) parseFuncDecl() {
+func (self *Parser) parseFunc() {
 	s := self.s
 
 	if !s.CurIs(token.Ident) {
