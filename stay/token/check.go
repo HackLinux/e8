@@ -1,13 +1,13 @@
 package token
 
-func IsOperator(t Token) bool {
+func (t Token) IsOperator() bool {
 	return operatorBegin < t && t < operatorEnd
 }
 
-func IsKeyword(t Token) bool {
+func (t Token) IsKeyword() bool {
 	return keywordBegin < t && t < keywordEnd
 }
 
-func IsLiteral(t Token) bool {
+func (t Token) IsLiteral() bool {
 	return literalBegin < t && t < literalEnd
 }

@@ -342,7 +342,7 @@ func (self *Lexer) scanToken() *LexToken {
 	if runes.IsLetter(r) {
 		s.ScanIdent()
 		lit := s.Accept()
-		t := token.IdentToken(lit)
+		t := token.FromIdent(lit)
 		return self.token(t, lit)
 	} else if runes.IsDigit(r) {
 		lit, t := self.scanNumber(false)

@@ -105,7 +105,7 @@ var keywords = func() map[string]Token {
 }()
 
 // Returns the related keyword token if it is a keyword; returns Ident otherwise.
-func IdentToken(s string) Token {
+func FromIdent(s string) Token {
 	if i, found := keywords[s]; found {
 		return i
 	}
