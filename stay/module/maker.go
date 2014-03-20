@@ -69,6 +69,35 @@ func (self *Maker) Add(p string) (*Module, error) {
 	return ret, nil
 }
 
-func (self *Maker) Make() {
-	// TODO:
+func (self *Maker) Make() error {
+	/* TODO:
+	- for each module within
+		- build signature
+		- try load cached signature and imports
+		- if load failed or signature changed or marked as need recompile
+			- rebuild signature and imports and save them
+			- mark the module as need recompile
+		- add imported modules into the set
+
+	- reorder the modules based on dependency
+	- populate the "need recompile flag"
+	
+	- for each module within that needs recompile
+		- compile the module, produce the linkable file
+	
+	- for each module within that needs recompile and produces an executable
+		- count all the dependencies
+		- link the module libraries
+		- if any module is broken, report error
+
+	compiled linkable format:
+	- hash of list of source files
+	- module list of direct dependencies
+	- declared symbol list and their values
+	- used symbol list and their used positions
+	- binary object
+
+	*/
+
+	panic("todo")
 }
