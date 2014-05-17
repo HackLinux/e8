@@ -16,7 +16,7 @@ type Printer struct {
 	Error  error
 }
 
-var _ Interface = new(Printer)
+var _ Iface = new(Printer)
 
 // Returns a new printer that writes to w
 // if w is nil, than all prints to the printer will be noops

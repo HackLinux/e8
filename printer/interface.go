@@ -1,6 +1,6 @@
 package printer
 
-type Interface interface {
+type Iface interface {
 	Print(a ...interface{}) (int, error)
 	Println(a ...interface{}) (int, error)
 	Printf(format string, a ...interface{}) (int, error)

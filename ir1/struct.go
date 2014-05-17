@@ -6,25 +6,49 @@ import (
 
 // a memory structure
 type Struct struct {
-	Vars []*Var
+	vars    []*Var
+	nameMap map[string]*Var
 }
 
 func NewStruct() *Struct {
 	ret := new(Struct)
+	ret.nameMap = make(map[string]*Var)
 	return ret
 }
 
-func (self *Struct) PrintTo(p printer.Interface) {
-	for _, v := range self.Vars {
+func (self *Struct) PrintTo(p printer.Iface) {
+	for _, v := range self.vars {
 		p.Print(v.String())
 	}
 }
 
-// add a field variable into the structure
-func (self *Struct) Fv(v *Var) {
-	self.Vars = append(self.Vars, v)
+func (self *Struct) AddVar(v *Var) bool {
+	self.vars = append(self.vars, v)
+	if v.Name == "_" {
+		return true
+	}
+
+	ret := self.nameMap[v.Name]
+	if ret != nil {
+		self.nameMap[v.Name] = v
+		return true
+	}
+	return false
 }
 
-func (self *Struct) F(n string, t Type) {
-	self.Fv(V(n, t))
+// add a field variable into the structure
+func (self *Struct) Fv(v *Var) bool {
+	return self.AddVar(v)
+}
+
+func (self *Struct) F(n string, t Type) bool {
+	return self.Fv(V(n, t))
+}
+
+func (self *Struct) Find(n string) *Var {
+	if n == "_" {
+		return nil
+	}
+
+	return self.nameMap[n]
 }

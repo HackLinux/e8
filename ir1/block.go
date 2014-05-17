@@ -6,14 +6,16 @@ import (
 
 type Block struct {
 	Stmts []Stmt
+	Local *Struct
 }
 
 func NewBlock() *Block {
 	ret := new(Block)
+	ret.Local = NewStruct()
 	return ret
 }
 
-func (self *Block) PrintTo(p printer.Interface) {
+func (self *Block) PrintTo(p printer.Iface) {
 	for _, s := range self.Stmts {
 		s.PrintTo(p)
 	}

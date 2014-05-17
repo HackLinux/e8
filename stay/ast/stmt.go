@@ -23,7 +23,7 @@ func (self *BlockStmt) Add(s Stmt) {
 	self.Stmts = append(self.Stmts, s)
 }
 
-func (self *BlockStmt) PrintTo(p printer.Interface) {
+func (self *BlockStmt) PrintTo(p printer.Iface) {
 	p.Println("{")
 	p.ShiftIn()
 

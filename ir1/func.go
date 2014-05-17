@@ -25,7 +25,7 @@ func F(n string) *Func {
 	return NewFunc(n)
 }
 
-func (self *Func) PrintTo(p printer.Interface) {
+func (self *Func) PrintTo(p printer.Iface) {
 	p.Printf("func %s {", self.Name)
 	p.ShiftIn()
 

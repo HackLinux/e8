@@ -10,7 +10,7 @@ type ImportDecl struct {
 	Line int
 }
 
-func (self *ImportDecl) PrintTo(p printer.Interface) {
+func (self *ImportDecl) PrintTo(p printer.Iface) {
 	if self.As == "" {
 		p.Printf("%q", self.Path)
 	} else {

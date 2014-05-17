@@ -26,7 +26,7 @@ func (self *Program) AddFunc(f *FuncDecl) {
 	self.Funcs = append(self.Funcs, f)
 }
 
-func (self *Program) PrintTo(p printer.Interface) {
+func (self *Program) PrintTo(p printer.Iface) {
 	if len(self.Imports) > 0 {
 		p.Println("import (")
 		p.ShiftIn()

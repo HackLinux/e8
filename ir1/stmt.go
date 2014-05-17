@@ -5,7 +5,7 @@ import (
 )
 
 type Stmt interface {
-	PrintTo(p printer.Interface)
+	PrintTo(p printer.Iface)
 }
 
 type NoopStmt struct {
@@ -22,6 +22,6 @@ func NewComment(c string) *NoopStmt {
 
 func Cm(c string) *NoopStmt { return NewComment(c) }
 
-func (s *NoopStmt) PrintTo(p printer.Interface) {
+func (s *NoopStmt) PrintTo(p printer.Iface) {
 	p.Printf("// %s", s.Comment)
 }

@@ -50,38 +50,38 @@ func (self *CallExpr) AddArg(e Expr) {
 	self.ArgList = append(self.ArgList, e)
 }
 
-func (self *Ident) PrintTo(p printer.Interface) {
+func (self *Ident) PrintTo(p printer.Iface) {
 	p.Println("ident: ", self.Ident)
 }
 
-func (self *StringLit) PrintTo(p printer.Interface) {
+func (self *StringLit) PrintTo(p printer.Iface) {
 	p.Printf("string: %q", self.Value)
 }
 
-func (self *IntLit) PrintTo(p printer.Interface) {
+func (self *IntLit) PrintTo(p printer.Iface) {
 	p.Printf("int: %d", self.Value)
 }
 
-func (self *FloatLit) PrintTo(p printer.Interface) {
+func (self *FloatLit) PrintTo(p printer.Iface) {
 	p.Printf("float: %q", self.Value)
 }
 
-func (self *CharLit) PrintTo(p printer.Interface) {
+func (self *CharLit) PrintTo(p printer.Iface) {
 	p.Printf("char: %q", rune(self.R))
 }
 
-func (self *ParenExpr) PrintTo(p printer.Interface) {
+func (self *ParenExpr) PrintTo(p printer.Iface) {
 	p.Println("(")
 	p.ShiftIn()
 	self.X.PrintTo(p)
 	p.ShiftOut(")")
 }
 
-func (self *BadExpr) PrintTo(p printer.Interface) {
+func (self *BadExpr) PrintTo(p printer.Iface) {
 	p.Println("BAD")
 }
 
-func (self *CallExpr) PrintTo(p printer.Interface) {
+func (self *CallExpr) PrintTo(p printer.Iface) {
 	p.Println("call {")
 	p.ShiftIn()
 
