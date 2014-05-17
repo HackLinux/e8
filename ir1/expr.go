@@ -24,3 +24,16 @@ func (self *VarExpr) Type() Type {
 func (self *VarExpr) String() string {
 	return self.Var.Name
 }
+
+type BinExpr struct {
+	V1, V2 *Var
+	Op Op
+}
+
+type UnaExpr struct {
+	V *Var
+	Op Op
+}
+
+type Op int
+
