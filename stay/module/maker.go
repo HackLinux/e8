@@ -81,10 +81,10 @@ func (self *Maker) Make() error {
 
 	- reorder the modules based on dependency
 	- populate the "need recompile flag"
-	
+
 	- for each module within that needs recompile
 		- compile the module, produce the linkable file
-	
+
 	- for each module within that needs recompile and produces an executable
 		- count all the dependencies
 		- link the module libraries
