@@ -20,6 +20,8 @@ func NewComment(c string) *NoopStmt {
 	return ret
 }
 
+func Cm(c string) *NoopStmt { return NewComment(c) }
+
 func (s *NoopStmt) PrintTo(p printer.Interface) {
 	p.Printf("// %s", s.Comment)
 }

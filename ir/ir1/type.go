@@ -2,6 +2,7 @@ package ir1
 
 type Type interface {
 	Size() uint32
+	String() string
 }
 
 type BasicType int
@@ -15,8 +16,26 @@ const (
 	U32 BasicType = (4 << 1) + 1
 )
 
+var basicTypeNames = map[BasicType]string{
+	I8:  "i8",
+	U8:  "u8",
+	I16: "i16",
+	U16: "u16",
+	I32: "i32",
+	U32: "u32",
+}
+
 func (t BasicType) Size() uint32 {
 	return uint32(t) >> 1
+}
+
+func (t BasicType) String() string {
+	ret, found := basicTypeNames[t]
+	if !found {
+		return "<?>"
+	}
+
+	return ret
 }
 
 type PointerType struct {

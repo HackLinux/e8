@@ -115,3 +115,7 @@ func String(p Printable) string {
 	p.PrintTo(dev)
 	return buf.String()
 }
+
+func Print(p Printable) {
+	fmt.Print(String(p))
+}
