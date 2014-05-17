@@ -7,11 +7,10 @@ import (
 
 func main() {
 	f := ir1.F("fabo")
-	f.Arg.F("i", ir1.U32)
-	f.Ret.F("ret", ir1.U32)
-	f.S(ir1.Cm("some comment"))
-	f.Local.F("x", ir1.U32)
-	f.Al("t", f.Vexpr("x"))
+	f.Arg("i", ir1.U32)
+	f.Ret("ret", ir1.U32)
+	f.Cm("some comment")
+	f.Al("t", f.Vexpr("i"))
 
 	printer.Print(f)
 }

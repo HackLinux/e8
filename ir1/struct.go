@@ -54,3 +54,7 @@ func (self *Struct) Find(n string) *Var {
 
 	return self.nameMap[n]
 }
+
+func (self *Struct) Empty() bool {
+	return len(self.vars) == 0
+}
