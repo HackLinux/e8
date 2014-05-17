@@ -5,10 +5,10 @@ import (
 )
 
 type Func struct {
-	Name   string  // the function name
-	arg    *Struct // structure of func call arguments
-	ret    *Struct // structure of return values
-	local  *Struct // structure of local variables
+	Name  string  // the function name
+	arg   *Struct // structure of func call arguments
+	ret   *Struct // structure of return values
+	local *Struct // structure of local variables
 
 	Stmts []Stmt
 }
@@ -154,4 +154,3 @@ func (self *Func) V(n string) *Var {
 func (self *Func) Vexpr(n string) *VarExpr {
 	return Ve(self.V(n))
 }
-
