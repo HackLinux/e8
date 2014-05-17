@@ -3,6 +3,7 @@ package ir1
 type Type interface {
 	Size() uint32
 	String() string
+	Equal(t Type) bool
 }
 
 type BasicType int
@@ -38,12 +39,38 @@ func (t BasicType) String() string {
 	return ret
 }
 
+func (t BasicType) Equal(other Type) bool {
+	switch o := other.(type) {
+	default:
+		return false
+	case BasicType:
+		return o == t
+	}
+}
+
 type PointerType struct {
 	of Type
 }
 
 const PointerSize = 4
 
-func (p *PointerType) Size() uint32 {
+func (t *PointerType) Size() uint32 {
 	return PointerSize
+}
+
+func (t *PointerType) Equal(other Type) bool {
+	switch o := other.(type) {
+	default:
+		return false
+	case *PointerType:
+		return t.of.Equal(o.of)
+	}
+}
+
+func SameType(t1, t2 Type) bool {
+	return t1.Equal(t2)
+}
+
+func (t *PointerType) String() string {
+	return "*" + t.of.String()
 }

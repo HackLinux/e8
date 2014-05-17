@@ -22,27 +22,29 @@ func (self *Struct) PrintTo(p printer.Iface) {
 	}
 }
 
-func (self *Struct) AddVar(v *Var) bool {
+func (self *Struct) AddVar(v *Var) {
 	self.vars = append(self.vars, v)
 	if v.Name == "_" {
-		return true
+		return
 	}
 
 	ret := self.nameMap[v.Name]
 	if ret != nil {
-		self.nameMap[v.Name] = v
-		return true
+		panic("duplicated variable in struct")
 	}
-	return false
+
+	self.nameMap[v.Name] = v
 }
 
 // add a field variable into the structure
-func (self *Struct) Fv(v *Var) bool {
-	return self.AddVar(v)
+func (self *Struct) Fv(v *Var) {
+	self.AddVar(v)
 }
 
-func (self *Struct) F(n string, t Type) bool {
-	return self.Fv(V(n, t))
+func (self *Struct) F(n string, t Type) *Var {
+	v := V(n, t)
+	self.Fv(v)
+	return v
 }
 
 func (self *Struct) Find(n string) *Var {

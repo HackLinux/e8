@@ -10,6 +10,8 @@ func main() {
 	f.Arg.F("i", ir1.U32)
 	f.Ret.F("ret", ir1.U32)
 	f.S(ir1.Cm("some comment"))
+	f.Local.F("x", ir1.U32)
+	f.Al("t", f.Vexpr("x"))
 
 	printer.Print(f)
 }
