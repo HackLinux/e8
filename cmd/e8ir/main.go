@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/h8liu/e8/ir/ir1"
+	"github.com/h8liu/e8/ir1"
 	"github.com/h8liu/e8/printer"
 )
 
