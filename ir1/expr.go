@@ -27,13 +27,12 @@ func (self *VarExpr) String() string {
 
 type BinExpr struct {
 	V1, V2 *Var
-	Op Op
+	Op     Op
 }
 
 type UnaExpr struct {
-	V *Var
+	V  *Var
 	Op Op
 }
 
 type Op int
-
