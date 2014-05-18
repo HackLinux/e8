@@ -16,12 +16,12 @@ const (
 var basicTypeNames = map[Basic]string{
 	Void: "void",
 	Bool: "bool",
-	I8:   "i8",
-	U8:   "u8",
-	I16:  "i16",
-	U16:  "u16",
-	I32:  "i32",
-	U32:  "u32",
+	I8:   "int8",
+	U8:   "uint8",
+	I16:  "int16",
+	U16:  "uint16",
+	I32:  "int32",
+	U32:  "uint32",
 }
 
 func (t Basic) Size() uint32 {

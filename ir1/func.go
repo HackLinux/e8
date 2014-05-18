@@ -38,21 +38,21 @@ func NewFunc(n string, t types.Type) *Func {
 func (self *Func) Name() string     { return self.name }
 func (self *Func) Type() types.Type { return self.Ret.Type }
 
+func (self *Func) Sig() string {
+	ret := fmt.Sprintf("func %s%s", self.name, self.Arg.List())
+	if self.Ret.Type != types.Void {
+		ret += fmt.Sprintf(" (ret %s)", self.Ret.Type.String())
+	}
+	return ret
+}
+
 func (self *Func) PrintTo(p printer.Iface) {
-	p.Printf("func %s %s {", self.name, self.Ret.Type.String())
+	p.Printf("%s {", self.Sig())
 	p.ShiftIn()
 
-	p.Printf("arg {")
-	p.ShiftIn()
-	self.Arg.PrintTo(p)
-	p.ShiftOut("}")
-
-	p.Printf("code {")
-	p.ShiftIn()
 	for _, s := range self.Stmts {
 		s.PrintTo(p)
 	}
-	p.ShiftOut("}")
 
 	p.ShiftOut("}")
 }
