@@ -10,7 +10,8 @@ import (
 )
 
 func main() {
-	p := P("main")
+	p := NewPackage("main")
+
 	f := p.NewFunc("fabo", U32)
 	f.AddArg("i", U32)
 	f.Comment("calculating fabonaci numbers")

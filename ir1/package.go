@@ -10,7 +10,7 @@ type Package struct {
 	Funcs map[string]*Func
 }
 
-func P(name string) *Package {
+func NewPackage(name string) *Package {
 	ret := new(Package)
 	ret.Name = name
 	ret.Funcs = make(map[string]*Func)
