@@ -42,7 +42,7 @@ func (self *Struct) List() string {
 	return buf.String()
 }
 
-func (self *Struct) Var(v *vars.Var) {
+func (self *Struct) addField(v *vars.Var) {
 	self.vars = append(self.vars, v)
 	if v.Name == "_" {
 		// add padding
@@ -57,9 +57,9 @@ func (self *Struct) Var(v *vars.Var) {
 	self.nameMap[v.Name] = v
 }
 
-func (self *Struct) Field(n string, t types.Type) *vars.Var {
+func (self *Struct) AddField(n string, t types.Type) *vars.Var {
 	v := vars.NewVar(n, t)
-	self.Var(v)
+	self.addField(v)
 	return v
 }
 

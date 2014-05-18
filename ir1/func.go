@@ -69,7 +69,7 @@ func (self *Func) AddArg(n string, t types.Type) *vars.Var {
 		panic("bug")
 	}
 
-	return self.Arg.Field(n, t)
+	return self.Arg.AddField(n, t)
 }
 
 func (self *Func) newLocal(n string, t types.Type) *vars.Var {
@@ -87,7 +87,7 @@ func (self *Func) newLocal(n string, t types.Type) *vars.Var {
 		return nil
 	}
 
-	return self.Local.Field(n, t)
+	return self.Local.AddField(n, t)
 }
 
 // Find a variable in the function scope
