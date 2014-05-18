@@ -5,3 +5,7 @@ type Type interface {
 	String() string
 	Equal(t Type) bool
 }
+
+func IsSame(t1, t2 Type) bool {
+	return t1.Equal(t2)
+}

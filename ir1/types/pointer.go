@@ -19,10 +19,6 @@ func (t *PointerType) Equal(other Type) bool {
 	}
 }
 
-func SameType(t1, t2 Type) bool {
-	return t1.Equal(t2)
-}
-
 func (t *PointerType) String() string {
 	return "*" + t.of.String()
 }

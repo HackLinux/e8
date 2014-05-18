@@ -18,10 +18,10 @@ func P(name string) *Package {
 	return ret
 }
 
-func (self *Package) F(name string, t types.Type) *Func {
+func (self *Package) NewFunc(name string, t types.Type) *Func {
 	assert(self.Funcs[name] == nil)
 
-	f := F(name, t)
+	f := NewFunc(name, t)
 	f.pack = self
 	self.Funcs[name] = f
 

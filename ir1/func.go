@@ -34,10 +34,6 @@ func NewFunc(n string, t types.Type) *Func {
 	return ret
 }
 
-func F(n string, t types.Type) *Func {
-	return NewFunc(n, t)
-}
-
 func (self *Func) Name() string     { return self.name }
 func (self *Func) Type() types.Type { return self.ret.Type }
 
@@ -74,7 +70,7 @@ func (self *Func) Arg(n string, t types.Type) *vars.Var {
 	return self.arg.Field(n, t)
 }
 
-func (self *Func) Var(n string, t types.Type) *vars.Var {
+func (self *Func) newLocal(n string, t types.Type) *vars.Var {
 	if self.arg.Find(n) != nil {
 		panic("already added in arg")
 	}
@@ -127,7 +123,7 @@ func (self *Func) Comment(s string) {
 }
 
 func (self *Func) AssignNew(n string, e exprs.Expr) string {
-	v := self.Var(n, e.Type())
+	v := self.newLocal(n, e.Type())
 	as := &stmts.Assign{
 		Alloc: true,
 		V:     v,
@@ -157,7 +153,7 @@ func (self *Func) Assign(n string, e exprs.Expr) {
 	if n != "_" && v == nil {
 		panic("variable not found")
 	}
-	if !types.SameType(v.Type, e.Type()) {
+	if !types.IsSame(v.Type, e.Type()) {
 		panic("wrong assignment type")
 	}
 
