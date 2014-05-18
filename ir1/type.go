@@ -9,6 +9,7 @@ type Type interface {
 type BasicType int
 
 const (
+	Void BasicType = 0
 	Bool BasicType = 1
 	I8   BasicType = (1 << 1)
 	U8   BasicType = (1 << 1) + 1
@@ -19,6 +20,7 @@ const (
 )
 
 var basicTypeNames = map[BasicType]string{
+	Void: "void",
 	Bool: "bool",
 	I8:   "i8",
 	U8:   "u8",

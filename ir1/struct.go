@@ -25,6 +25,7 @@ func (self *Struct) PrintTo(p printer.Iface) {
 func (self *Struct) AddVar(v *Var) {
 	self.vars = append(self.vars, v)
 	if v.Name == "_" {
+		// add padding
 		return
 	}
 
