@@ -178,5 +178,5 @@ func (self *Func) Bexpr(n1 string, op Op, n2 string) *BinExpr {
 }
 
 func (self *Func) Return() {
-	self.S(retStmt)
+	self.S(Return)
 }
