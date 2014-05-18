@@ -1,20 +1,24 @@
-package ir1
+package exprs
 
 import (
 	"bytes"
 	"fmt"
+
+	"github.com/h8liu/e8/ir1/decls"
+	"github.com/h8liu/e8/ir1/types"
+	"github.com/h8liu/e8/ir1/vars"
 )
 
 type CallExpr struct {
-	f    FuncDecl
-	args []*Var
+	f    decls.Func
+	args []*vars.Var
 }
 
-func Call(f FuncDecl, args ...*Var) *CallExpr {
+func Call(f decls.Func, args ...*vars.Var) *CallExpr {
 	return &CallExpr{f, args}
 }
 
-func (self *CallExpr) Type() Type {
+func (self *CallExpr) Type() types.Type {
 	return self.f.Type()
 }
 

@@ -3,14 +3,18 @@ package ir1
 import (
 	"fmt"
 
+	"github.com/h8liu/e8/ir1/exprs"
+	"github.com/h8liu/e8/ir1/ops"
+	"github.com/h8liu/e8/ir1/types"
+	"github.com/h8liu/e8/ir1/vars"
 	"github.com/h8liu/e8/printer"
 )
 
 type Func struct {
-	name  string  // the function name
-	arg   *Struct // structure of func call arguments
-	ret   *Var    // structure of return values
-	local *Struct // structure of local variables
+	name  string    // the function name
+	arg   *Struct   // structure of func call arguments
+	ret   *vars.Var // structure of return values
+	local *Struct   // structure of local variables
 
 	pack *Package
 
@@ -19,22 +23,22 @@ type Func struct {
 	Stmts []Stmt
 }
 
-func NewFunc(n string, t Type) *Func {
+func NewFunc(n string, t types.Type) *Func {
 	ret := new(Func)
 	ret.name = n
 	ret.arg = NewStruct()
-	ret.ret = &Var{"<ret>", t}
+	ret.ret = &vars.Var{"<ret>", t}
 	ret.local = NewStruct()
 
 	return ret
 }
 
-func F(n string, t Type) *Func {
+func F(n string, t types.Type) *Func {
 	return NewFunc(n, t)
 }
 
-func (self *Func) Name() string { return self.name }
-func (self *Func) Type() Type   { return self.ret.Type }
+func (self *Func) Name() string     { return self.name }
+func (self *Func) Type() types.Type { return self.ret.Type }
 
 func (self *Func) PrintTo(p printer.Iface) {
 	p.Printf("func %s %s {", self.name, self.ret.Type.String())
@@ -55,21 +59,21 @@ func (self *Func) PrintTo(p printer.Iface) {
 	p.ShiftOut("}")
 }
 
-func (self *Func) Arg(n string, t Type) *Var {
+func (self *Func) Arg(n string, t types.Type) *vars.Var {
 	if !self.local.Empty() {
 		panic("already added local")
 	}
 	if n == "<ret>" {
 		panic("<ret> is reserved for return")
 	}
-	if t == Void || n == "_" {
+	if t == types.Void || n == "_" {
 		panic("bug")
 	}
 
 	return self.arg.F(n, t)
 }
 
-func (self *Func) Var(n string, t Type) *Var {
+func (self *Func) Var(n string, t types.Type) *vars.Var {
 	if self.arg.Find(n) != nil {
 		panic("already added in arg")
 	}
@@ -77,7 +81,7 @@ func (self *Func) Var(n string, t Type) *Var {
 		panic("<ret> is reserved for return")
 	}
 
-	if t == Void {
+	if t == types.Void {
 		if n != "_" {
 			panic("cannot add named void type")
 		}
@@ -89,7 +93,7 @@ func (self *Func) Var(n string, t Type) *Var {
 
 // Find a variable in the function scope
 // return nil on not found
-func (self *Func) Find(n string) *Var {
+func (self *Func) Find(n string) *vars.Var {
 	if n == "_" {
 		return nil
 	}
@@ -121,7 +125,7 @@ func (self *Func) Cm(s string) {
 	self.S(Cm(s))
 }
 
-func (self *Func) Al(n string, e Expr) string {
+func (self *Func) Al(n string, e exprs.Expr) string {
 	v := self.Var(n, e.Type())
 	as := &AssignStmt{
 		Alloc: true,
@@ -134,7 +138,7 @@ func (self *Func) Al(n string, e Expr) string {
 	return n
 }
 
-func (self *Func) AlTmp(e Expr) (n string) {
+func (self *Func) AlTmp(e exprs.Expr) (n string) {
 	for {
 		n = fmt.Sprintf("_%d", self.nvar)
 		if self.Find(n) == nil {
@@ -146,13 +150,13 @@ func (self *Func) AlTmp(e Expr) (n string) {
 	return self.Al(n, e)
 }
 
-func (self *Func) As(n string, e Expr) {
+func (self *Func) As(n string, e exprs.Expr) {
 	v := self.Find(n)
 
 	if n != "_" && v == nil {
 		panic("variable not found")
 	}
-	if !SameType(v.Type, e.Type()) {
+	if !types.SameType(v.Type, e.Type()) {
 		panic("wrong assignment type")
 	}
 
@@ -165,7 +169,7 @@ func (self *Func) As(n string, e Expr) {
 	self.S(as)
 }
 
-func (self *Func) RetAs(e Expr) {
+func (self *Func) RetAs(e exprs.Expr) {
 	self.As("<ret>", e)
 }
 
@@ -185,27 +189,27 @@ func (self *Func) Goto(lab string) {
 	self.S(Goto(lab))
 }
 
-func (self *Func) Call(f string, vars ...string) *CallExpr {
-	var args []*Var
+func (self *Func) Call(f string, vs ...string) *exprs.CallExpr {
+	var args []*vars.Var
 
-	for _, v := range vars {
+	for _, v := range vs {
 		args = append(args, self.V(v))
 	}
 
 	fd := self.pack.FindCall(f)
 	assert(fd != nil)
 
-	return Call(fd, args...)
+	return exprs.Call(fd, args...)
 }
 
-func (self *Func) V(n string) *Var {
+func (self *Func) V(n string) *vars.Var {
 	return self.Find(n)
 }
 
-func (self *Func) Vexpr(n string) *VarExpr {
-	return Vexpr(self.V(n))
+func (self *Func) Vexpr(n string) *exprs.SingleVar {
+	return exprs.NewSingleVar(self.V(n))
 }
 
-func (self *Func) Bexpr(n1 string, op Op, n2 string) *BinExpr {
-	return Bexpr(self.V(n1), op, self.V(n2))
+func (self *Func) Bexpr(n1 string, op ops.Op, n2 string) *exprs.Binary {
+	return exprs.NewBinary(self.V(n1), op, self.V(n2))
 }

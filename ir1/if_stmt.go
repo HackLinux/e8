@@ -1,16 +1,18 @@
 package ir1
 
 import (
+	"github.com/h8liu/e8/ir1/types"
+	"github.com/h8liu/e8/ir1/vars"
 	"github.com/h8liu/e8/printer"
 )
 
 type IfStmt struct {
-	v     *Var
+	v     *vars.Var
 	label string
 }
 
-func If(v *Var, lab string) *IfStmt {
-	assert(v.Type == Bool)
+func If(v *vars.Var, lab string) *IfStmt {
+	assert(v.Type == types.Bool)
 	return &IfStmt{v, lab}
 }
 
