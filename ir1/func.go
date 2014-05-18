@@ -13,7 +13,7 @@ import (
 )
 
 type Func struct {
-	N  string    // the function name
+	N     string    // the function name
 	Arg   *Struct   // structure of func call arguments
 	Ret   *vars.Var // structure of return values
 	Local *Struct   // structure of local variables
