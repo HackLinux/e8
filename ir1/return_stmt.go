@@ -11,4 +11,3 @@ const Return ReturnStmt = 0
 func (s ReturnStmt) PrintTo(p printer.Iface) {
 	p.Printf("return")
 }
-

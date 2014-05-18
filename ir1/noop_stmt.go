@@ -21,4 +21,3 @@ func Cm(c string) *NoopStmt { return NewComment(c) }
 func (s *NoopStmt) PrintTo(p printer.Iface) {
 	p.Printf("// %s", s.Comment)
 }
-

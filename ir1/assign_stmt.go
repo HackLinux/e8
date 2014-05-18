@@ -17,4 +17,3 @@ func (s *AssignStmt) PrintTo(p printer.Iface) {
 		p.Printf("%s = %s", s.V.Name, s.E.String())
 	}
 }
-
