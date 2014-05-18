@@ -41,7 +41,7 @@ func (self *Struct) Var(v *vars.Var) {
 }
 
 func (self *Struct) Field(n string, t types.Type) *vars.Var {
-	v := vars.V(n, t)
+	v := vars.NewVar(n, t)
 	self.Var(v)
 	return v
 }

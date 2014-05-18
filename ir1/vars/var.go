@@ -21,7 +21,3 @@ func NewVar(n string, t types.Type) *Var {
 		Type: t,
 	}
 }
-
-func V(n string, t types.Type) *Var {
-	return NewVar(n, t)
-}
