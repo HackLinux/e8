@@ -1,6 +1,8 @@
 package ir1
 
 import (
+	"fmt"
+
 	"github.com/h8liu/e8/printer"
 )
 
@@ -9,6 +11,8 @@ type Func struct {
 	arg   *Struct // structure of func call arguments
 	ret   *Struct // structure of return values
 	local *Struct // structure of local variables
+
+	nvar int
 
 	Stmts []Stmt
 }
@@ -117,7 +121,7 @@ func (self *Func) Find(n string) *Var {
 	return nil
 }
 
-func (self *Func) Al(n string, e Expr) {
+func (self *Func) Al(n string, e Expr) string {
 	v := self.Var(n, e.Type())
 	as := &AssignStmt{
 		Alloc: true,
@@ -126,6 +130,20 @@ func (self *Func) Al(n string, e Expr) {
 	}
 
 	self.S(as)
+
+	return n
+}
+
+func (self *Func) AlTmp(e Expr) (n string) {
+	for {
+		n = fmt.Sprintf("_%d", self.nvar)
+		if self.Find(n) == nil {
+			break
+		}
+		self.nvar++
+	}
+
+	return self.Al(n, e)
 }
 
 func (self *Func) As(n string, e Expr) {
@@ -152,5 +170,13 @@ func (self *Func) V(n string) *Var {
 }
 
 func (self *Func) Vexpr(n string) *VarExpr {
-	return Ve(self.V(n))
+	return Vexpr(self.V(n))
+}
+
+func (self *Func) Bexpr(n1 string, op Op, n2 string) *BinExpr {
+	return Bexpr(self.V(n1), op, self.V(n2))
+}
+
+func (self *Func) Return() {
+	self.S(retStmt)
 }

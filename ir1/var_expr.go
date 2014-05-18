@@ -4,7 +4,7 @@ type VarExpr struct {
 	*Var
 }
 
-func Ve(v *Var) *VarExpr {
+func Vexpr(v *Var) *VarExpr {
 	if v == nil {
 		panic("bug")
 	}

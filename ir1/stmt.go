@@ -39,3 +39,11 @@ func (s *AssignStmt) PrintTo(p printer.Iface) {
 		p.Printf("%s = %s", s.V.Name, s.E.String())
 	}
 }
+
+type ReturnStmt int
+
+const retStmt ReturnStmt = 0
+
+func (s ReturnStmt) PrintTo(p printer.Iface) {
+	p.Printf("return")
+}
