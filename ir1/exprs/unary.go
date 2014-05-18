@@ -6,6 +6,6 @@ import (
 )
 
 type Unary struct {
-	V  *vars.Var
 	Op ops.Op
+	V  *vars.Var
 }

@@ -6,7 +6,7 @@ import (
 )
 
 type Single struct {
-	*vars.Var
+	V *vars.Var
 }
 
 func NewSingle(v *vars.Var) *Single {
@@ -18,9 +18,9 @@ func NewSingle(v *vars.Var) *Single {
 }
 
 func (self *Single) Type() types.Type {
-	return self.Var.Type
+	return self.V.Type
 }
 
 func (self *Single) String() string {
-	return self.Var.Name
+	return self.V.Name
 }

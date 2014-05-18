@@ -9,8 +9,8 @@ import (
 )
 
 type Binary struct {
-	V1, V2 *vars.Var
 	Op     ops.Op
+	V1, V2 *vars.Var
 }
 
 func (self *Binary) Type() types.Type {
@@ -43,5 +43,5 @@ func NewBinary(v1 *vars.Var, op ops.Op, v2 *vars.Var) *Binary {
 		assert(t1 != types.Bool && t2 != types.Bool)
 	}
 
-	return &Binary{v1, v2, op}
+	return &Binary{op, v1, v2}
 }

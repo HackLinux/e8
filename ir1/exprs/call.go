@@ -10,8 +10,8 @@ import (
 )
 
 type Call struct {
-	f    decls.Func
-	args []*vars.Var
+	F    decls.Func
+	Args []*vars.Var
 }
 
 func NewCall(f decls.Func, args ...*vars.Var) *Call {
@@ -19,14 +19,14 @@ func NewCall(f decls.Func, args ...*vars.Var) *Call {
 }
 
 func (self *Call) Type() types.Type {
-	return self.f.Type()
+	return self.F.Type()
 }
 
 func (self *Call) String() string {
 	buf := new(bytes.Buffer)
 
-	fmt.Fprintf(buf, "%s(", self.f.Name())
-	for i, arg := range self.args {
+	fmt.Fprintf(buf, "%s(", self.F.Name())
+	for i, arg := range self.Args {
 		if i > 0 {
 			fmt.Fprint(buf, ", ")
 		}
