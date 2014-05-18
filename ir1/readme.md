@@ -16,3 +16,5 @@ tranlate the instructions into asm.js (for now), becauase asm.js does
 not have goto statements. For asm.js, we will probably have a
 variation of IR1 which does not have goto statements.
 
+Currently IR1 is a strict subset of golang. It is not part of the
+design requirement, but it is a nice property to have.
