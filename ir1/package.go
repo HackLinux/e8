@@ -22,7 +22,7 @@ func (self *Package) NewFunc(name string, t types.Type) *Func {
 	assert(self.Funcs[name] == nil)
 
 	f := NewFunc(name, t)
-	f.pack = self
+	f.Pack = self
 	self.Funcs[name] = f
 
 	return f

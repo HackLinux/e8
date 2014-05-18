@@ -13,37 +13,38 @@ import (
 
 type Func struct {
 	name  string    // the function name
-	arg   *Struct   // structure of func call arguments
-	ret   *vars.Var // structure of return values
-	local *Struct   // structure of local variables
+	Arg   *Struct   // structure of func call arguments
+	Ret   *vars.Var // structure of return values
+	Local *Struct   // structure of local variables
 
-	pack *Package
-
-	nvar int
+	Pack *Package
 
 	Stmts []stmts.Stmt
+
+	nVar int
 }
 
 func NewFunc(n string, t types.Type) *Func {
 	ret := new(Func)
 	ret.name = n
-	ret.arg = NewStruct()
-	ret.ret = &vars.Var{"<ret>", t}
-	ret.local = NewStruct()
+	ret.Arg = NewStruct()
+	ret.Ret = vars.NewVar("ret", t)
+	ret.Local = NewStruct()
+	ret.nVar = 1
 
 	return ret
 }
 
 func (self *Func) Name() string     { return self.name }
-func (self *Func) Type() types.Type { return self.ret.Type }
+func (self *Func) Type() types.Type { return self.Ret.Type }
 
 func (self *Func) PrintTo(p printer.Iface) {
-	p.Printf("func %s %s {", self.name, self.ret.Type.String())
+	p.Printf("func %s %s {", self.name, self.Ret.Type.String())
 	p.ShiftIn()
 
 	p.Printf("arg {")
 	p.ShiftIn()
-	self.arg.PrintTo(p)
+	self.Arg.PrintTo(p)
 	p.ShiftOut("}")
 
 	p.Printf("code {")
@@ -56,8 +57,8 @@ func (self *Func) PrintTo(p printer.Iface) {
 	p.ShiftOut("}")
 }
 
-func (self *Func) Arg(n string, t types.Type) *vars.Var {
-	if !self.local.Empty() {
+func (self *Func) AddArg(n string, t types.Type) *vars.Var {
+	if !self.Local.Empty() {
 		panic("already added local")
 	}
 	if n == "<ret>" {
@@ -67,11 +68,11 @@ func (self *Func) Arg(n string, t types.Type) *vars.Var {
 		panic("bug")
 	}
 
-	return self.arg.Field(n, t)
+	return self.Arg.Field(n, t)
 }
 
 func (self *Func) newLocal(n string, t types.Type) *vars.Var {
-	if self.arg.Find(n) != nil {
+	if self.Arg.Find(n) != nil {
 		panic("already added in arg")
 	}
 	if n == "<ret>" {
@@ -85,7 +86,7 @@ func (self *Func) newLocal(n string, t types.Type) *vars.Var {
 		return nil
 	}
 
-	return self.local.Field(n, t)
+	return self.Local.Field(n, t)
 }
 
 // Find a variable in the function scope
@@ -96,15 +97,15 @@ func (self *Func) V(n string) *vars.Var {
 	}
 
 	if n == "<ret>" {
-		return self.ret
+		return self.Ret
 	}
 
-	v := self.arg.Find(n)
+	v := self.Arg.Find(n)
 	if v != nil {
 		return v
 	}
 
-	v = self.local.Find(n)
+	v = self.Local.Find(n)
 	if v != nil {
 		return v
 	}
@@ -137,11 +138,11 @@ func (self *Func) AssignNew(n string, e exprs.Expr) string {
 
 func (self *Func) AssignNewTemp(e exprs.Expr) (n string) {
 	for {
-		n = fmt.Sprintf("_%d", self.nvar)
+		n = fmt.Sprintf("_%d", self.nVar)
 		if self.V(n) == nil {
 			break
 		}
-		self.nvar++
+		self.nVar++
 	}
 
 	return self.AssignNew(n, e)
@@ -193,7 +194,7 @@ func (self *Func) Call(f string, vs ...string) *exprs.Call {
 		args = append(args, self.V(v))
 	}
 
-	fd := self.pack.FindCall(f)
+	fd := self.Pack.FindCall(f)
 	assert(fd != nil)
 
 	return exprs.NewCall(fd, args...)

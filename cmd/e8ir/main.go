@@ -12,7 +12,7 @@ import (
 func main() {
 	p := P("main")
 	f := p.NewFunc("fabo", U32)
-	f.Arg("i", U32)
+	f.AddArg("i", U32)
 	f.Comment("calculating fabonaci numbers")
 
 	c1 := f.AssignNew("c1", C(1, U32))

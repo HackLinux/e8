@@ -24,6 +24,6 @@ func (s *Jump) PrintTo(p printer.Iface) {
 	if s.v == nil {
 		p.Printf("goto %s", s.label)
 	} else {
-		p.Printf("if %s goto %s", s.v.Name, s.label)
+		p.Printf("if %s { goto %s }", s.v.Name, s.label)
 	}
 }
