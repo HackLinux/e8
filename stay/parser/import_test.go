@@ -49,22 +49,22 @@ import ( a "ho"; b "ho"; c "ho"; )
 `
 
 const expectOutput = `import (
-    "hello"
-    fmt "hello"
-    f "hello"
-    . "hello"
-    "ho"
-    "hello/ho"
-    "hello"
-    tx "hello/ho"
-    "hello"
-    "ho"
-    "ho"
-    "ho"
-    "ho"
-    a "ho"
-    b "ho"
-    c "ho"
+	"hello"
+	fmt "hello"
+	f "hello"
+	. "hello"
+	"ho"
+	"hello/ho"
+	"hello"
+	tx "hello/ho"
+	"hello"
+	"ho"
+	"ho"
+	"ho"
+	"ho"
+	a "ho"
+	b "ho"
+	c "ho"
 )
 `
 

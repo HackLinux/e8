@@ -7,8 +7,8 @@ import (
 )
 
 type Jump struct {
-	v     *vars.Var
-	label string
+	V     *vars.Var
+	Label string
 }
 
 func If(v *vars.Var, lab string) *Jump {
@@ -21,9 +21,12 @@ func Goto(lab string) *Jump {
 }
 
 func (s *Jump) PrintTo(p printer.Iface) {
-	if s.v == nil {
-		p.Printf("goto %s", s.label)
+	if s.V == nil {
+		p.Printf("goto %s", s.Label)
 	} else {
-		p.Printf("if %s { goto %s }", s.v.Name, s.label)
+		p.Printf("if %s {", s.V.Name)
+		p.ShiftIn()
+		p.Printf("goto %s", s.Label)
+		p.ShiftOut("}")
 	}
 }
