@@ -1,4 +1,4 @@
-package ir1
+package stmts
 
 import (
 	"github.com/h8liu/e8/ir1/types"
@@ -6,21 +6,21 @@ import (
 	"github.com/h8liu/e8/printer"
 )
 
-type IfStmt struct {
+type Jump struct {
 	v     *vars.Var
 	label string
 }
 
-func If(v *vars.Var, lab string) *IfStmt {
+func If(v *vars.Var, lab string) *Jump {
 	assert(v.Type == types.Bool)
-	return &IfStmt{v, lab}
+	return &Jump{v, lab}
 }
 
-func Goto(lab string) *IfStmt {
-	return &IfStmt{nil, lab}
+func Goto(lab string) *Jump {
+	return &Jump{nil, lab}
 }
 
-func (s IfStmt) PrintTo(p printer.Iface) {
+func (s *Jump) PrintTo(p printer.Iface) {
 	if s.v == nil {
 		p.Printf("goto %s", s.label)
 	} else {

@@ -7,7 +7,7 @@ import (
 	"github.com/h8liu/e8/printer"
 )
 
-// a memory structure
+// A combined continuous memory area of named memory slots
 type Struct struct {
 	vars    []*vars.Var
 	nameMap map[string]*vars.Var
@@ -25,7 +25,7 @@ func (self *Struct) PrintTo(p printer.Iface) {
 	}
 }
 
-func (self *Struct) AddVar(v *vars.Var) {
+func (self *Struct) Var(v *vars.Var) {
 	self.vars = append(self.vars, v)
 	if v.Name == "_" {
 		// add padding
@@ -40,14 +40,9 @@ func (self *Struct) AddVar(v *vars.Var) {
 	self.nameMap[v.Name] = v
 }
 
-// add a field variable into the structure
-func (self *Struct) Fv(v *vars.Var) {
-	self.AddVar(v)
-}
-
-func (self *Struct) F(n string, t types.Type) *vars.Var {
+func (self *Struct) Field(n string, t types.Type) *vars.Var {
 	v := vars.V(n, t)
-	self.Fv(v)
+	self.Var(v)
 	return v
 }
 

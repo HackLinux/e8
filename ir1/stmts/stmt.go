@@ -1,4 +1,4 @@
-package ir1
+package stmts
 
 import (
 	"github.com/h8liu/e8/printer"

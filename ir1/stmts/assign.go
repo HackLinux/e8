@@ -1,4 +1,4 @@
-package ir1
+package stmts
 
 import (
 	"github.com/h8liu/e8/ir1/exprs"
@@ -6,13 +6,13 @@ import (
 	"github.com/h8liu/e8/printer"
 )
 
-type AssignStmt struct {
+type Assign struct {
 	Alloc bool
 	V     *vars.Var
 	E     exprs.Expr
 }
 
-func (s *AssignStmt) PrintTo(p printer.Iface) {
+func (s *Assign) PrintTo(p printer.Iface) {
 	if s.Alloc {
 		p.Printf("%s := %s", s.V.Name, s.E.String())
 	} else {

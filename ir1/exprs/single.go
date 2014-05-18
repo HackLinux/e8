@@ -5,22 +5,22 @@ import (
 	"github.com/h8liu/e8/ir1/vars"
 )
 
-type SingleVar struct {
+type Single struct {
 	*vars.Var
 }
 
-func NewSingleVar(v *vars.Var) *SingleVar {
+func NewSingle(v *vars.Var) *Single {
 	if v == nil {
 		panic("bug")
 	}
 
-	return &SingleVar{v}
+	return &Single{v}
 }
 
-func (self *SingleVar) Type() types.Type {
+func (self *Single) Type() types.Type {
 	return self.Var.Type
 }
 
-func (self *SingleVar) String() string {
+func (self *Single) String() string {
 	return self.Var.Name
 }
