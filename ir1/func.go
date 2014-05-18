@@ -13,7 +13,7 @@ import (
 )
 
 type Func struct {
-	name  string    // the function name
+	N  string    // the function name
 	Arg   *Struct   // structure of func call arguments
 	Ret   *vars.Var // structure of return values
 	Local *Struct   // structure of local variables
@@ -27,7 +27,7 @@ type Func struct {
 
 func NewFunc(n string, t types.Type) *Func {
 	ret := new(Func)
-	ret.name = n
+	ret.N = n
 	ret.Arg = NewStruct()
 	ret.Ret = vars.NewVar("r", t)
 	ret.Local = NewStruct()
@@ -36,11 +36,11 @@ func NewFunc(n string, t types.Type) *Func {
 	return ret
 }
 
-func (self *Func) Name() string     { return self.name }
+func (self *Func) Name() string     { return self.N }
 func (self *Func) Type() types.Type { return self.Ret.Type }
 
 func (self *Func) Sig() string {
-	ret := fmt.Sprintf("func %s%s", self.name, self.Arg.List())
+	ret := fmt.Sprintf("func %s%s", self.N, self.Arg.List())
 	if self.Ret.Type != types.Void {
 		ret += fmt.Sprintf(" (r %s)", self.Ret.Type.String())
 	}
