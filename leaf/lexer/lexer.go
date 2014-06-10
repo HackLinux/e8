@@ -8,20 +8,37 @@ import (
 	"github.com/h8liu/e8/text/runes"
 	"github.com/h8liu/e8/text/scanner"
 
-	"github.com/h8liu/e8/leaf/reporter"
 	"github.com/h8liu/e8/leaf/token"
 )
 
 type Lexer struct {
-	s        *scanner.Scanner
-	reporter reporter.Interface
-
+	s   *scanner.Scanner
 	buf *Token
 
 	illegal    bool  // illegal encountered
 	insertSemi bool  // if treat end line as whitespace
 	eof        bool  // end of file returned
-	firstFail  error // lex error encountered
+	err        error // first error encountered
+
+	ErrorFunc func(e error)
+	File      string
+}
+
+type Error struct {
+	Err  error
+	File string
+	Line int
+	Col  int
+}
+
+func (e *Error) Error() string {
+	prefix := ""
+	if e.File != "" {
+		prefix = e.File + ":"
+	}
+	return fmt.Sprintf("%s%d:%d: %s",
+		prefix, e.Line, e.Col, e.Err,
+	)
 }
 
 // Creates a new lexer
@@ -33,27 +50,34 @@ func New(in io.Reader) *Lexer {
 	return ret
 }
 
-// Use a particular error reporter
-func (self *Lexer) ReportTo(r reporter.Interface) {
-	self.reporter = r
+func (self *Lexer) wrapError(e error) error {
+	ret := new(Error)
+	ret.Err = e
+	ret.Line, ret.Col = self.s.Pos()
+	ret.File = self.File
+
+	return ret
 }
 
 func (self *Lexer) report(e error) {
-	if self.reporter == nil {
+	if e == nil {
 		return
 	}
-	line, col := self.s.Pos()
-	self.reporter.Report(line, col, e)
+
+	e = self.wrapError(e)
+
+	if self.err == nil {
+		self.err = e
+	}
+
+	if self.ErrorFunc != nil {
+		self.ErrorFunc(e)
+	}
 }
 
 // Reports a lex error
 func (self *Lexer) failf(f string, args ...interface{}) {
-	e := fmt.Errorf(f, args...)
-	self.report(e)
-
-	if self.firstFail == nil {
-		self.firstFail = e
-	}
+	self.report(fmt.Errorf(f, args...))
 }
 
 func (self *Lexer) skipWhites() {
@@ -243,24 +267,11 @@ func (self *Lexer) scanComment() string {
 }
 
 func (self *Lexer) Err() error {
-	e := self.s.Err()
-	if e != nil {
-		return e
-	}
-
-	if self.firstFail != nil {
-		return self.firstFail
-	}
-
-	return nil
+	return self.err
 }
 
 func (self *Lexer) ScanErr() error {
 	return self.s.Err()
-}
-
-func (self *Lexer) LexErr() error {
-	return self.firstFail
 }
 
 var insertSemiTokens = []token.Token{
@@ -330,10 +341,7 @@ func (self *Lexer) scanToken() *Token {
 		}
 		self.eof = true
 
-		e := self.s.Err()
-		if e != nil {
-			self.report(e)
-		}
+		self.report(self.s.Err())
 		return self.token(token.EOF, "")
 	}
 
