@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/h8liu/e8/stay/lexer"
-	"github.com/h8liu/e8/stay/reporter"
+	"github.com/h8liu/e8/leaf/lexer"
+	"github.com/h8liu/e8/leaf/reporter"
 )
 
 func noError(e error) {

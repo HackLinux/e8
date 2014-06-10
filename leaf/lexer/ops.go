@@ -1,7 +1,7 @@
 package lexer
 
 import (
-	. "github.com/h8liu/e8/stay/token"
+	. "github.com/h8liu/e8/leaf/token"
 )
 
 var simpleOps = map[rune]Token{
