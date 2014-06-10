@@ -1,0 +1,52 @@
+Program = Import* Decl*
+
+Import = "import" Ident StringLit ;
+
+Decl = ConstDecl | VarDecl | StructDecl | IfaceDecl | FuncDecl
+ConstDecl = "const" Ident Type = Expr ;
+VarDecl = "var" Ident Type ; |
+    "var" Ident [ Type ] = Expr ;
+
+StructDecl = "struct" Ident "{" StructMember* Export* FuncDecl* "}"
+StructMember = Ident Type [ "export" ] ; // only struct and pointer to struct can export methods
+
+IfaceDecl = "inteface" Ident "{" FuncSig* "}"
+FuncSig = Ident "(" ParaList ")" [ Type ] |
+    Ident | Ident "." Ident // for including other interfaces
+
+Type = StructType | BasicType | "*" Type | ArrayType 
+StructType = Ident | Ident "." Ident 
+BasicType = uint | int | uint8 | int8 | char | byte | ptr
+ArrayType = "[" Expr "]" Type // expr must be constant
+SliceType = "[" "]" Type // just an alias for pointer
+
+FuncDecl = "func" Ident "(" ParaList ")" [ Type ] BlockStmt
+
+BlockStmt = "{" Stmt* "}" ;
+Stmt = DeclStmt | BasicStmt | IfStmt | ForStmt | 
+    BreakStmt | ContStmt | FallThruStmt | ReturnStmt | GotoStmt
+    LabeledStmt | BlockStmt 
+BasicStmt = EmptyStmt | IncDecStmt | AssignStmt | VarDeclStmt | CallStmt
+
+EmptyStmt = ; 
+DeclStmt = ConstDecl | VarDecl | StructDecl | IfaceDecl 
+IncDecStmt = Expr "++" ; | Expr "--"
+AssignStmt = Expr "=" Expr ;
+VarDeclStmt = Expr ":=" Expr ;
+CallStmt = CallExpr ;
+IfStmt = "if" Expr BlockStmt [ "else" BlockStmt ] 
+ForStmt = "for" [ Expr ] BlockStmt |
+    "for" BasicStmt ; Expr ; BasicStmt BlockStmt
+BreakStmt = "break" [ Ident ] ;
+ContStmt = "continue" [ Ident ] ;
+FallThruStmt = "fallthrough" ;
+ReturnStmt = "return" Expr ;
+GotoStmt = "goto" Expr ;
+LabeledStmt = Ident ":" Stmt
+
+Expr = PrimaryExpr | UnaryOp Expr | Expr BinaryOp Expr | 
+PrimaryExpr = CallExpr | "(" Expr ")" | Lit | Ident |
+    PrimaryExpr "." Ident | 
+    PrimaryExpr "[" Expr "]" | 
+CallExpr = PrimaryExpr "(" ArgList ")"
+ArgList = <nothing> | Expr [ "," ArgList ] 

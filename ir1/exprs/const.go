@@ -9,16 +9,16 @@ import (
 )
 
 type Const struct {
-	v int64
-	t types.Basic
+	V int64
+	T types.Basic
 }
 
 func (self *Const) Type() types.Type {
-	return self.t
+	return self.T
 }
 
 func (self *Const) String() string {
-	return fmt.Sprintf("%s(%d)", self.t.String(), self.v)
+	return fmt.Sprintf("%s(%d)", self.T, self.V)
 }
 
 func C(v int64, t types.Basic) *Const {

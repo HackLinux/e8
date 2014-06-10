@@ -2,6 +2,7 @@ package ir1
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/h8liu/e8/ir1/exprs"
 	"github.com/h8liu/e8/ir1/ops"
@@ -12,7 +13,7 @@ import (
 )
 
 type Func struct {
-	name  string    // the function name
+	N     string    // the function name
 	Arg   *Struct   // structure of func call arguments
 	Ret   *vars.Var // structure of return values
 	Local *Struct   // structure of local variables
@@ -21,27 +22,27 @@ type Func struct {
 
 	Stmts []stmts.Stmt
 
-	nVar int
+	nVar uint64
 }
 
 func NewFunc(n string, t types.Type) *Func {
 	ret := new(Func)
-	ret.name = n
+	ret.N = n
 	ret.Arg = NewStruct()
-	ret.Ret = vars.NewVar("ret", t)
+	ret.Ret = vars.NewVar("r", t)
 	ret.Local = NewStruct()
 	ret.nVar = 1
 
 	return ret
 }
 
-func (self *Func) Name() string     { return self.name }
+func (self *Func) Name() string     { return self.N }
 func (self *Func) Type() types.Type { return self.Ret.Type }
 
 func (self *Func) Sig() string {
-	ret := fmt.Sprintf("func %s%s", self.name, self.Arg.List())
+	ret := fmt.Sprintf("func %s%s", self.N, self.Arg.List())
 	if self.Ret.Type != types.Void {
-		ret += fmt.Sprintf(" (ret %s)", self.Ret.Type.String())
+		ret += fmt.Sprintf(" (r %s)", self.Ret.Type.String())
 	}
 	return ret
 }
@@ -61,22 +62,22 @@ func (self *Func) AddArg(n string, t types.Type) *vars.Var {
 	if !self.Local.Empty() {
 		panic("already added local")
 	}
-	if n == "<ret>" {
-		panic("<ret> is reserved for return")
+	if n == "r" {
+		panic(`"r" is reserved for return`)
 	}
 	if t == types.Void || n == "_" {
 		panic("bug")
 	}
 
-	return self.Arg.Field(n, t)
+	return self.Arg.AddField(n, t)
 }
 
 func (self *Func) newLocal(n string, t types.Type) *vars.Var {
 	if self.Arg.Find(n) != nil {
 		panic("already added in arg")
 	}
-	if n == "<ret>" {
-		panic("<ret> is reserved for return")
+	if n == "r" {
+		panic(`"r" is reserved for return`)
 	}
 
 	if t == types.Void {
@@ -86,7 +87,7 @@ func (self *Func) newLocal(n string, t types.Type) *vars.Var {
 		return nil
 	}
 
-	return self.Local.Field(n, t)
+	return self.Local.AddField(n, t)
 }
 
 // Find a variable in the function scope
@@ -96,7 +97,7 @@ func (self *Func) V(n string) *vars.Var {
 		return nil
 	}
 
-	if n == "<ret>" {
+	if n == "r" {
 		return self.Ret
 	}
 
@@ -136,16 +137,27 @@ func (self *Func) AssignNew(n string, e exprs.Expr) string {
 	return n
 }
 
-func (self *Func) AssignNewTemp(e exprs.Expr) (n string) {
+func (self *Func) tempVar() string {
 	for {
-		n = fmt.Sprintf("_%d", self.nVar)
+		n := fmt.Sprintf("t%d", self.nVar)
 		if self.V(n) == nil {
-			break
+			return n
 		}
 		self.nVar++
-	}
 
+		if self.nVar == math.MaxUint64 {
+			panic("run out of temp var space")
+		}
+	}
+}
+
+func (self *Func) NewTemp(e exprs.Expr) string {
+	n := self.tempVar()
 	return self.AssignNew(n, e)
+}
+
+func (self *Func) NewConst(v int64, t types.Basic) string {
+	return self.NewTemp(exprs.C(v, t))
 }
 
 func (self *Func) Assign(n string, e exprs.Expr) {
@@ -168,7 +180,7 @@ func (self *Func) Assign(n string, e exprs.Expr) {
 }
 
 func (self *Func) AssignReturn(e exprs.Expr) {
-	self.Assign("<ret>", e)
+	self.Assign("r", e)
 }
 
 func (self *Func) Return() {
