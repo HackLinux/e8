@@ -16,7 +16,7 @@ type Lexer struct {
 	s        *scanner.Scanner
 	reporter reporter.Interface
 
-	buf *LexToken
+	buf *Token
 
 	illegal    bool  // illegal encountered
 	insertSemi bool  // if treat end line as whitespace
@@ -28,7 +28,7 @@ type Lexer struct {
 func New(in io.Reader) *Lexer {
 	ret := new(Lexer)
 	ret.s = scanner.New(in)
-	ret.buf = new(LexToken)
+	ret.buf = new(Token)
 
 	return ret
 }
@@ -292,7 +292,7 @@ func (self *Lexer) savePos() {
 	self.buf.Line, self.buf.Col = self.s.Pos()
 }
 
-func (self *Lexer) token(t token.Token, lit string) *LexToken {
+func (self *Lexer) token(t token.Token, lit string) *Token {
 	self.buf.Token = t
 	self.buf.Lit = lit
 	return self.buf
@@ -305,7 +305,7 @@ func (self *Lexer) Scan() bool { return !self.eof }
 // t is the token code, p is the position code,
 // and lit is the string literal.
 // Returns token.EOF in t for the last token.
-func (self *Lexer) Token() *LexToken {
+func (self *Lexer) Token() *Token {
 	ret := self.scanToken()
 	if ret.Token != token.Illegal {
 		self.insertSemi = insertSemiTokenMap[ret.Token]
@@ -313,7 +313,7 @@ func (self *Lexer) Token() *LexToken {
 	return ret
 }
 
-func (self *Lexer) scanToken() *LexToken {
+func (self *Lexer) scanToken() *Token {
 	if self.eof {
 		// once it reached eof, it will repeatedly return EOF
 		self.savePos()

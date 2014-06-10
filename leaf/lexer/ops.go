@@ -1,55 +1,55 @@
 package lexer
 
 import (
-	. "github.com/h8liu/e8/leaf/token"
+	t "github.com/h8liu/e8/leaf/token"
 )
 
-var simpleOps = map[rune]Token{
-	':': Colon,
-	',': Comma,
-	';': Semicolon,
-	'(': Lparen,
-	')': Rparen,
-	'[': Lbrack,
-	']': Rbrack,
-	'{': Lbrace,
-	'}': Rbrace,
+var simpleOps = map[rune]t.Token{
+	':': t.Colon,
+	',': t.Comma,
+	';': t.Semicolon,
+	'(': t.Lparen,
+	')': t.Rparen,
+	'[': t.Lbrack,
+	']': t.Rbrack,
+	'{': t.Lbrace,
+	'}': t.Rbrace,
 }
 
-var eqOps = map[rune]*struct{ t, eqt Token }{
-	'*': {Mul, MulAssign},
-	'/': {Div, DivAssign},
-	'%': {Mod, ModAssign},
-	'^': {Xor, XorAssign},
-	'=': {Assign, Eq},
-	'!': {Not, Neq},
+var eqOps = map[rune]*struct{ t, eqt t.Token }{
+	'*': {t.Mul, t.MulAssign},
+	'/': {t.Div, t.DivAssign},
+	'%': {t.Mod, t.ModAssign},
+	'^': {t.Xor, t.XorAssign},
+	'=': {t.Assign, t.Eq},
+	'!': {t.Not, t.Neq},
 }
 
 var xeqOps = map[rune]*struct {
-	t, eqt, xt Token
+	t, eqt, xt t.Token
 	x          rune
 }{
-	'+': {Add, AddAssign, Inc, '+'},
-	'-': {Sub, SubAssign, Dec, '-'},
-	'|': {Or, OrAssign, Lor, '|'},
+	'+': {t.Add, t.AddAssign, t.Inc, '+'},
+	'-': {t.Sub, t.SubAssign, t.Dec, '-'},
+	'|': {t.Or, t.OrAssign, t.Lor, '|'},
 }
 
-func (self *Lexer) scanOperator(r rune) Token {
+func (self *Lexer) scanOperator(r rune) t.Token {
 	s := self.s
 
 	if r == '\n' {
 		self.insertSemi = false
-		return Semicolon
+		return t.Semicolon
 	} else if r == '.' {
 		if s.Scan('.') {
 			if s.Scan('.') {
-				return Ellipsis
+				return t.Ellipsis
 			}
 			self.failf("two dots, expecting one more")
-			return Illegal
+			return t.Illegal
 		}
 
-		return Dot
+		return t.Dot
 	} else if ret, found := simpleOps[r]; found {
 		return ret
 	} else if o, found := eqOps[r]; found {
@@ -69,44 +69,44 @@ func (self *Lexer) scanOperator(r rune) Token {
 	switch r {
 	case '<':
 		if s.Scan('=') {
-			return Leq
+			return t.Leq
 		} else if s.Scan('<') {
 			if s.Scan('=') {
-				return ShiftLeftAssign
+				return t.ShiftLeftAssign
 			}
-			return ShiftLeft
+			return t.ShiftLeft
 		}
-		return Less
+		return t.Less
 	case '>':
 		if s.Scan('=') {
-			return Geq
+			return t.Geq
 		} else if s.Scan('>') {
 			if s.Scan('=') {
-				return ShiftRightAssign
+				return t.ShiftRightAssign
 			}
-			return ShiftRight
+			return t.ShiftRight
 		}
-		return Greater
+		return t.Greater
 	case '&':
 		if s.Scan('^') {
 			if s.Scan('=') {
-				return NandAssign
+				return t.NandAssign
 			} else {
-				return Nand
+				return t.Nand
 			}
 		}
 		if s.Scan('=') {
-			return AndAssign
+			return t.AndAssign
 		} else if s.Scan('&') {
-			return Land
+			return t.Land
 		}
 
-		return And
+		return t.And
 	}
 
 	if !self.illegal {
 		self.illegal = true
 		self.failf("illegal character")
 	}
-	return Illegal
+	return t.Illegal
 }

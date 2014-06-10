@@ -6,7 +6,7 @@ import (
 	. "github.com/h8liu/e8/ir1/ops"
 	. "github.com/h8liu/e8/ir1/types"
 
-	"github.com/h8liu/e8/printer"
+	"github.com/h8liu/e8/prt"
 )
 
 func main() {
@@ -32,5 +32,5 @@ func main() {
 	f.AssignReturn(f.Binary(t2, Add, t3))
 	f.Return()
 
-	printer.Print(f)
+	prt.Print(f)
 }
