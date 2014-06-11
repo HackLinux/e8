@@ -15,13 +15,13 @@ type Lexer struct {
 	s   *scanner.Scanner
 	buf *Token
 
-	illegal    bool  // illegal encountered
-	insertSemi bool  // if treat end line as whitespace
-	eof        bool  // end of file returned
-	err        error // first error encountered
+	illegal    bool   // illegal encountered
+	insertSemi bool   // if treat end line as whitespace
+	eof        bool   // end of file returned
+	err        error  // first error encountered
+	filename   string // filename for printing error
 
 	ErrorFunc func(e error)
-	File      string
 }
 
 type Error struct {
@@ -42,10 +42,11 @@ func (e *Error) Error() string {
 }
 
 // Creates a new lexer
-func New(in io.Reader) *Lexer {
+func New(in io.Reader, filename string) *Lexer {
 	ret := new(Lexer)
 	ret.s = scanner.New(in)
 	ret.buf = new(Token)
+	ret.filename = filename
 
 	return ret
 }
@@ -54,7 +55,7 @@ func (self *Lexer) wrapError(e error) error {
 	ret := new(Error)
 	ret.Err = e
 	ret.Line, ret.Col = self.s.Pos()
-	ret.File = self.File
+	ret.File = self.filename
 
 	return ret
 }
@@ -342,6 +343,7 @@ func (self *Lexer) scanToken() *Token {
 		self.eof = true
 
 		self.report(self.s.Err())
+
 		return self.token(token.EOF, "")
 	}
 
