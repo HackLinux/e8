@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/h8liu/e8/stay/lexer"
-	. "github.com/h8liu/e8/stay/token"
+	"github.com/h8liu/e8/leaf/lexer"
+	. "github.com/h8liu/e8/leaf/token"
 )
 
 type r struct {
@@ -15,8 +15,7 @@ type r struct {
 
 func TestLexer(t *testing.T) {
 	_o := func(s string, exp ...*r) *lexer.Lexer {
-		lex := lexer.New(strings.NewReader(s))
-		lex.ReportTo(nil) // silence the error reporter
+		lex := lexer.New(strings.NewReader(s), "")
 		i := 0
 		for lex.Scan() {
 			tok := lex.Token()
@@ -50,14 +49,14 @@ func TestLexer(t *testing.T) {
 	}
 	o := func(s string, exp ...*r) {
 		lex := _o(s, exp...)
-		e := lex.LexErr()
+		e := lex.Err()
 		if e != nil {
 			t.Errorf("lex %q: got lex error %s", s, e)
 		}
 	}
 	oe := func(s string, exp ...*r) {
 		lex := _o(s, exp...)
-		if lex.LexErr() == nil {
+		if lex.Err() == nil {
 			t.Errorf("lex %q: should be illegal", s)
 		}
 	}
