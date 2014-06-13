@@ -36,6 +36,19 @@ func (self *Parser) Parse() *ast.Program {
 func (self *Parser) parseDecls(prog *ast.Program) {
 	decl := self.lex.Token()
 
+	/*
+		// this what we would like to write
+
+		if self.Match(token.Func) {
+			id := self.Ident()
+			self.Match(token.Lparen)
+			// parse args here
+			// for now args must be empty
+			self.Match(token.Rparen)
+		}
+
+	*/
+
 	switch decl.Token {
 	case token.Func:
 
