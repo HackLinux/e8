@@ -38,7 +38,6 @@ func (self *Parser) parseDecls(prog *ast.Program) {
 
 	/*
 		// this what we would like to write
-
 		if self.Match(token.Func) {
 			id := self.Ident()
 			self.Match(token.Lparen)
@@ -46,7 +45,6 @@ func (self *Parser) parseDecls(prog *ast.Program) {
 			// for now args must be empty
 			self.Match(token.Rparen)
 		}
-
 	*/
 
 	switch decl.Token {
