@@ -3,7 +3,7 @@ package ast
 type Func struct {
 	Name  string
 	Args  []*FuncArg
-	Rets  []*FuncArg
+	Ret   *FuncArg
 	Block *Block
 }
 

@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/h8liu/e8/leaf/ast"
@@ -14,6 +15,7 @@ type Parser struct {
 
 	lex *lexer.Lexer
 	*scanner
+	errors []*Error
 }
 
 func NewParser(in io.Reader, filename string) *Parser {
@@ -24,11 +26,16 @@ func NewParser(in io.Reader, filename string) *Parser {
 }
 
 func (p *Parser) Parse() *ast.Program {
+	p.push("source-file")
+	defer p.pop()
+
 	ret := new(ast.Program)
 
 	for !p.eof() {
 		d := p.parseTopDecl()
-		ret.AddDecl(d)
+		if d != nil {
+			ret.AddDecl(d)
+		}
 	}
 
 	return ret
@@ -39,10 +46,30 @@ func (p *Parser) parseTopDecl() ast.Node {
 		return p.parseFunc()
 	}
 
-	return p.parseErrorDecl()
+	p.parseErrorDecl()
+	return nil
+}
+
+func (p *Parser) expect(tok t.Token) bool {
+	if tok == t.EOF {
+		panic("cannot expect EOF")
+	}
+
+	if p.ahead(tok) {
+		assert(p.shift())
+		return true
+	}
+
+	p.err(fmt.Sprintf("expect %s, got %s", tok, p.cur.Token))
+
+	p.shift() // make progress anyway
+	return false
 }
 
 func (p *Parser) parseFunc() *ast.Func {
+	p.push("func-decl")
+	defer p.pop()
+
 	ret := new(ast.Func)
 	err := func() *ast.Func {
 		p.skipUntil(t.Semi)
@@ -81,13 +108,18 @@ func (p *Parser) parseFunc() *ast.Func {
 	return ret
 }
 
-func (p *Parser) parseErrorDecl() *ast.Error {
-	ret := ast.NewError("invalid declaration")
+func (p *Parser) err(s string) {
+	e := new(Error)
+	e.Pos = p.cur
+	e.Err = s
 
-	skipped := p.skipUntil(t.Semi)
-	for _, n := range skipped {
-		ret.Add(n)
-	}
+	p.errors = append(p.errors, e)
+}
 
-	return ret
+func (p *Parser) parseErrorDecl() {
+	p.push("error-decl")
+	defer p.pop()
+
+	p.err("syntax error: expect declaration")
+	p.skipUntil(t.Semi)
 }

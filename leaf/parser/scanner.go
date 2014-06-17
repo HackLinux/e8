@@ -11,11 +11,15 @@ type scanner struct {
 	lexer *lexer.Lexer
 	cur   *lexer.Token
 	last  *lexer.Token
+
+	*tracker
 }
 
 func newScanner(in io.Reader, filename string) *scanner {
 	ret := new(scanner)
 	ret.lexer = lexer.New(in, filename)
+	ret.tracker = new(tracker)
+
 	ret.shift()
 
 	return ret
@@ -30,6 +34,11 @@ func (self *scanner) shift() bool {
 
 	for self.lexer.Scan() {
 		self.last = self.cur
+
+		if self.last != nil && self.last.Token != t.Comment {
+			self.tracker.add(self.last) // record in tracker
+		}
+
 		self.cur = self.lexer.Token()
 		if self.cur.Token != t.Comment {
 			return true
