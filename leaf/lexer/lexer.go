@@ -350,23 +350,24 @@ func (self *Lexer) scanToken() *Token {
 	s := self.s
 	r := s.Peek()
 
-	if runes.IsLetter(r) {
+	switch {
+	case runes.IsLetter(r):
 		s.ScanIdent()
 		lit := s.Accept()
 		t := token.FromIdent(lit)
 		return self.token(t, lit)
-	} else if runes.IsDigit(r) {
+	case runes.IsDigit(r):
 		lit, t := self.scanNumber(false)
 		return self.token(t, lit)
-	} else if r == '\'' {
+	case r == '\'':
 		s.Next()
 		lit := self.scanChar()
 		return self.token(token.Char, lit)
-	} else if r == '"' {
+	case r == '"':
 		s.Next()
 		lit := self.scanString()
 		return self.token(token.String, lit)
-	} else if r == '`' {
+	case r == '`':
 		s.Next()
 		lit := self.scanRawString()
 		return self.token(token.String, lit)
