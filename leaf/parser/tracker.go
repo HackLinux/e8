@@ -10,12 +10,12 @@ import (
 type trackNode interface{}
 
 type tracker struct {
-	root  *trackLevel
-	stack []*trackLevel
+	root  *level
+	stack []*level
 }
 
 func (t *tracker) add(n trackNode) {
-	_, isLevel := n.(*trackLevel)
+	_, isLevel := n.(*level)
 	_, isToken := n.(*lexer.Token)
 	assert(isLevel || isToken)
 
@@ -26,7 +26,7 @@ func (t *tracker) add(n trackNode) {
 }
 
 func (t *tracker) push(s string) {
-	level := new(trackLevel)
+	level := new(level)
 	level.name = s
 
 	if len(t.stack) == 0 {
@@ -37,6 +37,20 @@ func (t *tracker) push(s string) {
 		t.add(level)
 		t.stack = append(t.stack, level)
 	}
+}
+
+func (t *tracker) extend(s string) {
+	assert(t.root != nil) // we cannot reduce when there is nothing
+	assert(len(t.stack) != 0)
+
+	level := new(level)
+	level.name = s
+
+	nlevel := len(t.stack)
+	top := t.stack[nlevel-1]
+	last := top.swapLast(level)
+
+	level.add(last)
 }
 
 func (t *tracker) pop() trackNode {
