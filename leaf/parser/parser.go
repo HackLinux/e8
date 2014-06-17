@@ -43,8 +43,42 @@ func (p *Parser) parseTopDecl() ast.Node {
 }
 
 func (p *Parser) parseFunc() *ast.Func {
+	ret := new(ast.Func)
+	err := func() *ast.Func {
+		p.skipUntil(t.Semi)
+		return ret
+	}
+
+	if !p.expect(t.Func) {
+		return err()
+	}
+
+	if !p.expect(t.Ident) {
+		return err()
+	}
+
+	ret.Name = p.last.Lit
+
+	// TODO: parse args and signature
+	if !p.expect(t.Lparen) {
+		return err()
+	}
+
+	if !p.expect(t.Rparen) {
+		return err()
+	}
+
+	// TODO: parse block
+	if !p.expect(t.Lbrace) {
+		return err()
+	}
+
+	if !p.expect(t.Rbrace) {
+		return err()
+	}
+
 	// TODO:
-	return nil
+	return ret
 }
 
 func (p *Parser) parseErrorDecl() *ast.Error {
