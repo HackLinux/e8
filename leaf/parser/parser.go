@@ -75,7 +75,7 @@ func (p *Parser) Parse() (*ast.Program, []error) {
 	for !p.eof() {
 		d := p.parseTopDecl()
 		if d != nil {
-			ret.AddDecl(d)
+			ret.Decls = append(ret.Decls, d)
 		}
 	}
 
