@@ -19,6 +19,8 @@ func main() {
 	switch cmd {
 	case "lex":
 		mainLex(args)
+	case "parse":
+		mainParse(args)
 	case "run":
 		mainRun(args)
 	case "build":
