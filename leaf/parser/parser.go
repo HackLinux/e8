@@ -3,9 +3,9 @@ package parser
 import (
 	"io"
 
-	"github.com/h8liu/e8/leaf/ast"
+	// "github.com/h8liu/e8/leaf/ast"
 	"github.com/h8liu/e8/leaf/lexer"
-	"github.com/h8liu/e8/leaf/token"
+	// t "github.com/h8liu/e8/leaf/token"
 )
 
 type Parser struct {
@@ -19,39 +19,6 @@ func NewParser(in io.Reader, filename string) *Parser {
 	ret := new(Parser)
 	ret.in = in
 	ret.filename = filename
+	ret.lex = lexer.New(in, filename)
 	return ret
-}
-
-func (self *Parser) Parse() *ast.Program {
-	self.lex = lexer.New(self.in, self.filename)
-
-	prog := new(ast.Program)
-	prog.Filename = self.filename
-
-	self.parseDecls(prog)
-
-	return prog
-}
-
-func (self *Parser) parseDecls(prog *ast.Program) {
-	decl := self.lex.Token()
-
-	/*
-		// this what we would like to write
-		if self.Match(token.Func) {
-			id := self.Ident()
-			self.Match(token.Lparen)
-			// parse args here
-			// for now args must be empty
-			self.Match(token.Rparen)
-		}
-	*/
-
-	switch decl.Token {
-	case token.Func:
-
-	default:
-		// TODO: report error here
-		panic("expect declaration")
-	}
 }

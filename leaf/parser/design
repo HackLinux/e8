@@ -1,5 +1,5 @@
 func parseImport(b *Builder) {
-	if b.Ahead(t.Import) {
+	if b.AheadIs(t.Import) {
 		d := new Import()
 		b.PushData("importDecl", d)
 		b.Accept()

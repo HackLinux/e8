@@ -7,7 +7,7 @@ import (
 var simpleOps = map[rune]t.Token{
 	':': t.Colon,
 	',': t.Comma,
-	';': t.Semicolon,
+	';': t.Semi,
 	'(': t.Lparen,
 	')': t.Rparen,
 	'[': t.Lbrack,
@@ -39,7 +39,7 @@ func (self *Lexer) scanOperator(r rune) t.Token {
 
 	if r == '\n' {
 		self.insertSemi = false
-		return t.Semicolon
+		return t.Semi
 	} else if r == '.' {
 		if s.Scan('.') {
 			if s.Scan('.') {

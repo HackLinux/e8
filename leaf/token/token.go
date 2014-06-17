@@ -72,7 +72,7 @@ const (
 	Rparen    // )
 	Rbrack    // ]
 	Rbrace    // }
-	Semicolon // ;
+	Semi	  // ;
 	Colon     // :
 
 	operatorEnd

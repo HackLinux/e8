@@ -338,7 +338,7 @@ func (self *Lexer) scanToken() *Token {
 	if self.s.Closed() {
 		if self.insertSemi {
 			self.insertSemi = false
-			return self.token(token.Semicolon, ";")
+			return self.token(token.Semi, ";")
 		}
 		self.eof = true
 
@@ -387,7 +387,7 @@ func (self *Lexer) scanToken() *Token {
 
 	t := self.scanOperator(r)
 	lit := s.Accept()
-	if t == token.Semicolon {
+	if t == token.Semi {
 		lit = ";"
 	}
 

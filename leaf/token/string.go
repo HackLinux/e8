@@ -66,7 +66,7 @@ var tokenStr = map[Token]string{
 	Rparen:    ")",
 	Rbrack:    "]",
 	Rbrace:    "}",
-	Semicolon: ";",
+	Semi: ";",
 	Colon:     ":",
 
 	Break:       "break",
