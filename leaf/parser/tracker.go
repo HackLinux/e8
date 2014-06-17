@@ -51,6 +51,7 @@ func (t *tracker) extend(s string) {
 	last := top.swapLast(level)
 
 	level.add(last)
+	t.stack = append(t.stack, level)
 }
 
 func (t *tracker) pop() trackNode {

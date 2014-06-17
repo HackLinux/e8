@@ -61,6 +61,6 @@ func (p *Parser) parseErrorDecl() {
 	p.push("error-decl")
 	defer p.pop()
 
-	p.err("syntax error: expect declaration")
+	p.expecting("declaration")
 	p.skipUntil(t.Semi)
 }

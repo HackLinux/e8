@@ -1,14 +1,14 @@
 [main.lf]
-main.lf:1:1:         func       - "func"
-main.lf:1:6:         Ident      - "main"
-main.lf:1:10:        (          - "("
-main.lf:1:11:        )          - ")"
-main.lf:1:13:        {          - "{"
-main.lf:2:5:         Ident      - "print"
-main.lf:2:10:        (          - "("
-main.lf:2:11:        String     - "\"hello, world.\\n\""
-main.lf:2:28:        )          - ")"
-main.lf:3:0:         ;          - ";"
-main.lf:3:1:         }          - "}"
-main.lf:4:0:         ;          - ";"
-main.lf:4:0:         EOF        - ""
+main.lf:1:1: func
+main.lf:1:6: Ident - "main"
+main.lf:1:10: (
+main.lf:1:11: )
+main.lf:1:13: {
+main.lf:2:5: Ident - "print"
+main.lf:2:10: (
+main.lf:2:11: String - "\"hello, world.\\n\""
+main.lf:2:28: )
+main.lf:3:0: ;
+main.lf:3:1: }
+main.lf:4:0: ;
+main.lf:4:0: EOF

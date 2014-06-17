@@ -57,17 +57,14 @@ func (self *scanner) ahead(tok t.Token) bool {
 	return self.cur.Token == tok
 }
 
-func (self *scanner) expect(tok t.Token) bool {
+func (self *scanner) accept(tok t.Token) bool {
 	if tok == t.EOF {
-		panic("cannot expect EOF")
+		panic("cannot accept EOF")
 	}
 
 	if self.ahead(tok) {
 		return self.shift()
-	} else {
-		// append error node
 	}
-
 	return false
 }
 

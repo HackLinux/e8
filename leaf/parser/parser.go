@@ -92,6 +92,10 @@ func (p *Parser) expect(tok t.Token) bool {
 	return false
 }
 
+func (p *Parser) expecting(s string) {
+	p.err(fmt.Sprintf("expect %s, got %s", s, p.cur.Token))
+}
+
 func (p *Parser) err(s string) {
 	e := new(comperr.Error)
 	e.File = p.filename
@@ -100,4 +104,15 @@ func (p *Parser) err(s string) {
 	e.Col = p.cur.Col
 
 	p.errors = append(p.errors, e)
+}
+
+func (p *Parser) until(tok t.Token) bool {
+	if p.eof() {
+		return false
+	}
+	if p.ahead(tok) {
+		return false
+	}
+
+	return true
 }
