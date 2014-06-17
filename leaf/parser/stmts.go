@@ -35,7 +35,7 @@ func (p *Parser) parseExprStmt() *ast.ExprStmt {
 	ret := new(ast.ExprStmt)
 	ret.Expr = p.parseExpr()
 
-	if !p.expect(t.Semi) {
+	if !p.expectSemi() {
 		p.skipUntil(t.Semi)
 	}
 
@@ -44,7 +44,7 @@ func (p *Parser) parseExprStmt() *ast.ExprStmt {
 
 func (p *Parser) parseEmptyStmt() *ast.EmptyStmt {
 	p.push("empty-stmt")
-	p.expect(t.Semi)
+	p.expectSemi()
 	p.pop()
 
 	return new(ast.EmptyStmt)

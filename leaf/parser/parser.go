@@ -92,6 +92,14 @@ func (p *Parser) expect(tok t.Token) bool {
 	return false
 }
 
+func (p *Parser) expectSemi() bool {
+	if p.ahead(t.Rparen) || p.ahead(t.Rbrace) {
+		return true
+	}
+
+	return p.expect(t.Semi)
+}
+
 func (p *Parser) expecting(s string) {
 	p.err(fmt.Sprintf("expect %s, got %s", s, p.cur.Token))
 }

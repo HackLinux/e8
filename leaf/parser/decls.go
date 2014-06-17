@@ -50,7 +50,7 @@ func (p *Parser) parseFunc() *ast.Func {
 
 	ret.Block = p.parseBlock()
 
-	if !p.expect(t.Semi) {
+	if !p.expectSemi() {
 		return err()
 	}
 

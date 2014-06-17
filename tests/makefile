@@ -1,0 +1,2 @@
+all:
+	leaf parse *.lf
