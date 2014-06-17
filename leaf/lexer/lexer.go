@@ -8,6 +8,7 @@ import (
 	"github.com/h8liu/e8/text/runes"
 	"github.com/h8liu/e8/text/scanner"
 
+	"github.com/h8liu/e8/leaf/comperr"
 	"github.com/h8liu/e8/leaf/token"
 )
 
@@ -24,23 +25,6 @@ type Lexer struct {
 	ErrorFunc func(e error)
 }
 
-type Error struct {
-	Err  error
-	File string
-	Line int
-	Col  int
-}
-
-func (e *Error) Error() string {
-	prefix := ""
-	if e.File != "" {
-		prefix = e.File + ":"
-	}
-	return fmt.Sprintf("%s%d:%d: %s",
-		prefix, e.Line, e.Col, e.Err,
-	)
-}
-
 // Creates a new lexer
 func New(in io.Reader, filename string) *Lexer {
 	ret := new(Lexer)
@@ -52,7 +36,7 @@ func New(in io.Reader, filename string) *Lexer {
 }
 
 func (self *Lexer) wrapError(e error) error {
-	ret := new(Error)
+	ret := new(comperr.Error)
 	ret.Err = e
 	ret.Line, ret.Col = self.s.Pos()
 	ret.File = self.filename
@@ -322,7 +306,8 @@ func (self *Lexer) Token() *Token {
 	if ret.Token != token.Illegal {
 		self.insertSemi = insertSemiTokenMap[ret.Token]
 	}
-	return ret
+
+	return ret.Clone()
 }
 
 func (self *Lexer) scanToken() *Token {

@@ -12,14 +12,19 @@ type scanner struct {
 	cur   *lexer.Token
 	last  *lexer.Token
 
+	errors []error
+
 	*tracker
 }
 
 func newScanner(in io.Reader, filename string) *scanner {
 	ret := new(scanner)
 	ret.lexer = lexer.New(in, filename)
-	ret.tracker = new(tracker)
+	ret.lexer.ErrorFunc = func(e error) {
+		ret.errors = append(ret.errors, e)
+	}
 
+	ret.tracker = new(tracker)
 	ret.shift()
 
 	return ret
@@ -28,7 +33,7 @@ func newScanner(in io.Reader, filename string) *scanner {
 // reads in the next token
 // return false if the current token is already end-of-file
 func (self *scanner) shift() bool {
-	if self.cur.Token == t.EOF {
+	if self.cur != nil && self.cur.Token == t.EOF {
 		return false
 	}
 

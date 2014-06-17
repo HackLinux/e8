@@ -35,11 +35,7 @@ func mainLex(args []string) {
 
 		for lex.Scan() {
 			tok := lex.Token()
-			leading := fmt.Sprintf("%s:%d:%d:", f, tok.Line, tok.Col)
-			fmt.Printf("%-20s %-10s - %q\n",
-				leading,
-				tok.Token, tok.Lit,
-			)
+			fmt.Println(tok.Str(f))
 		}
 	}
 }

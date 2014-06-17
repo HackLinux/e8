@@ -11,3 +11,16 @@ func (t Token) IsKeyword() bool {
 func (t Token) IsLiteral() bool {
 	return literalBegin < t && t < literalEnd
 }
+
+func (t Token) IsSymbol() bool {
+	if t.IsLiteral() {
+		return false
+	}
+	if t == Comment {
+		return false
+	}
+	if t == Illegal {
+		return false
+	}
+	return true
+}

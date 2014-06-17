@@ -1,4 +1,4 @@
-package printer
+package prt
 
 type Iface interface {
 	Print(a ...interface{}) (int, error)
