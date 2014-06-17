@@ -1,6 +1,6 @@
 package ast
 
-type FuncDecl struct {
+type Func struct {
 	Name  string
 	Args  []*FuncArg
 	Rets  []*FuncArg
