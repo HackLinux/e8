@@ -54,6 +54,6 @@ func (t *tracker) PrintTrack(out io.Writer) {
 
 	p := prt.New(out)
 	p.Indent = "    "
-	
+
 	t.root.PrintTo(p)
 }

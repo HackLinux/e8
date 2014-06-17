@@ -24,22 +24,22 @@ func (t *Token) Clone() *Token {
 
 func (t *Token) Str(f string) string {
 	if !t.Token.IsSymbol() {
-		return fmt.Sprintf("%s:%d:%d: %s - %q", 
+		return fmt.Sprintf("%s:%d:%d: %s - %q",
 			f, t.Line, t.Col,
 			t.Token, t.Lit,
-		)	
+		)
 	}
-	
+
 	return fmt.Sprintf("%s:%d:%d: %s", f, t.Line, t.Col, t.Token)
 }
 
 func (t *Token) String() string {
 	if !t.Token.IsSymbol() {
-		return fmt.Sprintf("%d:%d: %s - %q", 
+		return fmt.Sprintf("%d:%d: %s - %q",
 			t.Line, t.Col,
 			t.Token, t.Lit,
-		)	
+		)
 	}
-	
+
 	return fmt.Sprintf("%d:%d: %s", t.Line, t.Col, t.Token)
 }
