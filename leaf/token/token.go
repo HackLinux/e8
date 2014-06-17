@@ -69,11 +69,11 @@ const (
 	Comma  // ,
 	Dot    // .
 
-	Rparen    // )
-	Rbrack    // ]
-	Rbrace    // }
-	Semi	  // ;
-	Colon     // :
+	Rparen // )
+	Rbrack // ]
+	Rbrace // }
+	Semi   // ;
+	Colon  // :
 
 	operatorEnd
 
