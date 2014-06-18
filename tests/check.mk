@@ -1,4 +1,4 @@
-.PHONY: check build
+.PHONY: check build lex parse
 
 check:
 	leaf lex main.lf | diff - lex.result
@@ -13,3 +13,6 @@ lex:
 
 parse:
 	leaf parse main.lf
+
+ast:
+	leaf parse -ast main.lf

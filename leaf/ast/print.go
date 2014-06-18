@@ -48,7 +48,7 @@ func Print(p prt.Iface, n Node) {
 		p.Print("+ <empty-stmt>")
 
 	case *ExprStmt:
-		p.Print("+ <expr-stmt> expr:")
+		p.Print("+ <expr-stmt>:")
 		p.ShiftIn()
 		Print(p, n.Expr)
 		p.ShiftOut()
