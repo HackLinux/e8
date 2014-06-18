@@ -5,8 +5,8 @@ import (
 	"io"
 	"os"
 
-	"e8vm.net/e8/vm"
 	"e8vm.net/e8/mem"
+	"e8vm.net/e8/vm"
 )
 
 func Make(in io.Reader) (*vm.VM, error) {

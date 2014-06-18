@@ -3,9 +3,9 @@ package inst_test
 import (
 	"testing"
 
-	"e8vm.net/e8/vm"
 	. "e8vm.net/e8/inst"
 	"e8vm.net/e8/mem"
+	"e8vm.net/e8/vm"
 )
 
 func TestSingleInst(t *testing.T) {
