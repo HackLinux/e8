@@ -79,8 +79,6 @@ See more on my [Motivation](https://e8vm.net/p/wiki/Motivation) page.
 
 `$ go get e8vm.net/p`
 
-This should grab all `e8` into you `$GOPATH` folder.
-
 **Documents**
 
 Incomplete now. However, you can try type `make doc` under this project folder, 
