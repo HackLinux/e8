@@ -64,7 +64,7 @@ func TestLexer(t *testing.T) {
 	m := func(t Token, lit string) *r { return &r{t, lit} }
 	n := func(t Token) *r { return &r{t, t.String()} }
 	id := func(s string) *r { return &r{Ident, s} }
-	sc := n(Semicolon)
+	sc := n(Semi)
 	// eof := n(EOF)
 
 	for _, t := range Keywords() {
