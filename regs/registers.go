@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"io"
 
-	"e8vm.net/e8/vm/align"
-	"e8vm.net/e8/vm/inst"
+	"e8vm.net/e8/align"
+	"e8vm.net/e8/inst"
 )
 
 // Registers container for e8 ALU. Based on the instruction design, it has 32

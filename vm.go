@@ -2,15 +2,15 @@
 Package vm maintains the basic CPU unit needed for instruction execution.
 It defines the interface for a VM core, and also implements the registers in it.
 */
-package vm
+package e8
 
 import (
 	"fmt"
 	"io"
 	"os"
 
-	"e8vm.net/e8/vm/inst"
-	"e8vm.net/e8/vm/mem"
+	"e8vm.net/e8/inst"
+	"e8vm.net/e8/mem"
 )
 
 // VM has a core and also has the system page

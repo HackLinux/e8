@@ -1,9 +1,9 @@
-package vm
+package e8
 
 import (
-	"e8vm.net/e8/vm/inst"
-	"e8vm.net/e8/vm/mem"
-	"e8vm.net/e8/vm/regs"
+	"e8vm.net/e8/inst"
+	"e8vm.net/e8/mem"
+	"e8vm.net/e8/regs"
 )
 
 /*

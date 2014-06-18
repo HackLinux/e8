@@ -1,4 +1,4 @@
-package vm
+package e8
 
 import (
 	"bytes"

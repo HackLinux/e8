@@ -1,9 +1,9 @@
-package vm
+package e8
 
 import (
 	"io"
 
-	"e8vm.net/e8/vm/mem"
+	"e8vm.net/e8/mem"
 )
 
 // System page is a special page that is mapped to

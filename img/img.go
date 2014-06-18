@@ -5,12 +5,12 @@ import (
 	"io"
 	"os"
 
-	"e8vm.net/e8/vm"
-	"e8vm.net/e8/vm/mem"
+	"e8vm.net/e8"
+	"e8vm.net/e8/mem"
 )
 
-func Make(in io.Reader) (*vm.VM, error) {
-	c := vm.New()
+func Make(in io.Reader) (*e8.VM, error) {
+	c := e8.New()
 	e := LoadInto(c, in)
 	if e != nil {
 		return nil, e
@@ -18,7 +18,7 @@ func Make(in io.Reader) (*vm.VM, error) {
 	return c, nil
 }
 
-func Open(path string) (*vm.VM, error) {
+func Open(path string) (*e8.VM, error) {
 	fin, e := os.Open(path)
 	if e != nil {
 		return nil, e
@@ -29,7 +29,7 @@ func Open(path string) (*vm.VM, error) {
 	return Make(fin)
 }
 
-func LoadInto(c *vm.VM, in io.Reader) error {
+func LoadInto(c *e8.VM, in io.Reader) error {
 	header := new(Header)
 	var p mem.Page
 	cur := uint32(0)

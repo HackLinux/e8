@@ -1,7 +1,7 @@
 package mem
 
 import (
-	"e8vm.net/e8/vm/align"
+	"e8vm.net/e8/align"
 )
 
 // A page wrapper that takes a page and perform aligned reads
