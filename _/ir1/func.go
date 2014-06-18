@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/h8liu/e8/ir1/exprs"
-	"github.com/h8liu/e8/ir1/ops"
-	"github.com/h8liu/e8/ir1/stmts"
-	"github.com/h8liu/e8/ir1/types"
-	"github.com/h8liu/e8/ir1/vars"
-	"github.com/h8liu/e8/printer"
+	"e8vm.net/p/ir1/exprs"
+	"e8vm.net/p/ir1/ops"
+	"e8vm.net/p/ir1/stmts"
+	"e8vm.net/p/ir1/types"
+	"e8vm.net/p/ir1/vars"
+	"e8vm.net/p/printer"
 )
 
 type Func struct {

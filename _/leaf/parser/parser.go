@@ -4,10 +4,10 @@ package parser
 import (
 	"io"
 
-	"github.com/h8liu/e8/leaf/ast"
-	"github.com/h8liu/e8/leaf/lexer"
-	"github.com/h8liu/e8/leaf/reporter"
-	"github.com/h8liu/e8/leaf/token"
+	"e8vm.net/p/leaf/ast"
+	"e8vm.net/p/leaf/lexer"
+	"e8vm.net/p/leaf/reporter"
+	"e8vm.net/p/leaf/token"
 )
 
 const (

@@ -4,7 +4,7 @@ package module
 import (
 	"path/filepath"
 
-	"github.com/h8liu/e8/leaf/parser"
+	"e8vm.net/p/leaf/parser"
 )
 
 const (

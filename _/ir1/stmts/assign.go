@@ -1,9 +1,9 @@
 package stmts
 
 import (
-	"github.com/h8liu/e8/ir1/exprs"
-	"github.com/h8liu/e8/ir1/vars"
-	"github.com/h8liu/e8/printer"
+	"e8vm.net/p/ir1/exprs"
+	"e8vm.net/p/ir1/vars"
+	"e8vm.net/p/printer"
 )
 
 type Assign struct {

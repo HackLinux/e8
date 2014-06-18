@@ -1,8 +1,8 @@
 package ir1
 
 import (
-	"github.com/h8liu/e8/ir1/decls"
-	"github.com/h8liu/e8/ir1/types"
+	"e8vm.net/p/ir1/decls"
+	"e8vm.net/p/ir1/types"
 )
 
 type Package struct {

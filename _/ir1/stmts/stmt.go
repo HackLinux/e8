@@ -1,7 +1,7 @@
 package stmts
 
 import (
-	"github.com/h8liu/e8/printer"
+	"e8vm.net/p/printer"
 )
 
 type Stmt interface {

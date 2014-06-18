@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/h8liu/e8/ir1/types"
-	"github.com/h8liu/e8/ir1/vars"
+	"e8vm.net/p/ir1/types"
+	"e8vm.net/p/ir1/vars"
 
-	"github.com/h8liu/e8/printer"
+	"e8vm.net/p/printer"
 )
 
 // A combined continuous memory area of named memory slots

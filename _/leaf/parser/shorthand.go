@@ -4,8 +4,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/h8liu/e8/leaf/ast"
-	"github.com/h8liu/e8/leaf/reporter"
+	"e8vm.net/p/leaf/ast"
+	"e8vm.net/p/leaf/reporter"
 )
 
 func ParseFile(path string) (*ast.Program, error) {

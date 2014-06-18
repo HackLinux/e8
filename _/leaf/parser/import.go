@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"github.com/h8liu/e8/leaf/ast"
-	"github.com/h8liu/e8/leaf/token"
+	"e8vm.net/p/leaf/ast"
+	"e8vm.net/p/leaf/token"
 )
 
 func (self *Parser) parseImports() {

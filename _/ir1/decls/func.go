@@ -1,7 +1,7 @@
 package decls
 
 import (
-	"github.com/h8liu/e8/ir1/types"
+	"e8vm.net/p/ir1/types"
 )
 
 type Func interface {

@@ -1,12 +1,12 @@
 package main
 
 import (
-	. "github.com/h8liu/e8/ir1"
-	. "github.com/h8liu/e8/ir1/exprs"
-	. "github.com/h8liu/e8/ir1/ops"
-	. "github.com/h8liu/e8/ir1/types"
+	. "e8vm.net/p/ir1"
+	. "e8vm.net/p/ir1/exprs"
+	. "e8vm.net/p/ir1/ops"
+	. "e8vm.net/p/ir1/types"
 
-	"github.com/h8liu/e8/prt"
+	"e8vm.net/p/prt"
 )
 
 func main() {

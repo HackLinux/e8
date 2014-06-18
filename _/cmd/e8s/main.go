@@ -7,9 +7,9 @@ import (
 	"io"
 	"os"
 
-	"github.com/h8liu/e8/asm"
-	"github.com/h8liu/e8/vm/img"
-	"github.com/h8liu/e8/vm/mem"
+	"e8vm.net/p/asm"
+	"e8vm.net/p/vm/img"
+	"e8vm.net/p/vm/mem"
 )
 
 var (

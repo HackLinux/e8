@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/h8liu/e8/printer"
-	"github.com/h8liu/e8/stay/parser"
+	"e8vm.net/p/printer"
+	"e8vm.net/p/stay/parser"
 )
 
 const testProg = `

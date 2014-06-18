@@ -3,8 +3,8 @@ package parser
 import (
 	"fmt"
 
-	"github.com/h8liu/e8/leaf/reporter"
-	"github.com/h8liu/e8/leaf/token"
+	"e8vm.net/p/leaf/reporter"
+	"e8vm.net/p/leaf/token"
 )
 
 func (self *Parser) failf(f string, args ...interface{}) {

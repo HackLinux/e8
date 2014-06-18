@@ -1,9 +1,9 @@
 package exprs
 
 import (
-	"github.com/h8liu/e8/ir1/ops"
-	"github.com/h8liu/e8/ir1/types"
-	"github.com/h8liu/e8/ir1/vars"
+	"e8vm.net/p/ir1/ops"
+	"e8vm.net/p/ir1/types"
+	"e8vm.net/p/ir1/vars"
 
 	"fmt"
 )
