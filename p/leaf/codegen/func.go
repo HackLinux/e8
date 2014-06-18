@@ -25,4 +25,3 @@ func (f *Func) AddArg(t Type) {
 func (f *Func) AddNamedArg(t Type, name string) {
 	f.Args = append(f.Args, &Arg{Name: name, Type: t})
 }
-

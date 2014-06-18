@@ -19,4 +19,3 @@ const (
 	Uint8
 	Ptr
 )
-
