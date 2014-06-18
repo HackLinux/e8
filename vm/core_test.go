@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"e8vm.net/e8/vm/inst"
-	"e8vm.net/e8/vm/mem"
+	"e8vm.net/e8/inst"
+	"e8vm.net/e8/mem"
 
 	// "os"
 )

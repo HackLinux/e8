@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/h8liu/e8.png?branch=master)](https://travis-ci.org/h8liu/e8)
+[![BuildStatus](https://travis-ci.org/e8vm/e8.png?branch=master)](https://travis-ci.org/e8vm/e8)
 
 **Road Plan**
 
