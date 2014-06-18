@@ -1,12 +1,12 @@
 package main
 
 import (
-	. "e8vm.net/p/ir1"
-	. "e8vm.net/p/ir1/exprs"
-	. "e8vm.net/p/ir1/ops"
-	. "e8vm.net/p/ir1/types"
+	. "e8vm.net/e8/ir1"
+	. "e8vm.net/e8/ir1/exprs"
+	. "e8vm.net/e8/ir1/ops"
+	. "e8vm.net/e8/ir1/types"
 
-	"e8vm.net/p/prt"
+	"e8vm.net/e8/prt"
 )
 
 func main() {

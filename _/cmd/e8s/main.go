@@ -7,9 +7,9 @@ import (
 	"io"
 	"os"
 
-	"e8vm.net/p/asm"
-	"e8vm.net/p/vm/img"
-	"e8vm.net/p/vm/mem"
+	"e8vm.net/e8/asm"
+	"e8vm.net/e8/vm/img"
+	"e8vm.net/e8/vm/mem"
 )
 
 var (

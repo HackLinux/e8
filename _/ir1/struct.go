@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"fmt"
 
-	"e8vm.net/p/ir1/types"
-	"e8vm.net/p/ir1/vars"
+	"e8vm.net/e8/ir1/types"
+	"e8vm.net/e8/ir1/vars"
 
-	"e8vm.net/p/printer"
+	"e8vm.net/e8/printer"
 )
 
 // A combined continuous memory area of named memory slots

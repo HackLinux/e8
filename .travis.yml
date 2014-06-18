@@ -5,7 +5,7 @@ go:
     - tip
 
 install:
-    - go get e8vm.net/p
+    - go get e8vm.net/e8
 
 script:
-    - go test -v e8vm.net/p/...
+    - go test -v e8vm.net/e8/...

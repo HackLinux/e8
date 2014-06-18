@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"e8vm.net/p/leaf/lexer"
-	"e8vm.net/p/leaf/token"
+	"e8vm.net/e8/leaf/lexer"
+	"e8vm.net/e8/leaf/token"
 )
 
 // Scanner wraps a lexer and provides handy scanning API for the parser. It

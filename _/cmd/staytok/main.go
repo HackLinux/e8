@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"e8vm.net/p/leaf/lexer"
-	"e8vm.net/p/leaf/reporter"
+	"e8vm.net/e8/leaf/lexer"
+	"e8vm.net/e8/leaf/reporter"
 )
 
 func noError(e error) {

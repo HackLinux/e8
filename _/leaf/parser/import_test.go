@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"e8vm.net/p/printer"
-	"e8vm.net/p/stay/parser"
+	"e8vm.net/e8/printer"
+	"e8vm.net/e8/stay/parser"
 )
 
 const testProg = `

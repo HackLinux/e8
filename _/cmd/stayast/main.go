@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"e8vm.net/p/leaf/parser"
-	"e8vm.net/p/printer"
+	"e8vm.net/e8/leaf/parser"
+	"e8vm.net/e8/printer"
 )
 
 func noError(e error) {

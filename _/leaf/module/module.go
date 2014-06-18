@@ -4,7 +4,7 @@ package module
 import (
 	"path/filepath"
 
-	"e8vm.net/p/leaf/parser"
+	"e8vm.net/e8/leaf/parser"
 )
 
 const (
