@@ -5,11 +5,15 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/h8liu/e8/leaf/ast"
 	"github.com/h8liu/e8/leaf/parser"
+	"github.com/h8liu/e8/prt"
 )
 
 func mainParse(args []string) {
 	fset := flag.NewFlagSet("leaf-parse", flag.ExitOnError)
+	astFlag := fset.Bool("ast", false, "print AST instead of token reduce tree")
+
 	fset.Parse(args)
 
 	files := fset.Args()
@@ -19,19 +23,31 @@ func mainParse(args []string) {
 		return
 	}
 
-	for _, f := range files {
-		fmt.Printf("[%s]\n", f)
-
-		tree, errs := parser.ParseTree(f)
-
+	printErrors := func(errs []error) {
 		if len(errs) > 0 {
 			for _, e := range errs {
 				fmt.Fprintln(os.Stderr, e)
 			}
 		}
+	}
 
-		if tree != nil { // might be nil when the file does not exist
-			tree.PrintTree(os.Stdout)
+	for _, f := range files {
+		fmt.Printf("[%s]\n", f)
+
+		if *astFlag {
+			res, errs := parser.Parse(f)
+			printErrors(errs)
+			if res != nil {
+				p := prt.New(os.Stdout)
+				p.Indent = "    "
+				ast.Print(p, res)
+			}
+		} else {
+			tree, errs := parser.ParseTree(f)
+			printErrors(errs)
+			if tree != nil { // might be nil when the file does not exist
+				tree.PrintTree(os.Stdout)
+			}
 		}
 	}
 }

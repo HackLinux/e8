@@ -57,6 +57,7 @@ func (p *Parser) Parse() (*ast.Program, []error) {
 	defer p.pop()
 
 	ret := new(ast.Program)
+	ret.Filename = p.filename
 
 	for !p.eof() {
 		d := p.parseTopDecl()
