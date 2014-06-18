@@ -11,12 +11,12 @@
                 + expr:
                     + call-expr:
                         + operand:
-                            - 2:5: Ident - "print"
-                        - 2:10: (
+                            - 2:5: Ident - "printInt"
+                        - 2:13: (
                         + expr:
                             + operand:
-                                - 2:11: Int - "42"
-                        - 2:13: )
+                                - 2:14: Int - "42"
+                        - 2:16: )
                 - 3:0: ;
             - 3:1: }
         - 4:0: ;

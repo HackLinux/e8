@@ -10,7 +10,7 @@ fmt:
 	gofmt -s -w -l .
 
 tags:
-	gotags `find . -name "*.go"` > tags
+	gotags `find p -name "*.go"` > tags
 
 test:
 	go test ./...
@@ -19,7 +19,7 @@ testv:
 	go test -v ./...
 
 lc:
-	wc -l `find . -name "*.go"`
+	wc -l `find p -name "*.go"`
 
 doc:
 	godoc -http=:8000
