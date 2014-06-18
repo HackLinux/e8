@@ -6,3 +6,6 @@ go:
 
 install:
     - go get e8vm.net/p
+
+script:
+    - go test -v e8vm.net/p/...
