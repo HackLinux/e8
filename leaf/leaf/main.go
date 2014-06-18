@@ -37,10 +37,6 @@ func mainRun(args []string) {
 	panic("todo")
 }
 
-func mainBuild(args []string) {
-	panic("todo")
-}
-
 func mainHelp(args []string) {
 	panic("todo")
 }
