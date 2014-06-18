@@ -1,4 +1,4 @@
-package e8
+package vm
 
 import (
 	"e8vm.net/e8/inst"

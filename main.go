@@ -1,4 +1,4 @@
-package main
+package m
 
 func main() {
 	// we need several sub commands here
