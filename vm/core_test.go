@@ -60,7 +60,7 @@ func TestHelloWorld(t *testing.T) {
 	w(Iinst(inst.OpBne, 3, 0, 0xfffe))  // 010
 	w(Iinst(inst.OpSb, 0, 2, 0x0009))   // 014
 	w(Iinst(inst.OpAddi, 1, 1, 0x0001)) // 018
-	w(Jinst(-7))                        // 01c
+	w(Jinst(inst.OpJ, -7))              // 01c
 	w(Iinst(inst.OpSb, 0, 0, 0x0008))   // 020
 
 	c.SetPC(mem.PageStart(1))

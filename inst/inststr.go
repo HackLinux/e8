@@ -42,6 +42,8 @@ func (i Inst) String() string {
 			return fmt.Sprintf("noop-r%d", funct)
 		}
 
+	} else if op == OpJal {
+		return fmt.Sprintf("jal %d", i.Ad())
 	} else if op == OpJ {
 		return fmt.Sprintf("j %d", i.Ad())
 	} else {
@@ -52,7 +54,7 @@ func (i Inst) String() string {
 		name := OpName(op)
 
 		i2 := func() string {
-			return fmt.Sprintf("%s $%d, $d", name, rt, im)
+			return fmt.Sprintf("%s $%d, %d", name, rt, im)
 		}
 		i3sr := func() string {
 			return fmt.Sprintf("%s $%d, $%d, %d", name, rs, rt, ims)
@@ -70,9 +72,9 @@ func (i Inst) String() string {
 		switch op {
 		case OpBeq, OpBne:
 			return i3sr()
-		case OpAddi, OpAndi, OpOri:
+		case OpAndi, OpOri:
 			return i3()
-		case OpSlti:
+		case OpAddi, OpSlti:
 			return i3s()
 		case OpLui:
 			return i2()

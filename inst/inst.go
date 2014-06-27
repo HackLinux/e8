@@ -67,6 +67,7 @@ func makeInstList(m map[uint8]instFunc, n uint8) []instFunc {
 const (
 	OpRinst = 0
 	OpJ     = 0x02
+	OpJal   = 0x03
 	OpBeq   = 0x04
 	OpBne   = 0x05
 
@@ -90,6 +91,7 @@ var instList = makeInstList(
 	map[uint8]instFunc{
 		OpRinst: opRinst,
 		OpJ:     opJ,
+		OpJal:   opJal,
 		OpBeq:   opBeq,
 		OpBne:   opBne,
 
@@ -168,6 +170,12 @@ func opRinst(c Core, i Inst) { rInstList[i.Fn()](c, i) }
 func opJ(c Core, i Inst) {
 	pc := c.ReadReg(RegPC)
 	c.WriteReg(RegPC, pc+uint32(int32(i<<6)>>4))
+}
+
+func opJal(c Core, i Inst) {
+	pc := c.ReadReg(RegPC)
+	c.WriteReg(RegPC, pc+uint32(int32(i<<6)>>4))
+	c.WriteReg(RegRet, pc)
 }
 
 func opNoop(c Core, i Inst) {}

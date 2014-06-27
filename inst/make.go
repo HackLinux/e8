@@ -22,9 +22,9 @@ func Iinst(op, s, t uint8, im uint16) Inst {
 	return Inst(ret)
 }
 
-func Jinst(ad int32) Inst {
-	ret := uint32(OpJ) << 26
-	ret |= uint32(ad) & 0x3ffffff
+func Jinst(op uint8, off int32) Inst {
+	ret := uint32(op) << 26
+	ret |= uint32(off) & 0x3ffffff
 	return Inst(ret)
 }
 

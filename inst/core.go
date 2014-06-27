@@ -23,6 +23,7 @@ type Core interface {
 }
 
 const (
-	Nreg  = 32       // nunber of integer registers
-	RegPC = Nreg - 1 // the index of program counter
+	Nreg   = 32       // nunber of integer registers
+	RegPC  = Nreg - 1 // the index of program counter
+	RegRet = Nreg - 2 // the return address
 )
