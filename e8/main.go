@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -13,26 +14,21 @@ func main() {
 	}
 
 	cmd := args[1]
-	args = args[2:]
+	subArgs := args[2:]
 
 	switch cmd {
 	case "dasm":
-		mainDasm(args)
+		mainDasm(subArgs)
 	case "run":
-		mainRun(args)
+		mainRun(subArgs)
 	default:
-		fmt.Fprintf(os.Stderr, "e8: unknown subcommand %q.\n", cmd)
-		fmt.Fprintf(os.Stderr, "Run 'e8 help' for usage.\n")
+		if strings.HasSuffix(cmd, ".e8") {
+			mainRun(args)
+		} else {
+			fmt.Fprintf(os.Stderr, "e8: unknown subcommand %q.\n", cmd)
+			fmt.Fprintf(os.Stderr, "Run 'e8 help' for usage.\n")
+		}
 	}
-
-	// we need several sub commands here
-	/*
-		we need a bunch of sub command here
-		- help
-		- asm
-		- dasm
-		- run
-	*/
 }
 
 func printError(e error) {
