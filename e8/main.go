@@ -23,7 +23,7 @@ func main() {
 		mainRun(subArgs)
 	default:
 		if strings.HasSuffix(cmd, ".e8") {
-			mainRun(args)
+			mainRun(args[1:])
 		} else {
 			fmt.Fprintf(os.Stderr, "e8: unknown subcommand %q.\n", cmd)
 			fmt.Fprintf(os.Stderr, "Run 'e8 help' for usage.\n")
