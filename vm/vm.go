@@ -83,7 +83,7 @@ func (self *VM) SetPC(pc uint32) {
 
 // If the core halted.
 // Currently, a core can halt gracefully by writing a byte to address 0x4.
-// Or it will halt because of writing to address 0x0 to 0x3, which will
+// Or it will halt because of writing to address 0x0 to 0x7, which will
 // cause the core halts because of an address error.
 func (self *VM) Halted() bool { return self.sys.Halted() }
 
