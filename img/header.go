@@ -44,3 +44,5 @@ func (self *Header) WriteTo(out io.Writer) error {
 	_, e := out.Write(buf)
 	return e
 }
+
+func (self *Header) Start() uint32 { return self.addr }
