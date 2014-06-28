@@ -30,21 +30,14 @@ func Open(path string) (*vm.VM, error) {
 }
 
 func LoadInto(c *vm.VM, in io.Reader) error {
-	header := new(Header)
 	var p mem.Page
 	cur := uint32(0)
 
 	for {
-		e := header.ReadIn(in)
+		header, buf, e := Read(in)
 		if e == io.EOF {
 			return nil
 		}
-		if e != nil {
-			return e
-		}
-
-		buf := make([]byte, header.size)
-		_, e = io.ReadFull(in, buf)
 		if e != nil {
 			return e
 		}
@@ -69,4 +62,19 @@ func LoadInto(c *vm.VM, in io.Reader) error {
 	}
 
 	return nil
+}
+
+func Read(in io.Reader) (*Header, []byte, error) {
+	header := new(Header)
+	e := header.ReadIn(in)
+	if e != nil {
+		return nil, nil, e
+	}
+
+	buf := make([]byte, header.size)
+	_, e = io.ReadFull(in, buf)
+	if e == io.EOF {
+		e = io.ErrUnexpectedEOF
+	}
+	return header, buf, e
 }

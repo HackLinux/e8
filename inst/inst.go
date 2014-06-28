@@ -49,7 +49,7 @@ func (i Inst) Imu() uint16 { return uint16(i) }
 func (i Inst) Ims() int16 { return int16(uint16(i)) }
 
 // Returns the address field
-func (i Inst) Ad() int32 { return int32(i) << 6 >> 6 }
+func (i Inst) Off() int32 { return int32(i) << 6 >> 6 }
 
 type instFunc func(c Core, i Inst)
 

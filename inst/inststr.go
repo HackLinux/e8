@@ -43,9 +43,9 @@ func (i Inst) String() string {
 		}
 
 	} else if op == OpJal {
-		return fmt.Sprintf("jal %d", i.Ad())
+		return fmt.Sprintf("jal %d", i.Off())
 	} else if op == OpJ {
-		return fmt.Sprintf("j %d", i.Ad())
+		return fmt.Sprintf("j %d", i.Off())
 	} else {
 		rs := i.Rs()
 		rt := i.Rt()
