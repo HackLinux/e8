@@ -19,7 +19,7 @@ testv:
 	go test -v ./...
 
 lc:
-	wc -l `find . -name "*.go" | grep -v ^\./_ ` 
+	wc -l `find . -name "*.go"` 
 
 doc:
 	godoc -http=:8000
