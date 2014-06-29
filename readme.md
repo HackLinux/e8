@@ -41,7 +41,7 @@ very well modularized? Can we have
 a working simulated virtual machine where every piece of code is
 easily comprehensible and every experiment is easily repeatable?
 
-I think this is a question that worth answering in my short, boring
+I think this is one of the several questions that worth an answer in my short, boring
 and pathetic life, and E8 is my try to answer it.
 
 ### Why not x86 or ARM or simply MIPS? Why not JVM, LuaVM, LLVM byte code?
