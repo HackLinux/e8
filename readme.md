@@ -10,7 +10,7 @@ instruction set.
 Go-like syntax, targeting E8.
 - An operating system that runs in E8 written in Leaf.
 - Some example small programs in Leaf.
-- Rewrite the leaf compiler in leaf.
+- A Leaf compiler that is written in Leaf.
 
 ## Why? Why? Why?
 
