@@ -30,7 +30,8 @@ hard to even play with some simple research ideas. Even if you know how it
 works at a high level, it is often hard to tell how it really works or even
 if it really works.
 
-I often feel very uncomfortable about this situation. Does it have to be that complicated? Given that we already
+I often feel very uncomfortable about this situation. Does a working system
+have to be that complicated? Given that we already
 learned the lessons on designing ISAs, OSs and compilers, and also
 lessons on good
 software engineering, if we have the chance to design the ISA and the OS
