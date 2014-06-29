@@ -29,7 +29,7 @@ a huge amount of work comparing with porting E8. I would rather first
 complete the project just for E8 first. I will keep retargeting in mind
 when writing the compiler.
 
-Having the code be able to run in Chrome would be pretty nice.
+Having the code to be able to run in Chrome would be pretty nice.
 However, besides Google, I don't see other open-source project that compiles to
 NaCl or PNaCl. Neither I see documents that talk about how to write
 compilers for NaCl or PNaCl.
