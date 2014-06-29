@@ -106,8 +106,9 @@ Also, Rust uses LLVM as the back-end, which I dislike (see "Why not LLVM?")
 I like Go very much. Go is simple, relatively speaking. However, Go is a
 type-safe language. It has a large runtime, and a lot of Go features
 heavily relies on the runtime (like garbage collection). This does not very
-fit the need to write an operating system. I know there exists projects
-that writes in high-level languages that has a large run-time, but I still
+fit the need to write an operating system. I know there exists operating
+systems
+that are written in high-level languages that has a large run-time, but I still
 feel that the OS developer should naturally have the ability to manage
 the memory layout on their own.
 
