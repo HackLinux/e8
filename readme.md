@@ -46,7 +46,8 @@ and pathetic life, and E8 is my try to answer it. Sounds heroic, hugh?
 
 ### Why not x86 or ARM or simply MIPS? Why not JVM, LuaVM, LLVM byte code?
 
-To have repeatable experiment results, I would like an architecture that I can reason about the complexity of a
+To have repeatable experiment results on performance, I would like an architecture
+that I can measure the running time of a
 program by simply counting cycles. x86 and ARM are too complicated. E8 is
 actually very similar to MIPS, but slightly different and simpler in my
 opinion. Other language VMs have too many handy but high-level features
