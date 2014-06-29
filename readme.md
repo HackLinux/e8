@@ -17,10 +17,10 @@ Go-like syntax, targeting E8.
 ### Why E8? Why not x86 or ARM or simply MIPS? Why not JVM, LuaVM, LLVM byte code?
 
 I want an architecture that I can reason about the complexity of a
-program by simply counting cycles. x86 and ARM are too complicate. E8 is
-actually very similar to MIPS, but slightly different. Other language VMs
-have too many handy but high-level features that are hard to reason about
-its running time.
+program by simply counting cycles. x86 and ARM are too complicated. E8 is
+actually very similar to MIPS, but slightly different and simpler in my
+opinion. Other language VMs have too many handy but high-level features
+that are hard to reason about its running time.
 
 ### Why not NaCl? Why not PNaCl?
 
