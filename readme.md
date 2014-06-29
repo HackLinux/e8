@@ -24,7 +24,8 @@ Instead, I want to answer a question in my mind.
 The designed mechanisms and principles for a working computer (including the
 architecture, the OS, the tool chain for building running programs) often seems simple
 and straight-forward at a very high level, yet real working
-systems are often extremely clunky and complicated. On these systems, it is very
+systems are often extremely clunky and complicated. As a result,
+on real systems, it is very
 hard to even play with some simple research ideas. Even if you know how it
 works at a high level, it is often hard to tell how it really works.
 
