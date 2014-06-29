@@ -70,7 +70,7 @@ compilers for NaCl or PNaCl.
 I need a low-level programming language to write the OS for E8.
 At the same time, to have comprehensible source code,
 I want to write it in a "modern" language that at least has built-in
-supports for namespace, type methods and interface, I hope the language
+supports for namespace, type methods and interface, and I hope the language
 does not have macros or templates or other features that
 can arbitrarily polymorphs the source code with dark magic.
 
