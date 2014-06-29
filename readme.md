@@ -111,7 +111,7 @@ language PhD student and already familiar with LLVM, but as a Sysnet PhD,
 I think writing my own compiler from scratch might be even faster in the end.
 
 The E8 architecture is pretty simple, so it might be pretty easy to port
-clang to E8 using LLVM. I am not sure though, but might worth a try.
+clang or Rust to E8 using LLVM. I am not sure though, but might worth a try.
 
 ## Install
 
