@@ -79,7 +79,7 @@ I considered referencing TinyCC's source code.
 It is actually not very well modularized, like it uses a lot of global
 variables.
 
-TinyCC but it does not compile Linux source code. Even Clang
+Also, TinyCC does not compile Linux source code. Even Clang
 does not really compile Linux source code. Only GNU tools compile
 Linux. GNU produces probably the worst tool chain in terms of
 comprehensibility.
