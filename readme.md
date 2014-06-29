@@ -14,9 +14,33 @@ Go-like syntax, targeting E8.
 
 ## Why? Why? Why?
 
-### Why E8? Why not x86 or ARM or simply MIPS? Why not JVM, LuaVM, LLVM byte code?
+### Why E8?
 
-I want an architecture that I can reason about the complexity of a
+The goal of the entire project is not to have something that can run as soon
+as possible; we already have things that can run well, and I don't want to compete.
+
+I do have a question in my mind.
+
+The designed mechanisms and principles for a working computer (including the
+architecture, the OS, the tool chain for building running programs) often seems simple
+and straight-forward at a very high level, yet real working
+systems are often extremely clunky and complicated. On these systems, it is very
+hard to even play with some simple research ideas. Even if you know how it
+works at a high level, it is often hard to tell how it really works.
+
+I often feel very uncomfortable about this situation. Does it have to be that complicated? Given that we already
+learned the lessons on designing ISAs, OSs and compilers, and also
+lessons on good
+software engineering, if we have the chance to design the ISA and the OS
+from a clean slate, can we build a working (though simulated) computer stack that
+is just simple? Can we build an operating system where its source code is
+very well modularized? Can we have
+a working simulated virtual machine where every piece of code is
+easily comprehensible and every experiment is easily repeatable?
+
+### Why not x86 or ARM or simply MIPS? Why not JVM, LuaVM, LLVM byte code?
+
+To have repeatable experiment results, I would like an architecture that I can reason about the complexity of a
 program by simply counting cycles. x86 and ARM are too complicated. E8 is
 actually very similar to MIPS, but slightly different and simpler in my
 opinion. Other language VMs have too many handy but high-level features
@@ -36,38 +60,24 @@ compilers for NaCl or PNaCl.
 
 ### Why Leaf? Why a new language? Why not use C and Linux? Why not use tinycc?
 
-I need a low-level programming language to write stuff (like an OS) for E8.
+I need a low-level programming language to write the OS for E8.
+At the same time, to have the OS comprehensible, I want to write it in
+a "modern" language that at least has built-in
+supports for namespace, type methods and interface, and for
+the source code to be easily comprehensible, I hope the language
+does not have macros or templates or other features that
+can arbitrarily polymorphs the source code with dark magic.
 
-I don't like C/C++. It does not provide the right language syntax for writing
-comprehensible code.
+C and C++ are hence ruled out.
 
-TinyCC is fine, but it does not compile Linux source code. Even Clang
-does not really compile Linux source code.
+I considered referencing TinyCC's source code.
+It is actually not very well modularized, like it uses a lot of global
+variables.
 
-Anyway, the goal of the entire project is not to have something that can run as soon
-as possible; we already have things that can run well, and I don't want to compete.
-
-I do have a question in my mind.
-
-The designed mechanisms and principles for a working computer (including the
-architecture, the OS, the tool chain for building running programs) often seems simple
-and straight-forward at a very high level, yet real working
-systems are often extremely clunky and complicated. On these systems, it is very
-hard to even play with some simple research ideas. Even if you know how it
-works at a high level, it is often hard to tell how it really works.
-
-I often feel very uncomfortable about this situation. Does it have to be that complicated? Given that we already
-learned the lessons on designing ISAs, OSs and compilers, and also
-lessons on good
-software engineering, if we have the chance to design the ISA and the OS
-from a clean slate, can we build a working (though simulated) computer stack that
-is just simple? Can we build an operating system where its source code is
-well modularized and written in a "modern" language that has built-in
-supports for namespace, type methods and interface? Can we have
-a working simulated virtual machine where every piece of code is
-easily comprehensible and every experiment is easily repeatable?
-
-For building that, I feel like we need a language that is more than C.
+TinyCC but it does not compile Linux source code. Even Clang
+does not really compile Linux source code. Only GNU tools compile
+Linux. GNU produces probably the worst tool chain in terms of
+comprehensibility.
 
 ### Why not Python? Why not D? Why not Lua? Why not Rust? Why not Go?
 
