@@ -14,7 +14,7 @@ Go-like syntax, targeting E8.
 
 ## Why? Why? Why?
 
-### Why E8? Why not x86 or ARM or simply MIPS? Why not JVM, LuaVM, LLVM?
+### Why E8? Why not x86 or ARM or simply MIPS? Why not JVM, LuaVM, LLVM byte code?
 
 I want an architecture that I can reason about the complexity of a
 program by simply counting cycles. x86 and ARM are too complicate. E8 is
