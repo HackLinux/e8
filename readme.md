@@ -94,7 +94,7 @@ Also, Python is not low-level.
 
 Lua is simple, but it is designed to be a scripting language.
 
-I feel Rust is not stable and somehow too ambitious. I think it is a
+Rust is okay, but I feel Rust is not stable and somehow too ambitious. I think it is a
 good platform for testing cool system language ideas. However, it is not
 stable, yet already pretty complex. Many open-source projects have
 similar problems: people keep adding features that they like without much
