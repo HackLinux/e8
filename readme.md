@@ -16,7 +16,7 @@ Go-like syntax, targeting E8.
 
 ### Why E8?
 
-The goal of the entire project is not to have something that can run as soon
+The goal of the entire project is **not** to have something that can run as soon
 as possible; we already have things that can run well, and I don't want to compete.
 
 Instead, I want to answer a question in my mind.
@@ -27,8 +27,8 @@ and straight-forward at a very high level, yet real working
 systems are often extremely clunky and complicated. As a result,
 on real systems, it is very
 hard to even play with some simple research ideas. Even if you know how it
-works at a high level, it is often hard to tell how it really works or even
-if it really works.
+works at a high level, it is often hard to tell how it really works.
+In fact, it is often hard to tell **if** it really works.
 
 I often feel very uncomfortable about this situation. Does a working system
 have to be that complicated? Given that we already
