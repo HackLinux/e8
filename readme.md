@@ -80,7 +80,7 @@ Lua is simple, but it is designed to be a scripting language.
 I feel Rust is not stable and somehow too ambitious. I think it is a
 good platform for testing cool system language ideas. However, it is not
 stable, yet already pretty complex. Many open-source projects have
-similar problems: people features that they like without much
+similar problems: people keep adding features that they like without much
 discipline, and makes the outcome too complex to use in the end.
 Adding a new feature is easy; removing a bad one is hard.
 
