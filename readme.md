@@ -88,7 +88,7 @@ comprehensibility.
 
 Most languages are not simple. Python and D are very complicated languages
 that have complex syntax and numbers of features, which makes writing/porting
-a compiler a very hard job.
+a compiler a very hard job. Also Python is not low-level.
 
 Lua is simple, but it is designed to be a scripting language.
 
