@@ -64,13 +64,12 @@ However, besides Google, I don't see other open-source project that compiles to
 NaCl or PNaCl. Neither I see documents that talk about how to write
 compilers for NaCl or PNaCl.
 
-### Why Leaf? Why a new language? Why not use C and Linux? Why not use tinycc?
+### Why Leaf? Why a new language? Why not C and Linux? Why not tinycc?
 
 I need a low-level programming language to write the OS for E8.
-At the same time, to have the OS comprehensible, I want to write it in
-a "modern" language that at least has built-in
-supports for namespace, type methods and interface, and for
-the source code to be easily comprehensible, I hope the language
+At the same time, to have comprehensible source code,
+I want to write it in a "modern" language that at least has built-in
+supports for namespace, type methods and interface, I hope the language
 does not have macros or templates or other features that
 can arbitrarily polymorphs the source code with dark magic.
 
