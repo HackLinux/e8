@@ -80,8 +80,8 @@ It is actually not very well modularized, like it uses a lot of global
 variables.
 
 Also, TinyCC does not compile Linux source code. Even Clang
-does not really compile Linux source code. Only GNU tools compile
-Linux. GNU produces probably the worst tool chain in terms of
+does not really compile Linux source code. Only GNU tools compiles
+Linux, and GNU probably produces the worst tool chain in terms of
 comprehensibility.
 
 ### Why not Python? Why not D? Why not Lua? Why not Rust? Why not Go?
