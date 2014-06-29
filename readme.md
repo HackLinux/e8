@@ -19,7 +19,7 @@ Go-like syntax, targeting E8.
 The goal of the entire project is not to have something that can run as soon
 as possible; we already have things that can run well, and I don't want to compete.
 
-I do have a question in my mind.
+Instead, I want to answer a question in my mind.
 
 The designed mechanisms and principles for a working computer (including the
 architecture, the OS, the tool chain for building running programs) often seems simple
