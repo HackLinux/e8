@@ -17,7 +17,7 @@ type Registers struct {
 	floats []float64
 }
 
-// Create new register containers.
+// New creates a new register container.
 func New(nint, nfloat int) *Registers {
 	ret := new(Registers)
 
@@ -27,41 +27,46 @@ func New(nint, nfloat int) *Registers {
 	return ret
 }
 
-// Read integer register a
-func (self *Registers) ReadReg(a uint8) uint32 { return self.ints[a] }
+// ReadReg reads an integer register.
+func (rs *Registers) ReadReg(a uint8) uint32 { return rs.ints[a] }
 
-// Read floating point register a
-func (self *Registers) ReadFloatReg(a uint8) float64 { return self.floats[a] }
+// ReadFloatReg reads a floating-point register.
+func (rs *Registers) ReadFloatReg(a uint8) float64 { return rs.floats[a] }
 
-// Write integer register a with value v.  Writing to $0 will have no effect,
-// writing to $31, the program counter will be automatically aligned.
-func (self *Registers) WriteReg(a uint8, v uint32) {
+// WriteReg writes an integer register with value v. 
+// Writing to $0 will have no effect,
+// writing to $31 will be automatically aligned.
+func (rs *Registers) WriteReg(a uint8, v uint32) {
 	if a == 0 {
 		// do nothing
 	} else if a == inst.RegPC {
-		self.ints[inst.RegPC] = align.A32(v)
+		rs.ints[inst.RegPC] = align.A32(v)
 	} else {
-		self.ints[a] = v
+		rs.ints[a] = v
 	}
 }
 
-// Write floating point register a with value v
-func (self *Registers) WriteFloatReg(a uint8, v float64) {
-	self.floats[a] = v
+// WriteFloatReg writes to a floating-point register with value v.
+// Writing to $0 will have no effect.
+func (rs *Registers) WriteFloatReg(a uint8, v float64) {
+	if a == 0 {
+		return
+	}
+	rs.floats[a] = v
 }
 
-// Increase $31, program counter by 4.
-func (self *Registers) IncPC() uint32 {
-	ret := self.ints[inst.RegPC]
-	self.ints[inst.RegPC] += 4
+// IncPC increases the program counter, $31 by 4.
+func (rs *Registers) IncPC() uint32 {
+	ret := rs.ints[inst.RegPC]
+	rs.ints[inst.RegPC] += 4
 	return ret
 }
 
-// Print the register values to an output stream. Useful for debugging.
-// Currently only prints integer registers.
-func (self *Registers) PrintTo(w io.Writer) {
+// PrintTo prints the register values to an output stream. 
+// FIXME: currently it only prints the integer registers.
+func (rs *Registers) PrintTo(w io.Writer) {
 	for i := uint8(0); i < inst.Nreg; i++ {
-		fmt.Fprintf(w, "$%02d:%08x", i, self.ReadReg(i))
+		fmt.Fprintf(w, "$%02d:%08x", i, rs.ReadReg(i))
 		if (i+1)%4 == 0 {
 			fmt.Fprintln(w)
 		} else {
