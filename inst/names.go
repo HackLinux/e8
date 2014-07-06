@@ -62,6 +62,7 @@ var (
 		OpSh:   "sh",
 		OpSb:   "sb",
 		OpJ:    "j",
+		OpJal:  "jal",
 	})
 )
 
