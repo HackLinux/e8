@@ -1,3 +1,4 @@
+// Package align defines functions for aligning memory addresses.
 package align
 
 // A16 lower aligns an offset to 2-byte grids

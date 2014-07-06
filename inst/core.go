@@ -1,6 +1,7 @@
 package inst
 
-// Defines the operations that a CPU box for instruction needs to implement
+// Core defines the interface that a CPU requires for
+// executing instructions.
 type Core interface {
 	// Integer register operations
 	WriteReg(a uint8, v uint32)
@@ -23,7 +24,12 @@ type Core interface {
 }
 
 const (
-	Nreg   = 32       // nunber of integer registers
-	RegPC  = Nreg - 1 // the index of program counter
-	RegRet = Nreg - 2 // the return address
+	// Nreg is the number of registers
+	Nreg = 32
+
+	// RegPC is the index of the program counter register
+	RegPC = Nreg - 1
+
+	// RegRet is the index of the function return register
+	RegRet = Nreg - 2
 )

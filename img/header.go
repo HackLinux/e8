@@ -4,6 +4,7 @@ import (
 	"io"
 )
 
+// Header describes the size and starting address of an image section.
 type Header struct {
 	addr uint32
 	size uint32
@@ -24,25 +25,28 @@ func pu32(buf []byte, i uint32) {
 	buf[3] = uint8(i >> 24)
 }
 
-func (self *Header) ReadIn(in io.Reader) error {
+// ReadIn unmarshalls a header from an input stream.
+func (h *Header) ReadIn(in io.Reader) error {
 	buf := make([]byte, 8)
 	_, e := io.ReadFull(in, buf)
 	if e != nil {
 		return e
 	}
 
-	self.addr = u32(buf[0:4])
-	self.size = u32(buf[4:8])
+	h.addr = u32(buf[0:4])
+	h.size = u32(buf[4:8])
 	return nil
 }
 
-func (self *Header) WriteTo(out io.Writer) error {
+// WriteTo writes a header out to an output stream.
+func (h *Header) WriteTo(out io.Writer) error {
 	buf := make([]byte, 8)
-	pu32(buf[0:4], self.addr)
-	pu32(buf[4:8], self.size)
+	pu32(buf[0:4], h.addr)
+	pu32(buf[4:8], h.size)
 
 	_, e := out.Write(buf)
 	return e
 }
 
-func (self *Header) Start() uint32 { return self.addr }
+// Start returns the starting address of the section.
+func (h *Header) Start() uint32 { return h.addr }

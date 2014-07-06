@@ -1,3 +1,4 @@
+// e8 command loads and simulates a E8 virtual machine image.
 package main
 
 import (

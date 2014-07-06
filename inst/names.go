@@ -20,8 +20,8 @@ func newCodeMap(m map[uint8]string) *codeMap {
 	return ret
 }
 
-func (self *codeMap) Code(s string) uint8 { return self.codes[s] }
-func (self *codeMap) Name(c uint8) string { return self.names[c] }
+func (m *codeMap) code(s string) uint8 { return m.codes[s] }
+func (m *codeMap) name(c uint8) string { return m.names[c] }
 
 var (
 	functMap = newCodeMap(map[uint8]string{
@@ -54,9 +54,9 @@ var (
 		OpOri:  "ori",
 		OpLui:  "lui",
 		OpLw:   "lw",
-		OpLhs:  "lhs",
+		OpLh:   "lh",
 		OpLhu:  "lhu",
-		OpLbs:  "lbs",
+		OpLb:   "lb",
 		OpLbu:  "lbu",
 		OpSw:   "sw",
 		OpSh:   "sh",
@@ -66,8 +66,14 @@ var (
 	})
 )
 
-func FunctName(f uint8) string { return functMap.Name(f) }
-func OpName(op uint8) string   { return opMap.Name(op) }
+// FunctName returns the name of a funct code.
+func FunctName(f uint8) string { return functMap.name(f) }
 
-func FunctCode(f string) uint8 { return functMap.Code(f) }
-func OpCode(op string) uint8   { return opMap.Code(op) }
+// OpName returns the name of an op code.
+func OpName(op uint8) string { return opMap.name(op) }
+
+// FunctCode returns the code of a funct name.
+func FunctCode(f string) uint8 { return functMap.code(f) }
+
+// OpCode returns the code of an op name.
+func OpCode(op string) uint8 { return opMap.code(op) }

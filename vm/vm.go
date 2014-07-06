@@ -22,6 +22,8 @@ type VM struct {
 	sys  *SysPage
 }
 
+// New creates an empty virtual machine that has
+// only the system page mounted.
 func New() *VM {
 	ret := new(VM)
 	ret.Stdout = os.Stdout
@@ -34,40 +36,40 @@ func New() *VM {
 	return ret
 }
 
-// Executes one instruction.
-func (self *VM) Step() {
-	self.sys.Reset()
+// Step executes one instruction.
+func (vm *VM) Step() {
+	vm.sys.Reset()
 
-	pc := self.core.IncPC()
-	u32 := self.core.ReadU32(pc)
+	pc := vm.core.IncPC()
+	u32 := vm.core.ReadU32(pc)
 	in := inst.Inst(u32)
-	if self.Log != nil {
-		fmt.Fprintf(self.Log, "%08x: %08x   %v", pc, u32, in)
+	if vm.Log != nil {
+		fmt.Fprintf(vm.Log, "%08x: %08x   %v", pc, u32, in)
 		if in.Op() != inst.OpJ {
 			rs := in.Rs()
 			rt := in.Rt()
-			rsv := self.core.ReadReg(rs)
-			rtv := self.core.ReadReg(rt)
-			fmt.Fprintf(self.Log, "  ; $%d=%d(%08x) $%d=%d(%08x)",
+			rsv := vm.core.ReadReg(rs)
+			rtv := vm.core.ReadReg(rt)
+			fmt.Fprintf(vm.Log, "  ; $%d=%d(%08x) $%d=%d(%08x)",
 				rs, rsv, rsv, rt, rtv, rtv)
 		}
-		fmt.Fprintf(self.Log, "\n")
-		// self.Registers.PrintTo(self.Log)
+		fmt.Fprintf(vm.Log, "\n")
+		// vm.Registers.PrintTo(vm.Log)
 	}
-	inst.Exec(self.core, in)
+	inst.Exec(vm.core, in)
 
-	self.sys.FlushStdout(self.Stdout)
+	vm.sys.FlushStdout(vm.Stdout)
 }
 
-// Executes at most n instructions. Returns the number of instructions actually
-// executed. A core may return early when the core halts.
-func (self *VM) Run(n int) int {
+// Run executes at most n instructions. Returns the number of instructions
+// actually executed. A core may return early when the core halts.
+func (vm *VM) Run(n int) int {
 	i := 0
 	for i < n {
-		self.Step()
+		vm.Step()
 		i++
 
-		if self.sys.Halted() {
+		if vm.sys.Halted() {
 			break
 		}
 	}
@@ -75,42 +77,43 @@ func (self *VM) Run(n int) int {
 	return i
 }
 
-// Set the program counter. Note the last 2 bits are bind to 0, so
-// the program counter will be automatically aligned.
-func (self *VM) SetPC(pc uint32) {
-	self.core.WriteReg(inst.RegPC, pc)
+// SetPC sets the program counter. Note the last 2 bits are bind to 0, so the
+// program counter will be automatically aligned.
+func (vm *VM) SetPC(pc uint32) {
+	vm.core.WriteReg(inst.RegPC, pc)
 }
 
-// If the core halted.
+// Halted returns if the core halted.
 // Currently, a core can halt gracefully by writing a byte to address 0x4.
 // Or it will halt because of writing to address 0x0 to 0x7, which will
 // cause the core halts because of an address error.
-func (self *VM) Halted() bool { return self.sys.Halted() }
+func (vm *VM) Halted() bool { return vm.sys.Halted() }
 
-// If the core halted because of an address error.
+// AddrError returns if the core halted because of an address error.
 // Address error currently only occurs when visiting the word at address 0.
-func (self *VM) AddrError() bool { return self.sys.AddrError }
+func (vm *VM) AddrError() bool { return vm.sys.AddrError }
 
-// The value when the core halts. This the byte written to address 0x4.
-func (self *VM) HaltValue() uint8 { return self.sys.HaltValue }
+// HaltValue returns the value when the core halts. This the byte written to
+// address 0x4.
+func (vm *VM) HaltValue() uint8 { return vm.sys.HaltValue }
 
-// Returns if the core rests in peace, which means it halt with a halt value of 0
-// (writing a byte 0 to 0x4).
-func (self *VM) RIP() bool {
-	return self.Halted() && self.HaltValue() == 0 && !self.AddrError()
+// RIP returns if the core rests in peace, which means it halt with a halt
+// value of 0 (writing a byte 0 to 0x4).
+func (vm *VM) RIP() bool {
+	return vm.Halted() && vm.HaltValue() == 0 && !vm.AddrError()
 }
 
-// Checks if a page is valid
-func (self *VM) CheckPage(addr uint32) bool {
-	return self.core.Check(addr)
+// CheckPage checks if a page is valid
+func (vm *VM) CheckPage(addr uint32) bool {
+	return vm.core.Check(addr)
 }
 
-// Maps a page at particular address
-func (self *VM) MapPage(addr uint32, p mem.Page) {
-	self.core.Map(addr, p)
+// MapPage maps a page at particular address
+func (vm *VM) MapPage(addr uint32, p mem.Page) {
+	vm.core.Map(addr, p)
 }
 
-// Prints registers to out
-func (self *VM) DumpRegs(out io.Writer) {
-	self.core.PrintTo(out)
+// DumpRegs prints registers to out
+func (vm *VM) DumpRegs(out io.Writer) {
+	vm.core.PrintTo(out)
 }

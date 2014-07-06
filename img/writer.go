@@ -5,18 +5,24 @@ import (
 	"io"
 )
 
+// Writer wraps an output stream for creating
+// virtual machine images.
 type Writer struct {
 	io.Writer
 }
 
+// NewWriter creates a virtual machine image writer.
 func NewWriter(w io.Writer) *Writer {
 	return &Writer{w}
 }
 
-func (self *Writer) Write(addr uint32, bytes []byte) (e error) {
-	return Write(self.Writer, addr, bytes)
+// Write writes a section with a particular starting address.
+func (w *Writer) Write(addr uint32, bytes []byte) (e error) {
+	return Write(w.Writer, addr, bytes)
 }
 
+// Write writes a section with a particualr starting address
+// to an output stream.
 func Write(out io.Writer, addr uint32, bytes []byte) (e error) {
 	n := uint64(len(bytes))
 	if n > (1 << 31) {

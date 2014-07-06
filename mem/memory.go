@@ -1,6 +1,7 @@
+// Package mem defines the memory structure for E8 virtual machine.
 package mem
 
-// A paged memory structure
+// Memory defines a paged memory structure
 type Memory struct {
 	// Weather automatically allocate a new page on page miss
 	NoAutoAlloc bool
@@ -11,7 +12,7 @@ type Memory struct {
 
 var noopPage = NewNoopPage()
 
-// Create an empty memory space
+// New creates an empty memory space.
 func New() *Memory {
 	ret := new(Memory)
 	ret.pages = make(map[uint32]Page)
@@ -19,95 +20,95 @@ func New() *Memory {
 	return ret
 }
 
-// Fetch the page associated with the address.
-// If the page is missing, and auto allocation is on, a new page
-// will be auto allocated
-func (self *Memory) Get(addr uint32) Page {
-	id := PageId(addr)
-	ret := self.pages[PageId(addr)]
+// Get fetches the page associated with the address.  If the page is missing,
+// and auto allocation is on, a new page will be auto allocated
+func (m *Memory) Get(addr uint32) Page {
+	id := PageID(addr)
+	ret := m.pages[id]
 	if ret == nil {
-		if self.NoAutoAlloc {
+		if m.NoAutoAlloc {
 			return noopPage
 		}
 		p := NewPage()
-		self.pages[id] = p
+		m.pages[id] = p
 		return p
 	}
 
 	return ret
 }
 
-// Checks if a page exists for the address
-func (self *Memory) Check(addr uint32) bool {
-	return self.pages[PageId(addr)] != nil
+// Check checks if a page exists for the address
+func (m *Memory) Check(addr uint32) bool {
+	return m.pages[PageID(addr)] != nil
 }
 
-func (self *Memory) align(addr uint32) *Align {
-	self._align.Page = self.Get(addr)
-	return self._align
+func (m *Memory) align(addr uint32) *Align {
+	m._align.Page = m.Get(addr)
+	return m._align
 }
 
-// Writes a byte at addr.
+// WriteU8 writes a byte at addr.
 // If the page is missing, and auto allocation is off, this is an noop.
-func (self *Memory) WriteU8(addr uint32, value uint8) {
-	self.align(addr).WriteU8(addr, value)
+func (m *Memory) WriteU8(addr uint32, value uint8) {
+	m.align(addr).WriteU8(addr, value)
 }
 
-// Writes a half word at addr, the address will be automatically aligned down.
-// Byte order is little endian, and the lower bytes will be written first.
-// If the page is missing and auto allocation is off, this is a noop.
-func (self *Memory) WriteU16(addr uint32, value uint16) {
-	self.align(addr).WriteU16(addr, value)
+// WriteU16 writes a half word at addr, the address will be automatically
+// aligned down.  Byte order is little endian, and the lower bytes will be
+// written first.  If the page is missing and auto allocation is off, this is a
+// noop.
+func (m *Memory) WriteU16(addr uint32, value uint16) {
+	m.align(addr).WriteU16(addr, value)
 }
 
-// Writes a word at addr, the address will be automatically aligned down.
-// Byte order is little endian, and the lower bytes will be written first.
-// If the page is missing and auto allocation is off, this is a noop.
-func (self *Memory) WriteU32(addr uint32, value uint32) {
-	self.align(addr).WriteU32(addr, value)
+// WriteU32 writes a word at addr, the address will be automatically aligned
+// down.  Byte order is little endian, and the lower bytes will be written
+// first.  If the page is missing and auto allocation is off, this is a noop.
+func (m *Memory) WriteU32(addr uint32, value uint32) {
+	m.align(addr).WriteU32(addr, value)
 }
 
-// Writes a double precision floating point at addr, the address will be
-// automatically aligned down.
-func (self *Memory) WriteF64(addr uint32, value float64) {
-	self.align(addr).WriteF64(addr, value)
+// WriteF64 writes a double precision floating point at addr, the address will
+// be automatically aligned down.
+func (m *Memory) WriteF64(addr uint32, value float64) {
+	m.align(addr).WriteF64(addr, value)
 }
 
-// Reads a byte at addr.
+// ReadU8 reads a byte at addr.
 // If the page is missing and auto allocation is off, 0 is returned.
-func (self *Memory) ReadU8(addr uint32) uint8 {
-	return self.align(addr).ReadU8(addr)
+func (m *Memory) ReadU8(addr uint32) uint8 {
+	return m.align(addr).ReadU8(addr)
 }
 
-// Reads a half word at addr.
+// ReadU16 reads a half word at addr.
 // Byte order is little endian, and the lower bytes will be read first.
 // If the page is missing and auto allocation is off, 0 is returned.
-func (self *Memory) ReadU16(addr uint32) uint16 {
-	return self.align(addr).ReadU16(addr)
+func (m *Memory) ReadU16(addr uint32) uint16 {
+	return m.align(addr).ReadU16(addr)
 }
 
-// Reads a word at addr.
+// ReadU32 reads a word at addr.
 // Byte order is little endian, and the lower bytes will be read first.
 // If the page is missing and auto allocation is off, 0 is returned.
-func (self *Memory) ReadU32(addr uint32) uint32 {
-	return self.align(addr).ReadU32(addr)
+func (m *Memory) ReadU32(addr uint32) uint32 {
+	return m.align(addr).ReadU32(addr)
 }
 
-// Reads a double precision floating point at addr.
-func (self *Memory) ReadF64(addr uint32) float64 {
-	return self.align(addr).ReadF64(addr)
+// ReadF64 reads a double precision floating point at addr.
+func (m *Memory) ReadF64(addr uint32) float64 {
+	return m.align(addr).ReadF64(addr)
 }
 
-// Map a page for the address, the address will be auto aligned down to
+// Map maps a page for the address, the address will be auto aligned down to
 // page boundaries.
-func (self *Memory) Map(addr uint32, page Page) {
-	self.pages[PageId(addr)] = page
+func (m *Memory) Map(addr uint32, page Page) {
+	m.pages[PageID(addr)] = page
 }
 
-// Unmap a page for the address. The unmapped page is returned.
-func (self *Memory) Unmap(addr uint32) Page {
-	id := PageId(addr)
-	ret := self.pages[id]
-	delete(self.pages, id)
+// Unmap unmaps a page for the address. The unmapped page is returned.
+func (m *Memory) Unmap(addr uint32) Page {
+	id := PageID(addr)
+	ret := m.pages[id]
+	delete(m.pages, id)
 	return ret
 }

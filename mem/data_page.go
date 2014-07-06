@@ -1,25 +1,30 @@
 package mem
 
+// DataPage is a regular memoery page that saves data.
 type DataPage struct {
 	bytes []byte
 }
 
 var _ Page = new(DataPage)
 
+// NewPage creates a regular memory page that saves data.
 func NewPage() *DataPage {
 	ret := new(DataPage)
 	ret.bytes = make([]byte, PageSize)
 	return ret
 }
 
-func (self *DataPage) Read(offset uint32) uint8 {
-	return self.bytes[offset]
+// Read reads a byte at a particuar offset.
+func (p *DataPage) Read(offset uint32) uint8 {
+	return p.bytes[offset]
 }
 
-func (self *DataPage) Write(offset uint32, b uint8) {
-	self.bytes[offset] = b
+// Write writes a byte at a particular offset.
+func (p *DataPage) Write(offset uint32, b uint8) {
+	p.bytes[offset] = b
 }
 
-func (self *DataPage) Bytes() []byte {
-	return self.bytes
+// Bytes returns the content of the page.
+func (p *DataPage) Bytes() []byte {
+	return p.bytes
 }

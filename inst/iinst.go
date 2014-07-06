@@ -31,7 +31,7 @@ func opLw(c Core, i Inst) {
 	c.WriteReg(i.Rt(), c.ReadU32(addr))
 }
 
-func opLhs(c Core, i Inst) {
+func opLh(c Core, i Inst) {
 	addr := memAddr(c, i)
 	c.WriteReg(i.Rt(), signExt(c.ReadU16(addr)))
 }
@@ -41,7 +41,7 @@ func opLhu(c Core, i Inst) {
 	c.WriteReg(i.Rt(), unsignExt(c.ReadU16(addr)))
 }
 
-func opLbs(c Core, i Inst) {
+func opLb(c Core, i Inst) {
 	addr := memAddr(c, i)
 	c.WriteReg(i.Rt(), signExt8(c.ReadU8(addr)))
 }

@@ -1,3 +1,4 @@
+// Package regs defines the registers for a E8 virtual machine CPU.
 package regs
 
 import (
@@ -33,7 +34,7 @@ func (rs *Registers) ReadReg(a uint8) uint32 { return rs.ints[a] }
 // ReadFloatReg reads a floating-point register.
 func (rs *Registers) ReadFloatReg(a uint8) float64 { return rs.floats[a] }
 
-// WriteReg writes an integer register with value v. 
+// WriteReg writes an integer register with value v.
 // Writing to $0 will have no effect,
 // writing to $31 will be automatically aligned.
 func (rs *Registers) WriteReg(a uint8, v uint32) {
@@ -62,7 +63,7 @@ func (rs *Registers) IncPC() uint32 {
 	return ret
 }
 
-// PrintTo prints the register values to an output stream. 
+// PrintTo prints the register values to an output stream.
 // FIXME: currently it only prints the integer registers.
 func (rs *Registers) PrintTo(w io.Writer) {
 	for i := uint8(0); i < inst.Nreg; i++ {

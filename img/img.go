@@ -1,3 +1,5 @@
+// Package img defines functions for loading and saving E8 virtual machine
+// images.
 package img
 
 import (
@@ -9,6 +11,7 @@ import (
 	"e8vm.net/e8/vm"
 )
 
+// Make makes a virtual machine from an input stream.
 func Make(in io.Reader) (*vm.VM, error) {
 	v := vm.New()
 	e := LoadInto(v, in)
@@ -18,6 +21,7 @@ func Make(in io.Reader) (*vm.VM, error) {
 	return v, nil
 }
 
+// Open makes a virtual machine from a file.
 func Open(path string) (*vm.VM, error) {
 	fin, e := os.Open(path)
 	if e != nil {
@@ -29,6 +33,7 @@ func Open(path string) (*vm.VM, error) {
 	return Make(fin)
 }
 
+// LoadInto loads a virtual machine with an input stream.
 func LoadInto(c *vm.VM, in io.Reader) error {
 	var p mem.Page
 	cur := uint32(0)
@@ -44,7 +49,7 @@ func LoadInto(c *vm.VM, in io.Reader) error {
 
 		for i, b := range buf {
 			addr := header.addr + uint32(i)
-			id := mem.PageId(addr)
+			id := mem.PageID(addr)
 			if id == 0 {
 				return fmt.Errorf("attempt to map system page")
 			}
@@ -64,6 +69,8 @@ func LoadInto(c *vm.VM, in io.Reader) error {
 	return nil
 }
 
+// Read reads an image section from an input stream.
+// It returns the header and the section content.
 func Read(in io.Reader) (*Header, []byte, error) {
 	header := new(Header)
 	e := header.ReadIn(in)

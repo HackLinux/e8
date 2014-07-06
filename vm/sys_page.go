@@ -6,7 +6,7 @@ import (
 	"e8vm.net/e8/mem"
 )
 
-// System page is a special page that is mapped to
+// SysPage is a special system page that is always mapped to address 0.
 type SysPage struct {
 	AddrError   bool  // if anything read or written to address 0-3
 	Halt        bool  // if halt byte (address 4) is written
@@ -17,25 +17,29 @@ type SysPage struct {
 	stdout chan byte
 }
 
-// Special addresses on Sys page
+// Special addresses in a system page.
 const (
+	// Halt is the address for halting
 	// write: sets the halt value, halts the machine
 	Halt = 8
 
+	// Stdout is the address for output a char
 	// read: if stdout is ready for output
 	// write: output a byte to stdout
 	Stdout = 9
 
+	// StdinReady is the address for testing if an input is ready.
 	// read: if stdin is ready
 	StdinReady = 10
 
+	// Stdin is the address for fetching the input.
 	// read: fetch a byte if any, returns 0 if stdin is not ready
 	Stdin = 11
 )
 
 var _ mem.Page = new(SysPage)
 
-// Creates a system page
+// NewSysPage creates a system page
 func NewSysPage() *SysPage {
 	ret := new(SysPage)
 	ret.stdin = make(chan byte, 32)
@@ -44,51 +48,51 @@ func NewSysPage() *SysPage {
 	return ret
 }
 
-// Returns if the state is halted
-func (self *SysPage) Halted() bool {
-	if self == nil {
+// Halted returns if the state is halted
+func (p *SysPage) Halted() bool {
+	if p == nil {
 		return false
 	}
 
-	return self.Halt
+	return p.Halt
 }
 
-// Clear errors, no longer halting.
-func (self *SysPage) Reset() {
-	if self == nil {
+// Reset clears errors; the system is no longer halting afterwards.
+func (p *SysPage) Reset() {
+	if p == nil {
 		return
 	}
-	self.AddrError = false
-	self.Halt = false
+	p.AddrError = false
+	p.Halt = false
 }
 
-func (self *SysPage) addrError() {
-	self.AddrError = true
-	self.Halt = true
-	self.HaltValue = 0xff
+func (p *SysPage) addrError() {
+	p.AddrError = true
+	p.Halt = true
+	p.HaltValue = 0xff
 }
 
-// Reads a byte at address offset
-func (self *SysPage) Read(offset uint32) uint8 {
+// Read reads a byte at address offset
+func (p *SysPage) Read(offset uint32) uint8 {
 	if offset < 8 {
-		self.addrError()
+		p.addrError()
 		return 0
 	}
 
 	switch offset {
 	case Stdout: // stdout ready
-		if len(self.stdout) < cap(self.stdout) {
+		if len(p.stdout) < cap(p.stdout) {
 			return 0 // ready
 		}
 		return 1 // busy
 	case StdinReady: // stdin ready
-		if len(self.stdin) > 0 {
+		if len(p.stdin) > 0 {
 			return 0
 		}
 		return 1 // invalid
 	case Stdin: // stdin value
-		if len(self.stdin) > 0 {
-			return <-self.stdin
+		if len(p.stdin) > 0 {
+			return <-p.stdin
 		}
 		return 0
 	default:
@@ -96,36 +100,36 @@ func (self *SysPage) Read(offset uint32) uint8 {
 	}
 }
 
-// Writes a byte at address offset
-func (self *SysPage) Write(offset uint32, b uint8) {
+// Write writes a byte at address offset
+func (p *SysPage) Write(offset uint32, b uint8) {
 	if offset < 8 {
-		self.addrError()
+		p.addrError()
 		return
 	}
 
 	switch offset {
 	case Halt: // halt
-		self.Halt = true
-		self.HaltValue = b
+		p.Halt = true
+		p.HaltValue = b
 	case Stdout: // stdout
-		if len(self.stdout) < cap(self.stdout) {
-			self.stdout <- b
+		if len(p.stdout) < cap(p.stdout) {
+			p.stdout <- b
 		}
 	}
 }
 
-// Flushes buffered stdout bytes to Writer
-// Errors will be stored on self.IoError
-func (self *SysPage) FlushStdout(w io.Writer) {
-	if self == nil {
+// FlushStdout flushes buffered stdout bytes to Writer.
+// Errors will be stored on p.IoError
+func (p *SysPage) FlushStdout(w io.Writer) {
+	if p == nil {
 		return
 	}
 
-	for len(self.stdout) > 0 {
-		b := <-self.stdout
+	for len(p.stdout) > 0 {
+		b := <-p.stdout
 		_, e := w.Write([]byte{b})
 		if e != nil {
-			self.StdoutError = e
+			p.StdoutError = e
 		}
 	}
 }

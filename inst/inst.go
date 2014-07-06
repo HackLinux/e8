@@ -1,7 +1,10 @@
+// Package inst defines all the E8 instructions.
 package inst
 
+// Inst represents an E8 instruction.
 type Inst uint32
 
+// The bit positions and masks
 const (
 	OpShift    = 26
 	RsShift    = 21
@@ -16,39 +19,42 @@ const (
 	ShamtMask = 0x1f << ShamtShift
 	FunctMask = 0x3f
 	ImMask    = 0xffff
+)
 
+// The total possible number of functs and ops.
+const (
 	Nfunct = 64
 	Nop    = 64
 )
 
-// Returns the uint32 representation
+// U32 returns the uint32 representation
 func (i Inst) U32() uint32 { return uint32(i) }
 
-// Returns the op field
+// Op returns the op field
 func (i Inst) Op() uint8 { return uint8(i >> 26) }
 
-// Returns the rs field
+// Rs returns the rs field
 func (i Inst) Rs() uint8 { return uint8(i>>21) & 0x1f }
 
-// Returns the rt field
+// Rt returns the rt field
 func (i Inst) Rt() uint8 { return uint8(i>>16) & 0x1f }
 
-// Returns the rd field
+// Rd returns the rd field
 func (i Inst) Rd() uint8 { return uint8(i>>11) & 0x1f }
 
-// Returns the shamt field
+// Sh returns the shamt field
 func (i Inst) Sh() uint8 { return uint8(i>>6) & 0x1f }
 
-// Returns the funct field
+// Fn returns the funct field
 func (i Inst) Fn() uint8 { return uint8(i) & 0x3f }
 
-// Returns the immediate (16-bit) field as an unsigned int
+// Imu returns the immediate (16-bit) field as an unsigned int
 func (i Inst) Imu() uint16 { return uint16(i) }
 
-// Returns the immediate (16-bit) field as an signed int
+// Ims returns the immediate (16-bit) field as an signed int
 func (i Inst) Ims() int16 { return int16(uint16(i)) }
 
-// Returns the address field
+// Off returns the address field
 func (i Inst) Off() int32 { return int32(i) << 6 >> 6 }
 
 type instFunc func(c Core, i Inst)
@@ -64,6 +70,7 @@ func makeInstList(m map[uint8]instFunc, n uint8) []instFunc {
 	return ret
 }
 
+// Instruction op codes.
 const (
 	OpRinst = 0
 	OpJ     = 0x02
@@ -78,9 +85,9 @@ const (
 	OpLui  = 0x0F
 
 	OpLw  = 0x23
-	OpLhs = 0x21
+	OpLh  = 0x21
 	OpLhu = 0x25
-	OpLbs = 0x20
+	OpLb  = 0x20
 	OpLbu = 0x24
 	OpSw  = 0x2B
 	OpSh  = 0x29
@@ -102,9 +109,9 @@ var instList = makeInstList(
 		OpLui:  opLui,
 
 		OpLw:  opLw,
-		OpLhs: opLhs,
+		OpLh:  opLh,
 		OpLhu: opLhu,
-		OpLbs: opLbs,
+		OpLb:  opLb,
 		OpLbu: opLbu,
 		OpSw:  opSw,
 		OpSh:  opSh,
@@ -112,6 +119,7 @@ var instList = makeInstList(
 	}, Nop,
 )
 
+// Instruction funct codes.
 const (
 	FnAdd = 0x20
 	FnSub = 0x22
@@ -162,7 +170,7 @@ var rInstList = makeInstList(
 	}, Nfunct,
 )
 
-// Executes an instruction.
+// Exec executes an instruction.
 func Exec(c Core, i Inst) { instList[i.Op()](c, i) }
 
 func opRinst(c Core, i Inst) { rInstList[i.Fn()](c, i) }
