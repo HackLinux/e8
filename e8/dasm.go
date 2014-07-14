@@ -29,7 +29,7 @@ func mainDasm(args []string) {
 				break
 			}
 			if e != nil {
-				printError(e)
+				fmt.Fprintf(os.Stderr, "error: invalid image: %s\n", e)
 				break
 			}
 

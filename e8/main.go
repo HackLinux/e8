@@ -33,5 +33,5 @@ func main() {
 }
 
 func printError(e error) {
-	fmt.Fprintf(os.Stderr, "error: %s", e)
+	fmt.Fprintf(os.Stderr, "error: %s\n", e)
 }
