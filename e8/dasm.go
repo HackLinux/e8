@@ -70,8 +70,12 @@ func dumpCodeSeg(start uint32, b []byte) {
 		}
 
 		b := b[i:j]
-		for _, bt := range b {
-			fmt.Printf(" %02x", bt)
+		for i := 3; i >= 0; i-- {
+			if i >= len(b) {
+				fmt.Printf("   ")
+			} else {
+				fmt.Printf(" %02x", b[i])
+			}
 		}
 
 		if len(b) == 4 {
