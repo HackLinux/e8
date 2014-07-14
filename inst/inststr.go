@@ -30,9 +30,8 @@ func (i Inst) String() string {
 		}
 
 		switch funct {
-		case FnAdd, FnSub, FnAnd, FnOr, FnXor, FnNor, FnSlt:
-			fallthrough
-		case FnMul, FnMulu, FnDiv, FnDivu, FnMod, FnModu:
+		case FnAdd, FnSub, FnAnd, FnOr, FnXor, FnNor, FnSlt,
+			FnMul, FnMulu, FnDiv, FnDivu, FnMod, FnModu:
 			return r3()
 		case FnSll, FnSrl, FnSra:
 			return r3s()
